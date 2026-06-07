@@ -1,0 +1,32 @@
+{
+  "name": "mit-digital-agency",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/vision": "^5.30.0",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.107.0",
+    "lucide-react": "^1.17.0",
+    "next": "^16.2.7",
+    "next-sanity": "^12.4.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "sanity": "^5.30.0",
+    "styled-components": "^6.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.32",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3"
+  }
+}

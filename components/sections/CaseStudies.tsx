@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ScaleIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import type { CaseStudyItem } from "@/lib/sanity/queries";
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard";
 
@@ -31,17 +32,21 @@ export function CaseStudies({ caseStudies }: CaseStudiesProps) {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <StaggerContainer className="mt-12 grid gap-5 lg:grid-cols-3">
           {items.length > 0 ? (
             items.map((caseStudy) => (
-              <CaseStudyCard caseStudy={caseStudy} key={caseStudy.slug || caseStudy.title} />
+              <StaggerItem className="h-full" key={caseStudy.slug || caseStudy.title}>
+                <ScaleIn className="h-full">
+                  <CaseStudyCard caseStudy={caseStudy} />
+                </ScaleIn>
+              </StaggerItem>
             ))
           ) : (
             <div className="rounded-[1.5rem] border border-slate-200 bg-white p-8 text-center text-slate-600 lg:col-span-3">
               Case study content is not available yet.
             </div>
           )}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

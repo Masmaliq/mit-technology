@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import type { TestimonialItem } from "@/lib/sanity/queries";
 
 type TestimonialsProps = {
@@ -37,55 +38,54 @@ export function Testimonials({ testimonials = [] }: TestimonialsProps) {
         </div>
 
         {visibleTestimonials.length > 0 ? (
-          <div className="mt-16 grid gap-5 lg:grid-cols-3">
+          <StaggerContainer className="mt-16 grid gap-5 lg:grid-cols-3">
             {visibleTestimonials.map((item) => {
               const rating = Math.max(1, Math.min(item.rating ?? 5, 5));
 
               return (
-                <figure
-                  className="flex min-h-[360px] flex-col justify-between rounded-[1.75rem] border border-slate-200 bg-white p-7 shadow-[0_24px_80px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_30px_90px_rgba(37,99,235,0.12)]"
-                  key={`${item.name}-${item.company ?? "testimonial"}`}
-                >
-                  <div>
-                    <div className="flex items-center gap-1 text-primary">
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <Star
-                          aria-hidden="true"
-                          className={index < rating ? "h-4 w-4 fill-current" : "h-4 w-4 text-slate-200"}
-                          key={index}
-                        />
-                      ))}
-                    </div>
-                    <blockquote className="mt-8 text-xl leading-9 tracking-tight text-navy">
-                      "{item.quote}"
-                    </blockquote>
-                  </div>
-
-                  <figcaption className="mt-10 flex items-center gap-4 border-t border-slate-100 pt-6">
-                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-semibold text-navy">
-                      {item.avatar?.url ? (
-                        <Image
-                          alt={item.avatar.alt ?? item.name ?? "MIT testimonial avatar"}
-                          className="object-cover"
-                          fill
-                          sizes="48px"
-                          src={item.avatar.url}
-                        />
-                      ) : (
-                        getInitials(item.name)
-                      )}
-                    </div>
+                <StaggerItem className="h-full" key={`${item.name}-${item.company ?? "testimonial"}`}>
+                  <figure className="flex min-h-[360px] flex-col justify-between rounded-[1.75rem] border border-slate-200 bg-white p-7 shadow-[0_24px_80px_rgba(15,23,42,0.06)] transition duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-[0_32px_96px_rgba(37,99,235,0.13)]">
                     <div>
-                      <p className="font-semibold text-navy">{item.name}</p>
-                      <p className="mt-1 text-sm leading-6 text-slate-500">
-                        {[item.position, item.company].filter(Boolean).join(", ")}
-                      </p>
+                      <div className="flex items-center gap-1 text-primary">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <Star
+                            aria-hidden="true"
+                            className={index < rating ? "h-4 w-4 fill-current" : "h-4 w-4 text-slate-200"}
+                            key={index}
+                          />
+                        ))}
+                      </div>
+                      <blockquote className="mt-8 text-xl leading-9 tracking-tight text-navy">
+                        "{item.quote}"
+                      </blockquote>
                     </div>
-                  </figcaption>
-                </figure>
+
+                    <figcaption className="mt-10 flex items-center gap-4 border-t border-slate-100 pt-6">
+                      <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-semibold text-navy">
+                        {item.avatar?.url ? (
+                          <Image
+                            alt={item.avatar.alt ?? item.name ?? "MIT testimonial avatar"}
+                            className="object-cover"
+                            fill
+                            sizes="48px"
+                            src={item.avatar.url}
+                          />
+                        ) : (
+                          getInitials(item.name)
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-navy">{item.name}</p>
+                        <p className="mt-1 text-sm leading-6 text-slate-500">
+                          {[item.position, item.company].filter(Boolean).join(", ")}
+                        </p>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerContainer>
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 px-8 py-10 text-center">
             <p className="text-sm font-medium text-slate-500">

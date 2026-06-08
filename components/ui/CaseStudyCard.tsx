@@ -42,7 +42,7 @@ export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
 
   return (
     <article
-      className={`group overflow-hidden rounded-[1.5rem] border p-4 transition duration-300 hover:-translate-y-1 hover:shadow-glass-lg ${
+      className={`group h-full overflow-hidden rounded-[1.5rem] border p-4 transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:shadow-glass-lg ${
         dark
           ? "border-white/10 bg-white/10 text-white hover:border-blue-300/40 hover:bg-white/[0.14]"
           : "border-slate-200 bg-white text-navy hover:border-primary/40"
@@ -56,7 +56,7 @@ export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
             fill
             unoptimized
             sizes="(min-width: 1024px) 33vw, 100vw"
-            className="object-cover"
+            className="object-cover transition duration-[350ms] ease-out group-hover:scale-[1.04]"
           />
         ) : (
           <>

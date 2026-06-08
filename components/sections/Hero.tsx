@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Gauge, Layers3, ShieldCheck, Sparkles } from "lucide-react";
+import { HeroFloat, ScaleIn } from "@/components/motion/Motion";
 
 type HeroProps = {
   title?: string;
@@ -106,48 +107,52 @@ export function Hero({
         </div>
 
         <div className="relative z-10">
-          <div className="rounded-[2rem] border border-white/70 bg-white/70 p-4 shadow-glass-lg backdrop-blur-xl">
-            <div className="rounded-[1.5rem] border border-slate-200 bg-navy p-5 text-white">
-              <div className="mb-6 flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-300">{visualConsoleTitle}</p>
-                  <p className="text-xl font-semibold">{visualConsoleHeading}</p>
-                </div>
-                <div className="rounded-full bg-primary/20 p-3 text-blue-200">
-                  <Layers3 className="h-5 w-5" />
-                </div>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {visualMetrics.map((item) => {
-                  const Icon = item.icon;
+          <ScaleIn>
+            <HeroFloat>
+              <div className="rounded-[2rem] border border-white/70 bg-white/70 p-4 shadow-glass-lg backdrop-blur-xl">
+                <div className="rounded-[1.5rem] border border-slate-200 bg-navy p-5 text-white">
+                  <div className="mb-6 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-300">{visualConsoleTitle}</p>
+                      <p className="text-xl font-semibold">{visualConsoleHeading}</p>
+                    </div>
+                    <div className="rounded-full bg-primary/20 p-3 text-blue-200">
+                      <Layers3 className="h-5 w-5" />
+                    </div>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {visualMetrics.map((item) => {
+                      const Icon = item.icon;
 
-                  return (
-                    <div
-                      className="rounded-2xl border border-white/10 bg-white/10 p-4"
-                      key={item.label}
-                    >
-                      <Icon className="mb-6 h-5 w-5 text-blue-200" />
-                      <p className="text-3xl font-semibold">{item.value}</p>
-                      <p className="mt-1 text-sm text-slate-300">{item.label}</p>
+                      return (
+                        <div
+                          className="rounded-2xl border border-white/10 bg-white/10 p-4"
+                          key={item.label}
+                        >
+                          <Icon className="mb-6 h-5 w-5 text-blue-200" />
+                          <p className="text-3xl font-semibold">{item.value}</p>
+                          <p className="mt-1 text-sm text-slate-300">{item.label}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-4 rounded-2xl bg-white p-5 text-navy">
+                    <p className="text-sm font-semibold text-slate-500">Recommended stack</p>
+                    <div className="mt-4 space-y-3">
+                      {visualRecommendedStack.map((item, index) => (
+                        <div className="flex items-center gap-3" key={item}>
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                            {index + 1}
+                          </span>
+                          <span className="text-sm font-medium">{item}</span>
+                        </div>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
-              <div className="mt-4 rounded-2xl bg-white p-5 text-navy">
-                <p className="text-sm font-semibold text-slate-500">Recommended stack</p>
-                <div className="mt-4 space-y-3">
-                  {visualRecommendedStack.map((item, index) => (
-                    <div className="flex items-center gap-3" key={item}>
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                        {index + 1}
-                      </span>
-                      <span className="text-sm font-medium">{item}</span>
-                    </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </HeroFloat>
+          </ScaleIn>
         </div>
       </div>
     </section>

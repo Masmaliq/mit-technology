@@ -4,6 +4,9 @@ export type SanityImageValue = {
     _id?: string;
     _ref?: string;
     _type?: string;
+    extension?: string;
+    mimeType?: string;
+    originalFilename?: string;
     url?: string;
   };
   crop?: unknown;
@@ -138,6 +141,7 @@ export type CaseStudyItem = SeoFields & {
 export type ClientLogoItem = {
   name?: string;
   logo?: SanityImageValue;
+  industry?: string;
   websiteUrl?: string;
   featured?: boolean;
   order?: number;
@@ -389,9 +393,19 @@ export const clientLogosQuery = `*[_type == "clientLogo" && !(_id in path("draft
   name,
   "logo": logo{
     ...,
+    "asset": {
+      "_ref": asset._ref,
+      "_type": asset._type,
+      "_id": asset->_id,
+      "extension": asset->extension,
+      "mimeType": asset->mimeType,
+      "originalFilename": asset->originalFilename,
+      "url": asset->url
+    },
     "url": asset->url,
     "alt": coalesce(alt, asset->altText)
   },
+  industry,
   websiteUrl,
   featured,
   order

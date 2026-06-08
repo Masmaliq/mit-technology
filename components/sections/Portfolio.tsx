@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ScaleIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import type { PortfolioItem } from "@/lib/sanity/queries";
 import { urlFor } from "@/sanity/lib/image";
 
@@ -74,7 +75,7 @@ export function Portfolio({ projects }: PortfolioProps) {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <StaggerContainer className="mt-12 grid gap-5 lg:grid-cols-3">
           {previewProjects.length > 0 ? (
             previewProjects.map((project) => {
               const thumbnailUrl = getThumbnailUrl(project);
@@ -87,7 +88,7 @@ export function Portfolio({ projects }: PortfolioProps) {
                     {thumbnailUrl ? (
                       <Image
                         alt={project.thumbnail?.alt || project.title || "Portfolio project"}
-                        className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                        className="object-cover transition duration-[350ms] ease-out group-hover:scale-[1.04]"
                         fill
                         unoptimized
                         sizes="(min-width: 1024px) 33vw, 100vw"
@@ -122,23 +123,29 @@ export function Portfolio({ projects }: PortfolioProps) {
               );
 
               return isExternal ? (
-                <a
-                  className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_20px_80px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_28px_96px_rgba(15,23,42,0.1)]"
-                  href={href}
-                  key={project.slug}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {cardContent}
-                </a>
+                <StaggerItem className="h-full" key={project.slug}>
+                  <ScaleIn className="h-full">
+                    <a
+                      className="group block h-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_20px_80px_rgba(15,23,42,0.06)] transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-primary/35 hover:shadow-[0_34px_108px_rgba(15,23,42,0.14)]"
+                      href={href}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {cardContent}
+                    </a>
+                  </ScaleIn>
+                </StaggerItem>
               ) : (
-                <Link
-                  className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_20px_80px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_28px_96px_rgba(15,23,42,0.1)]"
-                  href={href}
-                  key={project.slug}
-                >
-                  {cardContent}
-                </Link>
+                <StaggerItem className="h-full" key={project.slug}>
+                  <ScaleIn className="h-full">
+                    <Link
+                      className="group block h-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_20px_80px_rgba(15,23,42,0.06)] transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-primary/35 hover:shadow-[0_34px_108px_rgba(15,23,42,0.14)]"
+                      href={href}
+                    >
+                      {cardContent}
+                    </Link>
+                  </ScaleIn>
+                </StaggerItem>
               );
             })
           ) : (
@@ -146,7 +153,7 @@ export function Portfolio({ projects }: PortfolioProps) {
               Portfolio content is not available yet.
             </div>
           )}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

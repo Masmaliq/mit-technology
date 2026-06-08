@@ -1,4 +1,5 @@
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { FadeUp } from "@/components/motion/Motion";
 import { CTA } from "@/components/sections/CTA";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { ClientLogos } from "@/components/sections/ClientLogos";
@@ -60,45 +61,69 @@ export default async function HomePage() {
     <>
       <SiteHeader />
       <main className="overflow-hidden bg-white">
-        <Hero
-          title={homepage?.heroTitle}
-          subtitle={homepage?.heroSubtitle}
-          description={homepage?.heroDescription}
-          primaryCtaLabel={homepage?.heroPrimaryCtaLabel}
-          primaryCtaHref={homepage?.heroPrimaryCtaHref}
-          secondaryCtaLabel={homepage?.heroSecondaryCtaLabel}
-          secondaryCtaHref={homepage?.heroSecondaryCtaHref}
-          consoleTitle={homepage?.consoleTitle}
-          consoleHeading={homepage?.consoleHeading}
-          metricOneValue={homepage?.metricOneValue}
-          metricOneLabel={homepage?.metricOneLabel}
-          metricTwoValue={homepage?.metricTwoValue}
-          metricTwoLabel={homepage?.metricTwoLabel}
-          recommendedStack={homepage?.recommendedStack}
-        />
-        <ClientLogos logos={clientLogos} />
-        <Trust
-          eyebrow={homepage?.trustEyebrow}
-          title={homepage?.trustTitle}
-          description={homepage?.trustDescription}
-          items={homepage?.trustItems}
-        />
-        <Solutions solutions={solutions} />
-        <Portfolio projects={portfolio} />
-        <Process processes={processes} />
-        <CaseStudies caseStudies={featuredCaseStudies} />
-        <ImpactMetrics metrics={impactMetrics} />
-        <Testimonials testimonials={testimonials} />
-        <Pricing packages={packages} />
-        <CTA
-          eyebrow={homepage?.ctaEyebrow}
-          title={homepage?.ctaTitle}
-          description={homepage?.ctaDescription}
-          buttonLabel={homepage?.ctaButtonLabel}
-          buttonHref={homepage?.ctaButtonHref}
-        />
+        <FadeUp>
+          <Hero
+            title={homepage?.heroTitle}
+            subtitle={homepage?.heroSubtitle}
+            description={homepage?.heroDescription}
+            primaryCtaLabel={homepage?.heroPrimaryCtaLabel}
+            primaryCtaHref={homepage?.heroPrimaryCtaHref}
+            secondaryCtaLabel={homepage?.heroSecondaryCtaLabel}
+            secondaryCtaHref={homepage?.heroSecondaryCtaHref}
+            consoleTitle={homepage?.consoleTitle}
+            consoleHeading={homepage?.consoleHeading}
+            metricOneValue={homepage?.metricOneValue}
+            metricOneLabel={homepage?.metricOneLabel}
+            metricTwoValue={homepage?.metricTwoValue}
+            metricTwoLabel={homepage?.metricTwoLabel}
+            recommendedStack={homepage?.recommendedStack}
+          />
+        </FadeUp>
+        <FadeUp>
+          <ClientLogos logos={clientLogos} />
+        </FadeUp>
+        <FadeUp>
+          <Trust
+            eyebrow={homepage?.trustEyebrow}
+            title={homepage?.trustTitle}
+            description={homepage?.trustDescription}
+            items={homepage?.trustItems}
+          />
+        </FadeUp>
+        <FadeUp>
+          <Solutions solutions={solutions} />
+        </FadeUp>
+        <FadeUp>
+          <Portfolio projects={portfolio} />
+        </FadeUp>
+        <FadeUp>
+          <Process processes={processes} />
+        </FadeUp>
+        <FadeUp>
+          <CaseStudies caseStudies={featuredCaseStudies} />
+        </FadeUp>
+        <FadeUp>
+          <ImpactMetrics metrics={impactMetrics} />
+        </FadeUp>
+        <FadeUp>
+          <Testimonials testimonials={testimonials} />
+        </FadeUp>
+        <FadeUp>
+          <Pricing packages={packages} />
+        </FadeUp>
+        <FadeUp>
+          <CTA
+            eyebrow={homepage?.ctaEyebrow}
+            title={homepage?.ctaTitle}
+            description={homepage?.ctaDescription}
+            buttonLabel={homepage?.ctaButtonLabel}
+            buttonHref={homepage?.ctaButtonHref}
+          />
+        </FadeUp>
       </main>
-      <Footer />
+      <FadeUp subtle>
+        <Footer />
+      </FadeUp>
     </>
   );
 }

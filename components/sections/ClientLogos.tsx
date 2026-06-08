@@ -1,12 +1,25 @@
 import Image from "next/image";
 import type { ClientLogoItem } from "@/lib/sanity/queries";
+import { urlFor } from "@/sanity/lib/image";
 
 type ClientLogosProps = {
   logos?: ClientLogoItem[];
 };
 
+function getLogoUrl(logo?: ClientLogoItem["logo"]) {
+  if (!logo) {
+    return "";
+  }
+
+  try {
+    return urlFor(logo).width(300).height(96).fit("max").auto("format").url();
+  } catch {
+    return logo.url ?? "";
+  }
+}
+
 export function ClientLogos({ logos = [] }: ClientLogosProps) {
-  const visibleLogos = logos.filter((item) => item.name && item.logo?.url && item.featured !== false);
+  const visibleLogos = logos.filter((item) => item.name && getLogoUrl(item.logo) && item.featured !== false);
 
   return (
     <section aria-label="Client logos" className="bg-white py-16">
@@ -18,16 +31,16 @@ export function ClientLogos({ logos = [] }: ClientLogosProps) {
         </div>
 
         {visibleLogos.length > 0 ? (
-          <div className="mx-auto mt-10 grid max-w-5xl grid-cols-2 items-center gap-x-10 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mx-auto mt-12 grid max-w-7xl grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visibleLogos.map((item) => {
-              const logoUrl = item.logo?.url;
+              const logoUrl = getLogoUrl(item.logo);
 
               if (!logoUrl) {
                 return null;
               }
 
               const logo = (
-                <div className="relative mx-auto h-12 w-full max-w-[150px] opacity-55 grayscale transition duration-300 hover:opacity-90 hover:grayscale-0">
+                <div className="relative h-[72px] w-full max-w-[220px]">
                   <Image
                     alt={item.logo?.alt ?? item.name ?? "Client logo"}
                     className="object-contain"
@@ -41,7 +54,7 @@ export function ClientLogos({ logos = [] }: ClientLogosProps) {
               return item.websiteUrl ? (
                 <a
                   aria-label={item.name}
-                  className="flex min-h-16 items-center justify-center"
+                  className="flex h-[120px] w-full max-w-[300px] items-center justify-center rounded-2xl border border-slate-200/60 bg-white px-10 shadow-[0_10px_30px_rgba(15,23,42,0.035)] transition duration-300 hover:-translate-y-1 hover:border-slate-300/70 hover:shadow-[0_18px_48px_rgba(15,23,42,0.07)]"
                   href={item.websiteUrl}
                   key={item.name}
                   rel="noreferrer"
@@ -50,7 +63,10 @@ export function ClientLogos({ logos = [] }: ClientLogosProps) {
                   {logo}
                 </a>
               ) : (
-                <div className="flex min-h-16 items-center justify-center" key={item.name}>
+                <div
+                  className="flex h-[120px] w-full max-w-[300px] items-center justify-center rounded-2xl border border-slate-200/60 bg-white px-10 shadow-[0_10px_30px_rgba(15,23,42,0.035)] transition duration-300 hover:-translate-y-1 hover:border-slate-300/70 hover:shadow-[0_18px_48px_rgba(15,23,42,0.07)]"
+                  key={item.name}
+                >
                   {logo}
                 </div>
               );

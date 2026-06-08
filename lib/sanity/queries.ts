@@ -1,4 +1,12 @@
 export type SanityImageValue = {
+  _type?: string;
+  asset?: {
+    _ref?: string;
+    _type?: string;
+    url?: string;
+  };
+  crop?: unknown;
+  hotspot?: unknown;
   url?: string;
   alt?: string;
 };
@@ -330,7 +338,11 @@ export const caseStudyBySlugQuery = `*[_type == "caseStudy" && slug.current == $
 
 export const clientLogosQuery = `*[_type == "clientLogo" && !(_id in path("drafts.**"))] | order(featured desc, coalesce(order, 999), _createdAt asc){
   name,
-  "logo": logo${imageProjection},
+  "logo": logo{
+    ...,
+    "url": asset->url,
+    "alt": coalesce(alt, asset->altText)
+  },
   websiteUrl,
   featured,
   order

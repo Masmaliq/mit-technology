@@ -5,6 +5,7 @@ import { ClientLogos } from "@/components/sections/ClientLogos";
 import { Footer } from "@/components/sections/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { ImpactMetrics } from "@/components/sections/ImpactMetrics";
+import { Portfolio } from "@/components/sections/Portfolio";
 import { Pricing } from "@/components/sections/Pricing";
 import { Process } from "@/components/sections/Process";
 import { Solutions } from "@/components/sections/Solutions";
@@ -16,6 +17,7 @@ import {
   getClientLogos,
   getImpactMetrics,
   getPackages,
+  getPortfolio,
   getProcesses,
   getSolutions,
   getTestimonials,
@@ -40,11 +42,12 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [homepage, packages, solutions, caseStudies, processes, testimonials, clientLogos, impactMetrics] =
+  const [homepage, packages, solutions, portfolio, caseStudies, processes, testimonials, clientLogos, impactMetrics] =
     await Promise.all([
       getHomepage(),
       getPackages(),
       getSolutions(),
+      getPortfolio(),
       getCaseStudies(),
       getProcesses(),
       getTestimonials(),
@@ -81,6 +84,7 @@ export default async function HomePage() {
           items={homepage?.trustItems}
         />
         <Solutions solutions={solutions} />
+        <Portfolio projects={portfolio} />
         <Process processes={processes} />
         <CaseStudies caseStudies={featuredCaseStudies} />
         <ImpactMetrics metrics={impactMetrics} />

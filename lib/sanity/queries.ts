@@ -1,6 +1,7 @@
 export type SanityImageValue = {
   _type?: string;
   asset?: {
+    _id?: string;
     _ref?: string;
     _type?: string;
     url?: string;
@@ -108,6 +109,7 @@ export type PackageItem = SeoFields & {
 export type PortfolioItem = SeoFields & {
   title?: string;
   slug?: string;
+  caseStudySlug?: string;
   client?: string;
   category?: string;
   description?: string;
@@ -293,10 +295,21 @@ export const packagesQuery = `*[_type == "package" && !(_id in path("drafts.**")
 export const portfolioQuery = `*[_type == "portfolio" && !(_id in path("drafts.**"))] | order(coalesce(order, 999), _createdAt asc){
   title,
   "slug": slug.current,
+  "caseStudySlug": *[_type == "caseStudy" && slug.current == ^.slug.current && !(_id in path("drafts.**"))][0].slug.current,
   client,
   category,
   description,
-  "thumbnail": thumbnail${imageProjection},
+  "thumbnail": thumbnail{
+    ...,
+    "asset": {
+      "_ref": asset._ref,
+      "_type": asset._type,
+      "_id": asset->_id,
+      "url": asset->url
+    },
+    "url": asset->url,
+    "alt": coalesce(alt, asset->altText)
+  },
   "gallery": gallery[]${imageProjection},
   projectUrl,
   featured,

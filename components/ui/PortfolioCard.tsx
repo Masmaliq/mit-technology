@@ -3,7 +3,9 @@ import { ArrowRight, Check } from "lucide-react";
 import type { PortfolioProject } from "@/data/portfolio";
 
 type PortfolioCardProps = {
-  project: PortfolioProject;
+  project: PortfolioProject & {
+    href?: string;
+  };
   index: number;
   dark?: boolean;
 };
@@ -65,7 +67,7 @@ export function PortfolioCard({ project, index, dark = false }: PortfolioCardPro
         </div>
 
         <Link
-          href="/contact"
+          href={project.href || "/portfolio"}
           className={`mt-7 inline-flex items-center gap-2 text-sm font-semibold transition duration-300 ${
             dark ? "text-white hover:text-blue-200" : "text-primary hover:text-blue-700"
           }`}

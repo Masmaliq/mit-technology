@@ -16,12 +16,18 @@ export function generateMetadata() {
 }
 
 function mapPortfolioProject(project: Awaited<ReturnType<typeof getPortfolio>>[number]) {
+  const href = project.caseStudySlug
+    ? `/case-studies/${project.caseStudySlug}`
+    : project.projectUrl || (project.slug ? `/portfolio#${project.slug}` : "/portfolio");
+
   return {
     title: project.title || "Portfolio Project",
     category: project.category || "Selected Work",
     description: project.description || "",
     highlights: [project.client, project.category].filter((item): item is string => Boolean(item)),
     featured: project.featured,
+    href,
+    slug: project.slug,
   };
 }
 
@@ -52,7 +58,9 @@ export default async function PortfolioPage() {
           <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2 xl:grid-cols-3">
             {projects.length > 0 ? (
               projects.map((project, index) => (
-                <PortfolioCard index={index} key={project.title} project={project} />
+                <div id={project.slug} key={project.title}>
+                  <PortfolioCard index={index} project={project} />
+                </div>
               ))
             ) : (
               <div className="rounded-[1.5rem] border border-slate-200 bg-white p-8 text-center text-slate-600 md:col-span-2 xl:col-span-3">

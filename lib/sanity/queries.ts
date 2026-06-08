@@ -327,7 +327,25 @@ export const caseStudiesQuery = `*[_type == "caseStudy" && !(_id in path("drafts
   result,
   testimonial,
   "gallery": gallery[]${imageProjection},
-  "featuredImage": featuredImage${imageProjection},
+  "featuredImage": coalesce(
+    featuredImage,
+    gallery[0],
+    *[_type == "portfolio" && !(_id in path("drafts.**")) && defined(thumbnail.asset._ref) && (
+      slug.current == ^.slug.current ||
+      title == ^.title ||
+      category == ^.industry
+    )][0].thumbnail
+  ){
+    ...,
+    "asset": {
+      "_ref": asset._ref,
+      "_type": asset._type,
+      "_id": asset->_id,
+      "url": asset->url
+    },
+    "url": asset->url,
+    "alt": coalesce(alt, asset->altText)
+  },
   featured,
   order,
   ${seoProjection}
@@ -343,7 +361,25 @@ export const caseStudyBySlugQuery = `*[_type == "caseStudy" && slug.current == $
   result,
   testimonial,
   "gallery": gallery[]${imageProjection},
-  "featuredImage": featuredImage${imageProjection},
+  "featuredImage": coalesce(
+    featuredImage,
+    gallery[0],
+    *[_type == "portfolio" && !(_id in path("drafts.**")) && defined(thumbnail.asset._ref) && (
+      slug.current == ^.slug.current ||
+      title == ^.title ||
+      category == ^.industry
+    )][0].thumbnail
+  ){
+    ...,
+    "asset": {
+      "_ref": asset._ref,
+      "_type": asset._type,
+      "_id": asset->_id,
+      "url": asset->url
+    },
+    "url": asset->url,
+    "alt": coalesce(alt, asset->altText)
+  },
   featured,
   order,
   ${seoProjection}

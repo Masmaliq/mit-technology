@@ -16,7 +16,13 @@ function getThumbnailUrl(project: PortfolioItem) {
   }
 
   try {
-    const imageUrl = urlFor(thumbnail).width(960).height(640).fit("crop").auto("format").url();
+    const imageUrl = urlFor(thumbnail)
+      .width(1200)
+      .height(750)
+      .fit("crop")
+      .quality(85)
+      .auto("format")
+      .url();
 
     if (imageUrl.startsWith("http")) {
       return imageUrl;
@@ -77,12 +83,13 @@ export function Portfolio({ projects }: PortfolioProps) {
               const isExternal = href.startsWith("http");
               const cardContent = (
                 <>
-                  <div className="relative min-h-64 overflow-hidden rounded-[1.35rem] bg-[linear-gradient(135deg,#f8fbff_0%,#e8f0ff_100%)]">
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-[1.35rem] bg-[linear-gradient(135deg,#f8fbff_0%,#e8f0ff_100%)]">
                     {thumbnailUrl ? (
                       <Image
                         alt={project.thumbnail?.alt || project.title || "Portfolio project"}
                         className="object-cover transition duration-500 group-hover:scale-[1.03]"
                         fill
+                        unoptimized
                         sizes="(min-width: 1024px) 33vw, 100vw"
                         src={thumbnailUrl}
                       />

@@ -2,14 +2,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import type { CaseStudyItem } from "@/lib/sanity/queries";
+import { urlFor } from "@/sanity/lib/image";
 
 type CaseStudyCardProps = {
   caseStudy: CaseStudyItem;
   dark?: boolean;
 };
 
+function getFeaturedImageUrl(caseStudy: CaseStudyItem) {
+  const image = caseStudy.featuredImage;
+
+  if (!image) {
+    return "";
+  }
+
+  try {
+    const imageUrl = urlFor(image)
+      .width(1200)
+      .height(750)
+      .fit("crop")
+      .quality(85)
+      .auto("format")
+      .url();
+
+    if (imageUrl.startsWith("http")) {
+      return imageUrl;
+    }
+  } catch {
+    // Fall through to the resolved asset URL from the Sanity query.
+  }
+
+  return image.url?.startsWith("http") ? image.url : "";
+}
+
 export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
   const href = caseStudy.slug ? `/case-studies/${caseStudy.slug}` : "/case-studies";
+  const featuredImage = caseStudy.featuredImage;
+  const featuredImageUrl = getFeaturedImageUrl(caseStudy);
 
   return (
     <article
@@ -19,12 +48,13 @@ export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
           : "border-slate-200 bg-white text-navy hover:border-primary/40"
       }`}
     >
-      <div className="relative min-h-44 overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-blue-500/30 via-sky-400/15 to-white/10">
-        {caseStudy.featuredImage?.url ? (
+      <div className="relative aspect-[16/10] overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-blue-500/30 via-sky-400/15 to-white/10">
+        {featuredImageUrl ? (
           <Image
-            src={caseStudy.featuredImage.url}
-            alt={caseStudy.featuredImage.alt || caseStudy.title || ""}
+            src={featuredImageUrl}
+            alt={featuredImage?.alt || caseStudy.title || ""}
             fill
+            unoptimized
             sizes="(min-width: 1024px) 33vw, 100vw"
             className="object-cover"
           />

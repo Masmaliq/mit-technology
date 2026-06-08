@@ -20,6 +20,20 @@ export default async function PackagesPage() {
     <>
       <SiteHeader />
       <main className="bg-white">
+        <section className="border-b border-slate-200 bg-[#FBFAF7] px-6 py-20 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#9A7B38]">
+              MIT PACKAGES
+            </p>
+            <h1 className="mt-5 max-w-5xl text-5xl font-semibold tracking-tight text-slate-950 md:text-7xl">
+              Consulting-grade digital packages for companies ready to move seriously.
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600">
+              Explore CMS-managed engagement options across websites, applications, commerce, and
+              AI systems.
+            </p>
+          </div>
+        </section>
         <Pricing packages={packages} />
       </main>
       <Footer />

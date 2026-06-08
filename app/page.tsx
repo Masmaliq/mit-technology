@@ -9,6 +9,7 @@ import { Pricing } from "@/components/sections/Pricing";
 import { Process } from "@/components/sections/Process";
 import { Solutions } from "@/components/sections/Solutions";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { Trust } from "@/components/sections/Trust";
 import {
   getHomepage,
   getCaseStudies,
@@ -73,6 +74,12 @@ export default async function HomePage() {
           recommendedStack={homepage?.recommendedStack}
         />
         <ClientLogos logos={clientLogos} />
+        <Trust
+          eyebrow={homepage?.trustEyebrow}
+          title={homepage?.trustTitle}
+          description={homepage?.trustDescription}
+          items={homepage?.trustItems}
+        />
         <Solutions solutions={solutions} />
         <Process processes={processes} />
         <CaseStudies caseStudies={featuredCaseStudies} />

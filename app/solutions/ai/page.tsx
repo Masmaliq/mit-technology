@@ -1,14 +1,5 @@
-import { SiteHeader } from "@/components/layout/SiteHeader";
-import { Footer } from "@/components/sections/Footer";
-import { SolutionDivisionDetail } from "@/components/sections/SolutionDivisionDetail";
-import { getSolutionDivision } from "@/data/solution-divisions";
+import SolutionPage from "../[slug]/page";
 
 export default function AiDivisionPage() {
-  return (
-    <>
-      <SiteHeader />
-      <SolutionDivisionDetail division={getSolutionDivision("ai")} />
-      <Footer />
-    </>
-  );
+  return <SolutionPage params={Promise.resolve({ slug: "ai" })} />;
 }

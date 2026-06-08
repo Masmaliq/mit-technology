@@ -16,9 +16,12 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+**/.DS_Store
 
 # env
 .env*
+.env.local.json
+ .env.local.json
 
 # vercel
 .vercel

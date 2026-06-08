@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { ArrowRight, Bot, Building2, Check, ShoppingCart, Workflow } from "lucide-react";
-import { packageCategories } from "@/data/packages";
+import type { PackageItem } from "@/lib/sanity/queries";
 
 const icons = [Building2, ShoppingCart, Workflow, Bot];
 
-function getStartingPrice(plans: { price: string }[]) {
-  return plans[0]?.price ?? "Custom";
-}
+type PricingProps = {
+  packages?: PackageItem[];
+};
 
-export function Pricing() {
+export function Pricing({ packages }: PricingProps) {
+  const items = packages?.filter((item) => item.title) ?? [];
+
   return (
     <section
       id="pricing"
@@ -30,14 +32,15 @@ export function Pricing() {
         </div>
 
         <div className="mt-14 grid gap-5 lg:grid-cols-2">
-          {packageCategories.map((category, index) => {
-            const Icon = icons[index];
-            const businessPlan = category.plans.find((plan) => plan.name === "Business");
+          {items.length > 0 ? (
+            items.map((item, index) => {
+            const Icon = icons[index % icons.length];
+            const features = item.features?.filter(Boolean) ?? [];
 
             return (
               <article
                 className="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glass-lg"
-                key={category.title}
+                key={item.slug || item.title}
               >
                 <div className="absolute right-0 top-0 h-36 w-36 translate-x-10 -translate-y-10 rounded-full bg-primary/10 blur-3xl transition duration-300 group-hover:bg-primary/20" />
 
@@ -46,9 +49,9 @@ export function Pricing() {
                     <Icon className="h-6 w-6" />
                   </div>
                   <Link
-                    href={category.href}
+                    href="/packages"
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition duration-300 group-hover:border-primary/40 group-hover:text-primary"
-                    aria-label={`View ${category.summaryLabel} details`}
+                    aria-label={`View ${item.title} details`}
                   >
                     <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
                   </Link>
@@ -56,23 +59,26 @@ export function Pricing() {
 
                 <div className="relative mt-7">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-                    {category.summaryLabel}
+                    {item.featured ? "Featured Package" : "Package"}
                   </p>
                   <h3 className="mt-3 text-3xl font-semibold tracking-tight text-navy">
-                    {category.title}
+                    {item.title}
                   </h3>
+                  {item.description ? (
+                    <p className="mt-3 leading-7 text-slate-600">{item.description}</p>
+                  ) : null}
                   <div className="mt-6">
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
                       Starting From
                     </p>
                     <p className="mt-2 text-5xl font-semibold tracking-tight text-navy">
-                      {getStartingPrice(category.plans)}
+                      {item.startingPrice || "Custom"}
                     </p>
                   </div>
                 </div>
 
                 <div className="relative mt-7 grid gap-3 sm:grid-cols-3">
-                  {category.highlights.map((feature) => (
+                  {features.slice(0, 3).map((feature) => (
                     <div
                       className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
                       key={feature}
@@ -87,39 +93,29 @@ export function Pricing() {
 
                 <div className="relative mt-7 rounded-2xl border border-slate-200 bg-white">
                   <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                    <span className="text-sm font-semibold text-navy">
-                      {category.plans.length} available packages
-                    </span>
-                    {businessPlan ? (
+                    <span className="text-sm font-semibold text-navy">{features.length} features</span>
+                    {item.featured ? (
                       <span className="rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
                         Most Popular
                       </span>
                     ) : null}
                   </div>
                   <div className="divide-y divide-slate-200">
-                    {category.plans.map((plan) => (
+                    {features.map((feature) => (
                       <div
                         className="flex items-center justify-between gap-4 px-4 py-4"
-                        key={`${category.title}-${plan.name}`}
+                        key={`${item.title}-${feature}`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-navy">{plan.name}</span>
-                          {plan.name === "Business" ? (
-                            <span className="hidden rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary sm:inline-flex">
-                              Most Popular
-                            </span>
-                          ) : null}
+                          <span className="text-sm font-semibold text-navy">{feature}</span>
                         </div>
-                        <span className="text-right text-base font-semibold text-primary">
-                          {plan.price}
-                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <Link
-                  href={category.href}
+                  href="/contact"
                   className="relative mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-primary"
                 >
                   View Details
@@ -127,7 +123,12 @@ export function Pricing() {
                 </Link>
               </article>
             );
-          })}
+          })
+          ) : (
+            <div className="rounded-[1.75rem] border border-slate-200 bg-white p-8 text-center text-slate-600 lg:col-span-2">
+              Package content is not available yet.
+            </div>
+          )}
         </div>
 
         <div className="mt-16 overflow-hidden rounded-[2rem] bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.32),transparent_34%),linear-gradient(135deg,#0f172a_0%,#172554_100%)] p-8 text-white shadow-glass-lg md:p-12">

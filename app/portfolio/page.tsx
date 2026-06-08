@@ -3,9 +3,32 @@ import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Footer } from "@/components/sections/Footer";
 import { PortfolioCard } from "@/components/ui/PortfolioCard";
-import { portfolioProjects } from "@/data/portfolio";
+import { getPortfolio } from "@/lib/sanity/fetch";
+import { createCmsMetadata } from "@/lib/sanity/metadata";
 
-export default function PortfolioPage() {
+export function generateMetadata() {
+  return createCmsMetadata({
+    page: "portfolio",
+    path: "/portfolio",
+    title: "Portfolio",
+    description: "Explore selected MIT portfolio work.",
+  });
+}
+
+function mapPortfolioProject(project: Awaited<ReturnType<typeof getPortfolio>>[number]) {
+  return {
+    title: project.title || "Portfolio Project",
+    category: project.category || "Selected Work",
+    description: project.description || "",
+    highlights: [project.client, project.category].filter((item): item is string => Boolean(item)),
+    featured: project.featured,
+  };
+}
+
+export default async function PortfolioPage() {
+  const portfolio = await getPortfolio();
+  const projects = portfolio.map(mapPortfolioProject);
+
   return (
     <>
       <SiteHeader />
@@ -27,9 +50,15 @@ export default function PortfolioPage() {
 
         <section className="px-6 py-20 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {portfolioProjects.map((project, index) => (
-              <PortfolioCard index={index} key={project.title} project={project} />
-            ))}
+            {projects.length > 0 ? (
+              projects.map((project, index) => (
+                <PortfolioCard index={index} key={project.title} project={project} />
+              ))
+            ) : (
+              <div className="rounded-[1.5rem] border border-slate-200 bg-white p-8 text-center text-slate-600 md:col-span-2 xl:col-span-3">
+                Portfolio content is not available yet.
+              </div>
+            )}
           </div>
         </section>
 

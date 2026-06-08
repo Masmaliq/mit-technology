@@ -1,0 +1,50 @@
+# MIT CMS Roadmap
+
+Version: V1
+Started: June 2026
+
+## Core CMS
+
+Status: In Progress
+
+[x] Homepage CMS
+[x] Hero CMS
+[x] Trust CMS
+[x] CTA CMS
+
+[ ] About CMS
+[ ] Solutions CMS
+[ ] Portfolio CMS
+[ ] Contact CMS
+[ ] Site Settings CMS
+[ ] WhatsApp CTA
+
+---
+
+## Growth CMS
+
+Status: Planning
+
+[ ] Packages CMS
+[ ] Navbar CMS
+[ ] Footer CMS
+[ ] Lead Form
+[ ] Supabase Leads
+[ ] Dashboard Leads
+[ ] Export CSV
+
+---
+
+## Enterprise CMS
+
+Status: Future
+
+[ ] Blog
+[ ] Authors
+[ ] Categories
+[ ] Media Library
+[ ] Multi User
+[ ] Analytics
+[ ] CRM Leads
+[ ] AI Assistant
+[ ] Custom Dashboard

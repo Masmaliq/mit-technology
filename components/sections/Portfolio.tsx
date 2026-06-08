@@ -1,9 +1,26 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PortfolioCard } from "@/components/ui/PortfolioCard";
-import { featuredPortfolioProjects } from "@/data/portfolio";
+import type { PortfolioProject } from "@/data/portfolio";
+import type { PortfolioItem } from "@/lib/sanity/queries";
 
-export function Portfolio() {
+function mapSanityPortfolio(projects: PortfolioItem[]): PortfolioProject[] {
+  return projects.map((project) => ({
+    title: project.title || "Portfolio Project",
+    category: project.category || "Selected Work",
+    description: project.description || "",
+    highlights: [project.client, project.category].filter((item): item is string => Boolean(item)),
+    featured: project.featured,
+  }));
+}
+
+type PortfolioProps = {
+  projects?: PortfolioItem[];
+};
+
+export function Portfolio({ projects }: PortfolioProps) {
+  const previewProjects = projects && projects.length > 0 ? mapSanityPortfolio(projects) : [];
+
   return (
     <section id="portfolio" aria-label="Portfolio" className="bg-navy py-24 text-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -30,9 +47,15 @@ export function Portfolio() {
         </div>
 
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {featuredPortfolioProjects.map((project, index) => (
-            <PortfolioCard dark index={index} key={project.title} project={project} />
-          ))}
+          {previewProjects.length > 0 ? (
+            previewProjects.map((project, index) => (
+              <PortfolioCard dark index={index} key={project.title} project={project} />
+            ))
+          ) : (
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/10 p-8 text-center text-slate-300 lg:col-span-3">
+              Portfolio content is not available yet.
+            </div>
+          )}
         </div>
       </div>
     </section>

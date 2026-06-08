@@ -1,20 +1,21 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const ADMIN_PASSWORD = "MaliqMIT2026";
-
 async function login(formData: FormData) {
   "use server";
 
+  const adminPassword = process.env.ADMIN_PASSWORD;
   const password = String(formData.get("password") || "");
 
-  if (password === ADMIN_PASSWORD) {
+  if (adminPassword && password === adminPassword) {
     const cookieStore = await cookies();
 
     cookieStore.set("mit_admin", "true", {
       httpOnly: true,
       path: "/",
       maxAge: 60 * 60 * 24,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     });
 
     redirect("/admin/leads");

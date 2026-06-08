@@ -1,0 +1,108 @@
+# MIT CMS Sanity Architecture
+
+## Site Settings (Single Document)
+
+### Company Information
+
+* Company Name
+* Tagline
+* Description
+
+### Contact Information
+
+* Phone
+* WhatsApp
+* Email
+* Address
+
+### Social Media
+
+* Instagram
+* LinkedIn
+* Facebook
+* YouTube
+
+### Branding
+
+* Logo
+* Favicon
+* Primary Color
+* Secondary Color
+
+---
+
+## Homepage (Single Document)
+
+### Hero
+
+### Trust
+
+### Statistics
+
+### Featured Solutions
+
+### Featured Portfolio
+
+### CTA
+
+---
+
+## About (Single Document)
+
+### Hero
+
+### Story
+
+### Vision
+
+### Mission
+
+### Timeline
+
+### Team
+
+---
+
+## Solutions (Collection)
+
+### Title
+
+### Slug
+
+### Description
+
+### Features
+
+---
+
+## Packages (Collection)
+
+### Title
+
+### Price
+
+### Description
+
+### Features
+
+---
+
+## Portfolio (Collection)
+
+### Title
+
+### Slug
+
+### Client
+
+### Gallery
+
+---
+
+## Contact (Single Document)
+
+### Contact Form
+
+### Google Maps
+
+### WhatsApp CTA

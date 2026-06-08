@@ -1,49 +1,36 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  Bot,
-  Building2,
   CheckCircle2,
   Layers3,
   ShieldCheck,
-  ShoppingCart,
-  Workflow
 } from "lucide-react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Footer } from "@/components/sections/Footer";
+import { getAbout } from "@/lib/sanity/fetch";
+import { createCmsMetadata } from "@/lib/sanity/metadata";
 
-const services = [
-  {
-    title: "Company Profile Website",
-    description: "Premium corporate presence for credibility, trust, and lead generation.",
-    icon: Building2
-  },
-  {
-    title: "Store & E-Commerce",
-    description: "Commerce systems for product discovery, checkout, and scalable operations.",
-    icon: ShoppingCart
-  },
-  {
-    title: "Web Application",
-    description: "Custom dashboards, portals, CRM, ERP, and workflow systems for teams.",
-    icon: Workflow
-  },
-  {
-    title: "AI Ecosystem",
-    description: "AI assistants, automation, knowledge bases, and productivity systems.",
-    icon: Bot
-  }
-];
+export async function generateMetadata() {
+  const about = await getAbout();
 
-const whyMit = [
-  "Business-first digital strategy before design execution",
-  "Premium interface quality with scalable technical foundations",
-  "Clear information architecture for trust and conversion",
-  "Systems built for growth, content ownership, and iteration",
-  "Corporate-ready delivery across web, apps, commerce, and AI"
-];
+  return createCmsMetadata({
+    page: "about",
+    path: "/about",
+    seoTitle: about.seoTitle,
+    seoDescription: about.seoDescription,
+    seoImage: about.seoImage,
+    seoKeywords: about.seoKeywords,
+    title: about.heroTitle,
+    description: about.heroDescription,
+  });
+}
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const about = await getAbout();
+  const mission = about.mission?.filter(Boolean) ?? [];
+  const coreValues = about.coreValues?.filter(Boolean) ?? [];
+  const statistics = about.statistics?.filter((item) => item.value || item.label) ?? [];
+
   return (
     <>
       <SiteHeader />
@@ -55,21 +42,22 @@ export default function AboutPage() {
                 About MIT
               </p>
               <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight text-navy md:text-7xl">
-                Building Digital Systems for Growing Companies
+                {about.heroTitle || "About content is not available yet."}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-                MIT designs digital foundations that help companies look credible, operate more
-                clearly, and scale into the next stage with confidence.
-              </p>
+              {about.heroDescription ? (
+                <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                  {about.heroDescription}
+                </p>
+              ) : null}
             </div>
             <div className="rounded-[2rem] border border-white/70 bg-white/75 p-4 shadow-glass-lg backdrop-blur-xl">
               <div className="rounded-[1.5rem] bg-navy p-6 text-white">
                 <Layers3 className="h-8 w-8 text-blue-200" />
                 <p className="mt-10 text-sm font-semibold uppercase tracking-[0.22em] text-blue-200">
-                  Digital systems studio
+                  {statistics[0]?.label || "CMS Overview"}
                 </p>
                 <p className="mt-4 text-3xl font-semibold tracking-tight">
-                  Web, commerce, application, and AI systems under one strategic foundation.
+                  {statistics[0]?.value || about.storyTitle || about.heroTitle}
                 </p>
               </div>
             </div>
@@ -83,56 +71,45 @@ export default function AboutPage() {
                 About MIT
               </p>
               <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl">
-                A digital partner for companies moving from presence to systems.
+                {about.storyTitle || about.heroTitle || "About"}
               </h2>
             </div>
             <div className="space-y-5 text-lg leading-8 text-slate-600">
-              <p>
-                MIT helps businesses create premium digital experiences that are not only visually
-                polished, but also structured for trust, conversion, operations, and long-term
-                growth.
-              </p>
-              <p>
-                From corporate websites and ecommerce to internal applications and AI ecosystems,
-                MIT focuses on building clean, scalable digital systems that support real business
-                needs.
-              </p>
+              {about.storyDescription ? <p>{about.storyDescription}</p> : null}
+              {about.heroDescription ? <p>{about.heroDescription}</p> : null}
             </div>
           </div>
         </section>
 
-        <section className="bg-slate-50 px-6 py-20 lg:px-8">
+        {coreValues.length > 0 ? (
+          <section className="bg-slate-50 px-6 py-20 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-                Services
+                Core Values
               </p>
               <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl">
-                Four core systems for modern companies.
+                The principles behind how MIT builds digital systems.
               </h2>
             </div>
             <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {services.map((service) => {
-                const Icon = service.icon;
-
-                return (
+              {coreValues.map((value) => (
                   <article
                     className="rounded-[1.5rem] border border-white bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-glass-lg"
-                    key={service.title}
+                    key={value}
                   >
                     <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-                      <Icon className="h-6 w-6" />
+                      <ShieldCheck className="h-6 w-6" />
                     </div>
                     <h3 className="mt-7 text-2xl font-semibold tracking-tight text-navy">
-                      {service.title}
+                      {value}
                     </h3>
-                    <p className="mt-3 leading-7 text-slate-600">{service.description}</p>
                   </article>
-                );
-              })}
+                ))}
             </div>
           </div>
         </section>
+        ) : null}
 
         <section className="px-6 py-20 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-2">
@@ -141,8 +118,7 @@ export default function AboutPage() {
                 Mission
               </p>
               <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy">
-                Build digital systems that make growing companies clearer, faster, and more
-                credible.
+                {mission[0] || "Mission content is not available yet."}
               </h2>
             </article>
             <article className="rounded-[1.75rem] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-8 shadow-sm">
@@ -150,14 +126,14 @@ export default function AboutPage() {
                 Vision
               </p>
               <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy">
-                Become a trusted digital systems partner for companies building serious growth
-                infrastructure.
+                {about.vision || "Vision content is not available yet."}
               </h2>
             </article>
           </div>
         </section>
 
-        <section className="bg-navy px-6 py-20 text-white lg:px-8">
+        {mission.length > 1 ? (
+          <section className="bg-navy px-6 py-20 text-white lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-300">
@@ -168,7 +144,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <div className="grid gap-3">
-              {whyMit.map((item) => (
+              {mission.slice(1).map((item) => (
                 <div
                   className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur"
                   key={item}
@@ -180,6 +156,7 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+        ) : null}
 
         <section className="px-6 py-24 lg:px-8">
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.32),transparent_34%),linear-gradient(135deg,#0f172a_0%,#172554_100%)] p-8 text-white shadow-glass-lg md:p-12">

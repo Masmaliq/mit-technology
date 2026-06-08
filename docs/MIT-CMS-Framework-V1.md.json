@@ -1,0 +1,39 @@
+# MIT CMS Framework V1
+
+MIT CMS adalah framework internal MIT Technology untuk membangun website company profile premium secara cepat, konsisten, dan scalable.
+
+## Core CMS
+
+* Homepage
+* About
+* Services / Solutions
+* Portfolio
+* Contact
+* Site Settings
+
+## Growth CMS
+
+Semua fitur Core CMS +
+
+* Packages
+* Navbar CMS
+* Footer CMS
+* Lead Form
+* Supabase Leads
+* Dashboard Leads
+* Export CSV
+* SEO Settings
+
+## Enterprise CMS
+
+Semua fitur Growth CMS +
+
+* Blog / Articles
+* Authors
+* Categories
+* Media Library
+* Multi User
+* Analytics
+* CRM Leads
+* AI Chat Assistant
+* Custom Dashboard

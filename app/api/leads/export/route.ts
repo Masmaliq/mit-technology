@@ -1,6 +1,14 @@
 import { supabase } from "@/lib/supabase";
+import { cookies } from "next/headers";
 
 export async function GET() {
+  const cookieStore = await cookies();
+  const adminCookie = cookieStore.get("mit_admin");
+
+  if (adminCookie?.value !== "true") {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const { data: leads } = await supabase
     .from("contact_leads")
     .select("*")

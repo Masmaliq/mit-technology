@@ -1,8 +1,11 @@
 import type { ClientLogoItem } from "@/lib/sanity/queries";
-import { ScaleIn } from "@/components/motion/Motion";
+import { TextReveal } from "@/components/motion/Motion";
 import { urlFor } from "@/sanity/lib/image";
 
 type ClientLogosProps = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
   logos?: ClientLogoItem[];
 };
 
@@ -38,60 +41,82 @@ function ClientLogoImage({ item, logoUrl }: { item: ClientLogoItem; logoUrl: str
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-center overflow-visible">
-      <img
-        alt={item.logo?.alt ?? item.name ?? "Client logo"}
-        className="block h-full w-full object-contain object-center opacity-[0.85] grayscale transition duration-300 ease-out group-hover:opacity-100 group-hover:grayscale-0"
-        src={logoUrl}
-      />
-    </div>
+    <img
+      alt={item.logo?.alt ?? item.name ?? "Client logo"}
+      className="block max-h-[70px] max-w-[86%] object-contain object-center opacity-[0.55] grayscale transition duration-200 ease-out group-hover:opacity-100 group-hover:grayscale-0"
+      src={logoUrl}
+    />
   );
 }
 
-export function ClientLogos({ logos = [] }: ClientLogosProps) {
+export function ClientLogos({ eyebrow, title, description, logos = [] }: ClientLogosProps) {
   const visibleLogos = logos.filter((item) => item.name && item.featured !== false);
+  const sectionEyebrow = eyebrow?.trim() || "";
+  const sectionTitle = title?.trim() || "";
+  const sectionDescription = description?.trim() || "";
 
   return (
-    <section aria-label="Client logos" className="bg-slate-950 py-24">
+    <section
+      aria-label="Client logos"
+      id="client-logos"
+      className="bg-[linear-gradient(180deg,#020817_0%,#020817_88%,#ffffff_100%)] py-12 pb-14 lg:py-16 lg:pb-20"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-300">
-            TRUSTED INFRASTRUCTURE PARTNER
-          </p>
-          <p className="mt-4 text-sm leading-6 text-slate-400">
-            Selected companies, platforms, and internal brands supported by MIT Technology.
-          </p>
+        <div className="mx-auto max-w-4xl text-center">
+          {sectionEyebrow ? (
+            <TextReveal
+              as="p"
+              className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/80"
+              direction="down"
+              mode="chars"
+              stagger={0.018}
+              text={sectionEyebrow}
+            />
+          ) : null}
+          {sectionTitle ? (
+            <TextReveal
+              as="h2"
+              className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-4xl lg:text-[2.75rem]"
+              direction="up"
+              mode="words"
+              text={sectionTitle}
+            />
+          ) : null}
+          {sectionDescription ? (
+            <TextReveal
+              as="p"
+              className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 md:text-base md:leading-7"
+              direction="up"
+              mode="lines"
+              text={sectionDescription}
+            />
+          ) : null}
         </div>
 
         {visibleLogos.length > 0 ? (
-          <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
-            {visibleLogos.map((item, index) => {
+          <div className="mx-auto mt-10 grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {visibleLogos.map((item) => {
               const logoUrl = getLogoUrl(item.logo);
-
               const logo = <ClientLogoImage item={item} logoUrl={logoUrl} />;
 
               return item.websiteUrl ? (
-                <ScaleIn className="h-full" key={item.name}>
-                  <a
-                    aria-label={item.name}
-                    className="client-logo-card group flex aspect-[2.4/1] w-full items-center justify-center rounded-[24px] border border-slate-200/70 bg-white px-[22px] py-4 shadow-[0_16px_48px_rgba(0,0,0,0.18)] transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-slate-300 hover:shadow-[0_34px_86px_rgba(0,0,0,0.34)] lg:aspect-[2.7/1] lg:px-7 lg:py-[18px]"
-                    href={item.websiteUrl}
-                    rel="noreferrer"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                    target="_blank"
-                  >
-                    {logo}
-                  </a>
-                </ScaleIn>
+                <a
+                  aria-label={item.name}
+                  className="client-logo-card group flex h-[106px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-white px-10 py-6"
+                  href={item.websiteUrl}
+                  key={item.name}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {logo}
+                </a>
               ) : (
-                <ScaleIn className="h-full" key={item.name}>
-                  <div
-                    className="client-logo-card group flex aspect-[2.4/1] w-full items-center justify-center rounded-[24px] border border-slate-200/70 bg-white px-[22px] py-4 shadow-[0_16px_48px_rgba(0,0,0,0.18)] transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-slate-300 hover:shadow-[0_34px_86px_rgba(0,0,0,0.34)] lg:aspect-[2.7/1] lg:px-7 lg:py-[18px]"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    {logo}
-                  </div>
-                </ScaleIn>
+                <div
+                  className="client-logo-card group flex h-[106px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-white px-10 py-6"
+                  key={item.name}
+                >
+                  {logo}
+                </div>
               );
             })}
           </div>

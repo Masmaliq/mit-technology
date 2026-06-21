@@ -1,17 +1,27 @@
 import { getNavbar, getSiteSettings } from "@/lib/sanity/fetch";
 import { SiteHeaderClient } from "./SiteHeaderClient";
 
-export async function SiteHeader() {
+type SiteHeaderProps = {
+  overlay?: boolean;
+};
+
+export async function SiteHeader({ overlay = false }: SiteHeaderProps) {
   const [navbar, siteSettings] = await Promise.all([getNavbar(), getSiteSettings()]);
   const logo = navbar.logo || siteSettings.logo;
+  const companyName = siteSettings.companyName || siteSettings.siteTitle || "MIT Technology";
+  const brandMode = navbar.brandMode === "image" ? "image" : "textOnly";
+  const logoUrl = brandMode === "image" ? logo?.url || "/mit-logo.png" : undefined;
 
   return (
     <SiteHeaderClient
-      logoUrl={logo?.url}
-      logoAlt={siteSettings.companyName || logo?.alt || "MIT"}
+      logoUrl={logoUrl}
+      logoAlt={logo?.alt || companyName}
+      brandName={companyName}
+      brandMode={brandMode}
       menuItems={navbar.menuItems}
       ctaLabel={navbar.ctaLabel}
       ctaHref={navbar.ctaHref}
+      overlay={overlay}
     />
   );
 }

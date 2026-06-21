@@ -1,51 +1,77 @@
+import { StaggerContainer, StaggerItem, TextReveal } from "@/components/motion/Motion";
 import type { ProcessItem } from "@/lib/sanity/queries";
 
 type ProcessProps = {
   processes?: ProcessItem[];
+  eyebrow?: string;
+  title?: string;
+  description?: string;
 };
 
-export function Process({ processes = [] }: ProcessProps) {
+const processFallback = {
+  eyebrow: "MIT GROWTH FRAMEWORK",
+  title: "Framework konsultasi untuk digital infrastructure, automation, dan AI.",
+  description:
+    "Dari arah strategi hingga sistem yang scalable, setiap tahap dirancang agar pertumbuhan bisnis lebih terstruktur.",
+};
+
+export function Process({ processes = [], eyebrow, title, description }: ProcessProps) {
   const visibleProcesses = processes.filter((item) => item.title && item.featured !== false);
+  const displayEyebrow = eyebrow?.trim() || processFallback.eyebrow;
+  const displayTitle = title?.trim() || processFallback.title;
+  const displayDescription = description?.trim() || processFallback.description;
 
   return (
-    <section id="process" aria-label="Process" className="bg-white py-24">
+    <section id="process" aria-label="Process" className="bg-white py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-            MIT Growth Framework
-          </p>
-          <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl">
-            A consulting framework for digital infrastructure, automation, and AI.
-          </h2>
-          <p className="mt-5 text-lg leading-8 text-slate-600">
-            From strategic clarity to scalable systems, every stage is designed to make growth more operational.
-          </p>
+          <TextReveal
+            as="p"
+            className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+            direction="down"
+            mode="chars"
+            stagger={0.018}
+            text={displayEyebrow}
+          />
+          <TextReveal
+            as="h2"
+            className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
+            direction="up"
+            mode="words"
+            text={displayTitle}
+          />
+          <TextReveal
+            as="p"
+            className="mt-5 text-lg leading-8 text-slate-600"
+            direction="up"
+            mode="lines"
+            text={displayDescription}
+          />
         </div>
 
         {visibleProcesses.length > 0 ? (
-          <div className="mt-16 grid gap-px overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-200 md:grid-cols-2 lg:grid-cols-5">
+          <StaggerContainer className="mt-8 grid gap-2 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-200 md:grid-cols-2 lg:mt-12 lg:grid-cols-5 lg:gap-px lg:rounded-[2rem]">
             {visibleProcesses.map((item, index) => (
-              <article
-                className="group flex min-h-[300px] flex-col justify-between bg-white p-7 transition duration-300 hover:bg-slate-50"
-                key={item.slug ?? item.title}
-              >
-                <div>
-                  <span className="block text-6xl font-semibold tracking-tight text-slate-200 transition duration-300 group-hover:text-primary/20">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  {item.icon ? (
-                    <p className="mt-8 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-                      {item.icon}
-                    </p>
-                  ) : null}
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold tracking-tight text-navy">{item.title}</h3>
-                  <p className="mt-4 leading-7 text-slate-600">{item.shortDescription}</p>
-                </div>
-              </article>
+              <StaggerItem className="h-full" key={item.slug ?? item.title}>
+                <article className="group flex flex-col bg-white p-4 transition duration-300 hover:bg-slate-50 lg:min-h-[300px] lg:justify-between lg:p-7">
+                  <div className="flex items-start justify-between gap-4 lg:block">
+                    <span className="block text-3xl font-semibold leading-none tracking-tight text-slate-200 transition duration-300 group-hover:text-primary/20 lg:text-6xl">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {item.icon ? (
+                      <p className="mt-1 text-right text-[0.66rem] font-semibold uppercase tracking-[0.2em] text-primary lg:mt-8 lg:text-left lg:text-xs lg:tracking-[0.24em]">
+                        {item.icon}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="mt-3 lg:mt-0">
+                    <h3 className="text-lg font-semibold tracking-tight text-navy lg:text-2xl">{item.title}</h3>
+                    <p className="mt-1.5 text-sm leading-[1.45] text-slate-600 lg:mt-4 lg:text-base lg:leading-7">{item.shortDescription}</p>
+                  </div>
+                </article>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 px-8 py-10 text-center">
             <p className="text-sm font-medium text-slate-500">

@@ -1,40 +1,67 @@
-import { StaggerContainer, StaggerItem } from "@/components/motion/Motion";
+import { ScaleIn, StaggerContainer, StaggerItem, TextReveal } from "@/components/motion/Motion";
 import type { ImpactMetricItem } from "@/lib/sanity/queries";
 
 type ImpactMetricsProps = {
   metrics?: ImpactMetricItem[];
+  eyebrow?: string;
+  title?: string;
+  description?: string;
 };
 
-export function ImpactMetrics({ metrics = [] }: ImpactMetricsProps) {
-  const visibleMetrics = metrics.filter((item) => item.value && item.label && item.featured !== false);
+export function ImpactMetrics({ metrics = [], eyebrow, title, description }: ImpactMetricsProps) {
+  const visibleMetrics = metrics.filter((item) => item.value && item.label);
+  const cleanLabel = (label?: string) => label?.replace(/\s+De$/, "").trim();
+  const displayEyebrow = eyebrow?.trim() || "Impact Metrics";
+  const displayTitle = title?.trim() || "Dampak terukur untuk pertumbuhan jangka panjang.";
+  const displayDescription = description?.trim() || "";
 
   return (
-    <section aria-label="Impact metrics" className="bg-white py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section aria-label="Impact metrics" className="bg-white py-5 md:py-10 lg:py-16">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#9A7B38]">
-            Impact Metrics
-          </p>
-          <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl">
-            Measurable momentum for long-term growth.
-          </h2>
+          <TextReveal
+            as="p"
+            className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+            direction="down"
+            mode="chars"
+            stagger={0.018}
+            text={displayEyebrow}
+          />
+          <TextReveal
+            as="h2"
+            className="mt-3 text-3xl font-semibold tracking-tight text-navy md:mt-4 md:text-5xl"
+            direction="up"
+            mode="words"
+            text={displayTitle}
+          />
+          {displayDescription ? (
+            <TextReveal
+              as="p"
+              className="mt-4 text-base leading-7 text-slate-600 md:text-lg md:leading-8"
+              direction="up"
+              mode="lines"
+              text={displayDescription}
+            />
+          ) : null}
         </div>
 
         {visibleMetrics.length > 0 ? (
-          <StaggerContainer className="mt-16 grid divide-y divide-slate-200 border-y border-slate-200 md:grid-cols-2 md:divide-x md:divide-y-0 lg:grid-cols-4">
+          <StaggerContainer className="mt-5 grid grid-cols-1 gap-2.5 min-[390px]:grid-cols-2 md:mt-10 md:divide-y md:divide-slate-200 md:border-y md:border-slate-200 lg:mt-12 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
             {visibleMetrics.map((item) => (
               <StaggerItem key={`${item.value}-${item.label}`}>
-                <article className="px-0 py-10 md:px-8 lg:px-10">
+                <article className="h-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 shadow-[0_14px_36px_rgba(15,23,42,0.04)] md:rounded-none md:border-0 md:bg-transparent md:px-8 md:py-10 md:shadow-none lg:px-10">
                   {item.icon ? (
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9A7B38]">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-primary md:text-xs md:tracking-[0.24em]">
                       {item.icon}
                     </p>
                   ) : null}
-                  <p className="mt-5 text-5xl font-semibold tracking-tight text-slate-950 md:text-6xl">
-                    {item.value}
-                  </p>
-                  <h3 className="mt-5 text-lg font-semibold text-slate-950">{item.label}</h3>
-                  <p className="mt-3 leading-7 text-slate-500">{item.description}</p>
+                  <ScaleIn>
+                    <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 md:mt-5 md:text-6xl">
+                      {item.value}
+                    </p>
+                  </ScaleIn>
+                  <h3 className="mt-1.5 text-sm font-semibold leading-5 text-slate-950 md:mt-5 md:text-lg">{cleanLabel(item.label)}</h3>
+                  <p className="mt-1.5 text-xs leading-5 text-slate-500 md:mt-3 md:text-base md:leading-7">{item.description}</p>
                 </article>
               </StaggerItem>
             ))}

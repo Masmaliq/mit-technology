@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ScaleIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import type { PortfolioItem } from "@/lib/sanity/queries";
+import { toUrlSlug } from "@/lib/routing/slug";
 import { urlFor } from "@/sanity/lib/image";
 
 type PortfolioProps = {
@@ -37,40 +38,40 @@ function getThumbnailUrl(project: PortfolioItem) {
 
 function getProjectHref(project: PortfolioItem) {
   if (project.caseStudySlug) {
-    return `/case-studies/${project.caseStudySlug}`;
+    return `/case-studies/${toUrlSlug(project.caseStudySlug)}`;
   }
 
   if (project.projectUrl) {
     return project.projectUrl;
   }
 
-  return `/portfolio#${project.slug}`;
+  return "/case-studies";
 }
 
 export function Portfolio({ projects }: PortfolioProps) {
   const previewProjects = projects?.filter((project) => project.title && project.slug) ?? [];
 
   return (
-    <section id="portfolio" aria-label="Portfolio" className="bg-white py-24">
+    <section id="selected-case-studies" aria-label="Selected case studies" className="bg-white py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-              Selected Work
+              Selected Case Studies
             </p>
             <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl">
-              Digital Systems Built For Real Business Needs
+              Digital Systems Built for Real Business Needs
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              Explore selected concepts and platforms across corporate websites, ecommerce, web
-              applications, and AI ecosystems.
+              Explore selected projects built across corporate websites, digital platforms, and
+              business systems.
             </p>
           </div>
           <Link
-            href="/portfolio"
+            href="/case-studies"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white shadow-glass-lg transition duration-300 hover:-translate-y-0.5 hover:bg-primary"
           >
-            View Portfolio
+            View Case Studies
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -79,7 +80,7 @@ export function Portfolio({ projects }: PortfolioProps) {
           {previewProjects.length > 0 ? (
             previewProjects.map((project) => {
               const thumbnailUrl = getThumbnailUrl(project);
-              const category = project.category || "Selected Work";
+              const category = project.category || "Case Study";
               const href = getProjectHref(project);
               const isExternal = href.startsWith("http");
               const cardContent = (
@@ -87,7 +88,7 @@ export function Portfolio({ projects }: PortfolioProps) {
                   <div className="relative aspect-[16/10] overflow-hidden rounded-[1.35rem] bg-[linear-gradient(135deg,#f8fbff_0%,#e8f0ff_100%)]">
                     {thumbnailUrl ? (
                       <Image
-                        alt={project.thumbnail?.alt || project.title || "Portfolio project"}
+                        alt={project.thumbnail?.alt || project.title || "Case study project"}
                         className="object-cover transition duration-[350ms] ease-out group-hover:scale-[1.04]"
                         fill
                         unoptimized
@@ -126,7 +127,7 @@ export function Portfolio({ projects }: PortfolioProps) {
                 <StaggerItem className="h-full" key={project.slug}>
                   <ScaleIn className="h-full">
                     <a
-                      className="group block h-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_20px_80px_rgba(15,23,42,0.06)] transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-primary/35 hover:shadow-[0_34px_108px_rgba(15,23,42,0.14)]"
+                      className="group block h-full overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-4 shadow-[0_18px_64px_rgba(15,23,42,0.055)] transition duration-[350ms] ease-out hover:-translate-y-2 hover:scale-[1.01] hover:border-primary/25 hover:shadow-[0_28px_88px_rgba(15,23,42,0.11)]"
                       href={href}
                       rel="noreferrer"
                       target="_blank"
@@ -139,7 +140,7 @@ export function Portfolio({ projects }: PortfolioProps) {
                 <StaggerItem className="h-full" key={project.slug}>
                   <ScaleIn className="h-full">
                     <Link
-                      className="group block h-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_20px_80px_rgba(15,23,42,0.06)] transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:border-primary/35 hover:shadow-[0_34px_108px_rgba(15,23,42,0.14)]"
+                      className="group block h-full overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-4 shadow-[0_18px_64px_rgba(15,23,42,0.055)] transition duration-[350ms] ease-out hover:-translate-y-2 hover:scale-[1.01] hover:border-primary/25 hover:shadow-[0_28px_88px_rgba(15,23,42,0.11)]"
                       href={href}
                     >
                       {cardContent}
@@ -150,7 +151,7 @@ export function Portfolio({ projects }: PortfolioProps) {
             })
           ) : (
             <div className="rounded-[1.5rem] border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-600 lg:col-span-3">
-              Portfolio content is not available yet.
+              Case study content is not available yet.
             </div>
           )}
         </StaggerContainer>

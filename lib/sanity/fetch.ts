@@ -1,6 +1,8 @@
 import { client } from "@/sanity/lib/client";
+import { getCaseStudyUrlSlug, toUrlSlug } from "@/lib/routing/slug";
 import {
   aboutQuery,
+  caseStudiesPageSettingsQuery,
   caseStudiesQuery,
   caseStudyBySlugQuery,
   clientLogosQuery,
@@ -8,28 +10,35 @@ import {
   footerQuery,
   homepageQuery,
   impactMetricsQuery,
+  innerPageBySlugQuery,
   navbarQuery,
+  packagesPageSettingsQuery,
   packagesQuery,
   portfolioQuery,
   processQuery,
   siteSettingsQuery,
   solutionBySlugQuery,
+  solutionsPageQuery,
   solutionsQuery,
   testimonialsQuery,
   type About,
+  type CaseStudiesPageSettings,
   type CaseStudyItem,
   type ClientLogoItem,
   type Contact,
   type Footer,
   type Homepage,
   type ImpactMetricItem,
+  type InnerPage,
   type Navbar,
+  type PackagesPageSettings,
   type PackageItem,
   type PortfolioItem,
   type ProcessItem,
   type SolutionItem,
   type SiteSettings,
   type TestimonialItem,
+  type SolutionsPage,
 } from "./queries";
 
 function getFetchOptions(tags: string[]) {
@@ -47,8 +56,23 @@ async function sanityFetch<T>(query: string, tags: string[], fallback: T): Promi
     const data = await client.fetch<T | null>(query, {}, getFetchOptions(tags));
     return data ?? fallback;
   } catch (error) {
-    console.error("Sanity fetch failed", error);
-    return fallback;
+    console.error("Sanity fetch failed, retrying with CDN", error);
+
+    try {
+      const data = await client.withConfig({ useCdn: true }).fetch<T | null>(
+        query,
+        {},
+        {
+          next: { revalidate: 10, tags },
+          perspective: "published",
+        }
+      );
+
+      return data ?? fallback;
+    } catch (retryError) {
+      console.error("Sanity CDN fetch failed", retryError);
+      return fallback;
+    }
   }
 }
 
@@ -60,8 +84,26 @@ export function getAbout() {
   return sanityFetch<About>(aboutQuery, ["about"], {});
 }
 
+export function getInnerPage(slug: string): Promise<InnerPage> {
+  return client
+    .fetch<InnerPage | null>(innerPageBySlugQuery, { slug }, getFetchOptions(["innerPages", `innerPage:${slug}`]))
+    .then((data) => data ?? {})
+    .catch((error) => {
+      console.error("Sanity fetch failed", error);
+      return {};
+    });
+}
+
+export function getSolutionsPage() {
+  return sanityFetch<SolutionsPage>(solutionsPageQuery, ["solutionsPage"], {});
+}
+
 export function getPackages() {
   return sanityFetch<PackageItem[]>(packagesQuery, ["packages"], []);
+}
+
+export function getPackagesPageSettings() {
+  return sanityFetch<PackagesPageSettings>(packagesPageSettingsQuery, ["packagesPageSettings"], {});
 }
 
 export function getPortfolio() {
@@ -70,6 +112,10 @@ export function getPortfolio() {
 
 export function getCaseStudies() {
   return sanityFetch<CaseStudyItem[]>(caseStudiesQuery, ["caseStudies"], []);
+}
+
+export function getCaseStudiesPageSettings() {
+  return sanityFetch<CaseStudiesPageSettings>(caseStudiesPageSettingsQuery, ["caseStudiesPageSettings"], {});
 }
 
 export function getClientLogos() {
@@ -96,7 +142,22 @@ export async function getCaseStudyBySlug(slug: string) {
       getFetchOptions(["caseStudies", `caseStudy:${slug}`])
     );
 
-    return data;
+    if (data) {
+      return data;
+    }
+
+    const caseStudies = await getCaseStudies();
+    const normalizedSlug = toUrlSlug(slug);
+
+    return (
+      caseStudies.find((caseStudy) => {
+        return (
+          getCaseStudyUrlSlug(caseStudy) === normalizedSlug ||
+          toUrlSlug(caseStudy.slug) === normalizedSlug ||
+          toUrlSlug(caseStudy.title) === normalizedSlug
+        );
+      }) ?? null
+    );
   } catch (error) {
     console.error("Sanity fetch failed", error);
     return null;

@@ -1,0 +1,447 @@
+import { defineField, defineType } from "sanity";
+import { seoFields } from "./objects/seoFields";
+
+const imageWithAlt = [
+  defineField({
+    name: "alt",
+    title: "Alt Text",
+    type: "string",
+  }),
+];
+
+export const innerPageType = defineType({
+  name: "innerPage",
+  title: "Site Pages",
+  type: "document",
+  fieldsets: [
+    {
+      name: "identity",
+      title: "Page Identity",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "hero",
+      title: "Hero Content",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "heroMedia",
+      title: "Hero Media",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "sectionBuilder",
+      title: "Section Builder",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "cardBuilder",
+      title: "Card Builder",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "media",
+      title: "Media Builder",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "blocks",
+      title: "Page Content Blocks",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "listing",
+      title: "Page Listing / Cards",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "footerCta",
+      title: "Page Footer CTA",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "seo",
+      title: "SEO Builder",
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
+  fields: [
+    defineField({
+      name: "pageName",
+      title: "Page Name",
+      type: "string",
+      fieldset: "identity",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      fieldset: "identity",
+      options: { source: "pageName" },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "heroContent",
+      title: "Hero Content",
+      type: "pageHeroContent",
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "heroMedia",
+      title: "Hero Media",
+      type: "pageHeroMedia",
+      fieldset: "heroMedia",
+    }),
+    defineField({
+      name: "sectionBuilder",
+      title: "Section Builder",
+      type: "pageSectionBuilder",
+      fieldset: "sectionBuilder",
+    }),
+    defineField({
+      name: "cardBuilder",
+      title: "Card Builder",
+      type: "array",
+      fieldset: "cardBuilder",
+      of: [{ type: "pageCardBuilder" }],
+    }),
+    defineField({
+      name: "mediaBuilder",
+      title: "Media Builder",
+      type: "pageMediaBuilder",
+      fieldset: "media",
+    }),
+    defineField({
+      name: "seoBuilder",
+      title: "SEO Builder",
+      type: "pageSeoBuilder",
+      fieldset: "seo",
+    }),
+    defineField({
+      name: "heroEyebrow",
+      title: "Legacy Hero Eyebrow",
+      type: "string",
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "heroTitle",
+      title: "Legacy Hero Title",
+      type: "string",
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "heroDescription",
+      title: "Legacy Hero Description",
+      type: "text",
+      rows: 3,
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "heroBackgroundImage",
+      title: "Legacy Hero Background Image",
+      type: "image",
+      fieldset: "heroMedia",
+      options: { hotspot: true },
+      fields: imageWithAlt,
+    }),
+    defineField({
+      name: "heroMotionVideoMp4",
+      title: "Legacy Hero Video MP4",
+      type: "file",
+      fieldset: "heroMedia",
+      options: { accept: "video/mp4" },
+    }),
+    defineField({
+      name: "heroPosterImage",
+      title: "Legacy Hero Poster Image",
+      type: "image",
+      fieldset: "heroMedia",
+      options: { hotspot: true },
+      fields: imageWithAlt,
+    }),
+    defineField({
+      name: "heroOverlayOpacity",
+      title: "Legacy Hero Overlay Opacity",
+      type: "number",
+      fieldset: "heroMedia",
+      initialValue: 45,
+      validation: (Rule) => Rule.min(0).max(100),
+    }),
+    defineField({
+      name: "heroPrimaryButtonLabel",
+      title: "Hero Primary Button Label",
+      type: "string",
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "heroPrimaryButtonLink",
+      title: "Hero Primary Button Link",
+      type: "string",
+      fieldset: "hero",
+    }),
+    defineField({
+      name: "sectionEyebrow",
+      title: "Section Eyebrow",
+      type: "string",
+      fieldset: "media",
+    }),
+    defineField({
+      name: "sectionTitle",
+      title: "Section Title",
+      type: "string",
+      fieldset: "media",
+    }),
+    defineField({
+      name: "sectionDescription",
+      title: "Section Description",
+      type: "text",
+      rows: 3,
+      fieldset: "media",
+    }),
+    defineField({
+      name: "sectionMediaImage",
+      title: "Section Media Image",
+      type: "image",
+      fieldset: "media",
+      options: { hotspot: true },
+      fields: imageWithAlt,
+    }),
+    defineField({
+      name: "sectionMediaVideo",
+      title: "Section Media Video",
+      type: "file",
+      fieldset: "media",
+      options: { accept: "video/mp4,video/webm" },
+    }),
+    defineField({
+      name: "mediaLayout",
+      title: "Media Layout",
+      type: "string",
+      fieldset: "media",
+      options: {
+        list: [
+          { title: "Left", value: "left" },
+          { title: "Right", value: "right" },
+          { title: "Full", value: "full" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "right",
+    }),
+    defineField({
+      name: "contentBlocks",
+      title: "Content Blocks",
+      type: "array",
+      fieldset: "blocks",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "blockTitle", title: "Block Title", type: "string" }),
+            defineField({ name: "blockDescription", title: "Block Description", type: "text", rows: 3 }),
+            defineField({
+              name: "items",
+              title: "Items",
+              type: "array",
+              of: [
+                {
+                  type: "object",
+                  fields: [
+                    defineField({ name: "itemTitle", title: "Item Title", type: "string" }),
+                    defineField({ name: "itemDescription", title: "Item Description", type: "text", rows: 3 }),
+                    defineField({
+                      name: "itemImage",
+                      title: "Item Image",
+                      type: "image",
+                      options: { hotspot: true },
+                      fields: imageWithAlt,
+                    }),
+                    defineField({ name: "itemLink", title: "Item Link", type: "string" }),
+                  ],
+                  preview: {
+                    select: { title: "itemTitle", subtitle: "itemDescription", media: "itemImage" },
+                  },
+                },
+              ],
+            }),
+          ],
+          preview: {
+            select: { title: "blockTitle", subtitle: "blockDescription" },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "listingEyebrow",
+      title: "Listing Eyebrow",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "listingTitle",
+      title: "Listing Title",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "listingDescription",
+      title: "Listing Description",
+      type: "text",
+      rows: 3,
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "listingCtaLabel",
+      title: "Listing CTA Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "listingCtaUrl",
+      title: "Listing CTA URL",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "emptyStateText",
+      title: "Empty State Text",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "cardLabel",
+      title: "Default Card Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "featuredCardLabel",
+      title: "Featured Card Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "featuredBadgeLabel",
+      title: "Featured Badge Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "priceLabel",
+      title: "Price Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "scopeLabel",
+      title: "Scope Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "packageCtaLabel",
+      title: "Package Card CTA Label",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "packageCtaUrl",
+      title: "Package Card CTA URL",
+      type: "string",
+      fieldset: "listing",
+    }),
+    defineField({
+      name: "listingSupportItems",
+      title: "Listing Support Items",
+      type: "array",
+      fieldset: "listing",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string" }),
+            defineField({ name: "description", title: "Description", type: "text", rows: 2 }),
+          ],
+          preview: {
+            select: { title: "title", subtitle: "description" },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "listingBlocks",
+      title: "Manual Listing Blocks",
+      type: "array",
+      fieldset: "listing",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string" }),
+            defineField({ name: "category", title: "Category / Label", type: "string" }),
+            defineField({ name: "description", title: "Description", type: "text", rows: 3 }),
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              options: { hotspot: true },
+              fields: imageWithAlt,
+            }),
+            defineField({ name: "link", title: "Link", type: "string" }),
+            defineField({
+              name: "items",
+              title: "Items",
+              type: "array",
+              of: [{ type: "string" }],
+            }),
+            defineField({ name: "highlighted", title: "Highlighted", type: "boolean" }),
+          ],
+          preview: {
+            select: { title: "title", subtitle: "category", media: "image" },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "ctaTitle",
+      title: "CTA Title",
+      type: "string",
+      fieldset: "footerCta",
+    }),
+    defineField({
+      name: "ctaDescription",
+      title: "CTA Description",
+      type: "text",
+      rows: 3,
+      fieldset: "footerCta",
+    }),
+    defineField({
+      name: "ctaButtonLabel",
+      title: "CTA Button Label",
+      type: "string",
+      fieldset: "footerCta",
+    }),
+    defineField({
+      name: "ctaButtonLink",
+      title: "CTA Button Link",
+      type: "string",
+      fieldset: "footerCta",
+    }),
+    ...seoFields.map((field) => ({ ...field, fieldset: "seo" })),
+  ],
+  preview: {
+    select: {
+      title: "pageName",
+      subtitle: "slug.current",
+      media: "heroBackgroundImage",
+    },
+    prepare({ title, subtitle, media }) {
+      return {
+        title: title || "Site Page",
+        subtitle: subtitle ? `/${subtitle}` : "Inner page content",
+        media,
+      };
+    },
+  },
+});

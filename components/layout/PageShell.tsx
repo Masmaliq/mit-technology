@@ -1,21 +1,27 @@
 import type { ReactNode } from "react";
 import { Footer } from "@/components/sections/Footer";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { getSiteSettings } from "@/lib/sanity/fetch";
 
 type PageShellProps = {
   title: string;
   children?: ReactNode;
 };
 
-export function PageShell({ title, children }: PageShellProps) {
+export async function PageShell({ title, children }: PageShellProps) {
+  const settings = await getSiteSettings();
+  const brandName = settings.companyName || settings.siteTitle || "";
+
   return (
     <>
       <SiteHeader />
       <main className="min-h-[60vh] bg-white px-6 py-24 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-            MIT Technology
-          </p>
+          {brandName ? (
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+              {brandName}
+            </p>
+          ) : null}
           <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-navy md:text-6xl">
             {title}
           </h1>

@@ -12,6 +12,20 @@ export const navbarType = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: "brandMode",
+      title: "Brand Mode",
+      type: "string",
+      initialValue: "textOnly",
+      options: {
+        list: [
+          { title: "Text Only", value: "textOnly" },
+          { title: "Image Logo", value: "image" },
+        ],
+        layout: "radio",
+      },
+      description: "Choose whether the global header and footer render a text logo or uploaded image logo.",
+    }),
+    defineField({
       name: "menuItems",
       title: "Menu Items",
       type: "array",

@@ -45,9 +45,8 @@ export async function createCmsMetadata(input: MetadataInput = {}): Promise<Meta
     input.seoTitle ||
     pageSeo?.title ||
     input.title ||
-    siteSettings.siteTitle ||
     siteSettings.companyName ||
-    "MIT";
+    siteSettings.siteTitle;
   const description =
     input.seoDescription ||
     pageSeo?.description ||

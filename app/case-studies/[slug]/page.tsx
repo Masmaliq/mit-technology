@@ -3,8 +3,14 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, Quote } from "lucide-react";
 import { createCmsMetadata } from "@/lib/sanity/metadata";
 import { getCaseStudies, getCaseStudyBySlug } from "@/lib/sanity/fetch";
+import type { SanityImageValue } from "@/lib/sanity/queries";
+import { getCaseStudyUrlSlug } from "@/lib/routing/slug";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Footer } from "@/components/sections/Footer";
+import { CaseStudyGallery } from "@/components/sections/CaseStudyGallery";
+import { VisualCmsLayer } from "@/components/visual/VisualCmsLayer";
+import { hasHeroVisualImage } from "@/lib/visual";
+import { urlFor } from "@/sanity/lib/image";
 
 type CaseStudyPageProps = {
   params: Promise<{
@@ -12,13 +18,42 @@ type CaseStudyPageProps = {
   }>;
 };
 
+function getCaseStudyImageUrl(image?: SanityImageValue) {
+  if (!image) {
+    return "";
+  }
+
+  try {
+    const imageUrl = urlFor(image)
+      .width(1400)
+      .height(900)
+      .fit("crop")
+      .quality(85)
+      .auto("format")
+      .url();
+
+    if (imageUrl.startsWith("http")) {
+      return imageUrl;
+    }
+  } catch {
+    // Fall through to the resolved asset URL from the Sanity query.
+  }
+
+  if (image.url?.startsWith("http")) {
+    return image.url;
+  }
+
+  return image.asset?.url?.startsWith("http") ? image.asset.url : "";
+}
+
 export async function generateStaticParams() {
   const caseStudies = await getCaseStudies();
 
   return caseStudies
-    .filter((caseStudy) => caseStudy.slug)
+    .map((caseStudy) => getCaseStudyUrlSlug(caseStudy))
+    .filter(Boolean)
     .map((caseStudy) => ({
-      slug: caseStudy.slug as string,
+      slug: caseStudy,
     }));
 }
 
@@ -40,42 +75,61 @@ export async function generateMetadata({ params }: CaseStudyPageProps) {
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
   const caseStudy = await getCaseStudyBySlug(slug);
-  const gallery = caseStudy?.gallery?.filter((image) => image.url) ?? [];
 
   if (!caseStudy?.title) {
     notFound();
   }
 
   const title = caseStudy.title;
+  const visualPage = caseStudy.visualSettings?.pageSettings;
+  const hasCmsHeroVisual = hasHeroVisualImage(caseStudy.visualSettings);
+  const featuredImageUrl = getCaseStudyImageUrl(caseStudy.featuredImage);
+  const gallery = (caseStudy.gallery ?? [])
+    .map((image) => ({
+      src: getCaseStudyImageUrl(image),
+      alt: image.alt || title,
+      caption: image.caption,
+    }))
+    .filter((image) => image.src);
 
   return (
     <>
       <SiteHeader />
       <main className="bg-white">
-        <section className="bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.14),transparent_34%),linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-6 py-20 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.86fr] lg:items-center">
+        <section
+          className={`relative isolate overflow-hidden px-6 py-20 lg:px-8 ${
+            hasCmsHeroVisual ? "bg-slate-950 text-white" : "bg-white text-navy"
+          }`}
+        >
+          <VisualCmsLayer settings={caseStudy.visualSettings} variant="hero" />
+          <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.86fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-                {caseStudy.industry || "Case Study"}
+              <p className={`text-sm font-semibold uppercase tracking-[0.24em] ${hasCmsHeroVisual ? "text-blue-200" : "text-primary"}`}>
+                {visualPage?.heroEyebrowText || caseStudy.industry || "Case Study"}
               </p>
-              <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight text-navy md:text-7xl">
-                {title}
+              <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
+                {visualPage?.heroTitle || title}
               </h1>
-              {caseStudy.client ? (
-                <p className="mt-6 text-lg font-semibold text-slate-600">{caseStudy.client}</p>
+              {visualPage?.heroDescription || caseStudy.client ? (
+                <p className={`mt-6 text-lg font-semibold ${hasCmsHeroVisual ? "text-slate-200" : "text-slate-600"}`}>
+                  {visualPage?.heroDescription || caseStudy.client}
+                </p>
               ) : null}
             </div>
             <div className="relative min-h-80 overflow-hidden rounded-[2rem] border border-white/70 bg-white/75 shadow-glass-lg backdrop-blur-xl">
-              {caseStudy.featuredImage?.url ? (
+              {featuredImageUrl ? (
                 <Image
-                  src={caseStudy.featuredImage.url}
-                  alt={caseStudy.featuredImage.alt || title}
+                  src={featuredImageUrl}
+                  alt={caseStudy.featuredImage?.alt || title}
                   fill
                   priority
+                  unoptimized
                   sizes="(min-width: 1024px) 42vw, 100vw"
                   className="object-cover"
                 />
-              ) : null}
+              ) : (
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_24%,rgba(37,99,235,0.2),transparent_32%),linear-gradient(135deg,#f8fbff_0%,#e8f0ff_100%)]" />
+              )}
             </div>
           </div>
         </section>
@@ -112,26 +166,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           </section>
         ) : null}
 
-        {gallery.length > 0 ? (
-          <section className="px-6 py-20 lg:px-8">
-            <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2">
-              {gallery.map((image) => (
-                <div
-                  className="relative min-h-80 overflow-hidden rounded-[1.5rem] border border-slate-200"
-                  key={image.url}
-                >
-                  <Image
-                    src={image.url as string}
-                    alt={image.alt || title}
-                    fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        ) : null}
+        <CaseStudyGallery images={gallery} />
       </main>
       <Footer />
     </>

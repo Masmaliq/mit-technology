@@ -1,0 +1,40 @@
+const healthItems = [
+  { label: "SEO Status", badge: "Score: 74", badgeClass: "bg-amber-100 text-amber-700" },
+  { label: "Missing Images", badge: "Lengkap", badgeClass: "bg-emerald-100 text-emerald-700" },
+  { label: "Missing CTA", badge: "Lengkap", badgeClass: "bg-emerald-100 text-emerald-700" },
+  { label: "Draft Content", badge: "3 Draft", badgeClass: "bg-amber-100 text-amber-700" },
+  { label: "Product Asset", badge: "Uploaded", badgeClass: "bg-emerald-100 text-emerald-700" },
+  { label: "Poster Image", badge: "Uploaded", badgeClass: "bg-emerald-100 text-emerald-700" },
+  { label: "Mobile Fallback", badge: "Missing", badgeClass: "bg-red-100 text-red-700" },
+];
+
+export default function WebsiteHealthPanel() {
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="border-b border-slate-100 bg-gradient-to-r from-red-50 to-pink-50 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-slate-900">Website Health</h3>
+          <span className="inline-flex items-center gap-1 rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
+            2 Issue
+          </span>
+        </div>
+      </div>
+
+      <div className="space-y-3 p-6">
+        {healthItems.map((item) => (
+          <div key={item.label} className="flex items-center justify-between">
+            <span className="text-sm text-slate-700">{item.label}</span>
+            <span className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold ${item.badgeClass}`}>
+              {item.badge}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-3">
+        <span className="text-xs text-slate-500">2 item perlu diperbaiki</span>
+        <button className="text-xs font-semibold text-blue-600 hover:text-blue-700">Fix Issues →</button>
+      </div>
+    </div>
+  );
+}

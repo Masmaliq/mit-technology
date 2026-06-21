@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { VisualCmsLayer } from "@/components/visual/VisualCmsLayer";
 import type { SolutionItem } from "@/lib/sanity/queries";
+import { hasHeroVisualImage } from "@/lib/visual";
 
 type SolutionDivisionDetailProps = {
   solution: SolutionItem;
@@ -10,37 +12,47 @@ export function SolutionDivisionDetail({ solution }: SolutionDivisionDetailProps
   const features = solution.features?.filter(Boolean) ?? [];
   const benefits = solution.benefits?.filter(Boolean) ?? [];
   const process = solution.process?.filter((item) => item.title || item.description) ?? [];
+  const visualPage = solution.visualSettings?.pageSettings;
+  const hasCmsHeroVisual = hasHeroVisualImage(solution.visualSettings);
+  const heroEyebrow = visualPage?.heroEyebrowText || "";
+  const heroTitle = visualPage?.heroTitle || solution.title;
+  const heroDescription = visualPage?.heroDescription || solution.fullDescription || solution.shortDescription;
+  const hasHeroCta = Boolean(solution.ctaLabel && solution.ctaHref);
+  const hasFinalCta = Boolean(solution.ctaTitle || solution.ctaDescription || (solution.ctaLabel && solution.ctaHref));
 
   return (
     <main className="bg-white">
-      <section className="bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.14),transparent_34%),linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-6 py-20 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-            MIT Solutions
-          </p>
-          <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight text-navy md:text-7xl">
-            {solution.title}
-          </h1>
-          {solution.fullDescription || solution.shortDescription ? (
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600">
-              {solution.fullDescription || solution.shortDescription}
+      <section
+        className={`relative isolate overflow-hidden px-6 py-20 lg:px-8 ${
+          hasCmsHeroVisual ? "bg-slate-950 text-white" : "bg-white text-navy"
+        }`}
+      >
+        <VisualCmsLayer settings={solution.visualSettings} variant="hero" />
+        <div className="relative mx-auto max-w-7xl">
+          {heroEyebrow ? (
+            <p className={`text-sm font-semibold uppercase tracking-[0.24em] ${hasCmsHeroVisual ? "text-blue-200" : "text-primary"}`}>
+              {heroEyebrow}
             </p>
           ) : null}
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+          <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
+            {heroTitle}
+          </h1>
+          {heroDescription ? (
+            <p className={`mt-6 max-w-3xl text-lg leading-8 ${hasCmsHeroVisual ? "text-slate-200" : "text-slate-600"}`}>
+              {heroDescription}
+            </p>
+          ) : null}
+          {hasHeroCta ? (
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link
-              href={solution.ctaHref || "/contact"}
+              href={solution.ctaHref as string}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-4 text-sm font-semibold text-white shadow-glass-lg transition duration-300 hover:-translate-y-1 hover:bg-blue-700"
             >
-              {solution.ctaLabel || "Discuss this solution"}
+              {solution.ctaLabel}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/packages"
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/80 px-6 py-4 text-sm font-semibold text-navy transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:text-primary"
-            >
-              View related packages
-            </Link>
           </div>
+          ) : null}
         </div>
       </section>
 
@@ -50,9 +62,11 @@ export function SolutionDivisionDetail({ solution }: SolutionDivisionDetailProps
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
               Overview
             </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy">
-              {solution.shortDescription || "Built as a focused solution system."}
-            </h2>
+            {solution.shortDescription ? (
+              <h2 className="mt-4 text-4xl font-semibold tracking-tight text-navy">
+                {solution.shortDescription}
+              </h2>
+            ) : null}
             {solution.fullDescription ? (
               <p className="mt-5 leading-8 text-slate-600">{solution.fullDescription}</p>
             ) : null}
@@ -72,7 +86,7 @@ export function SolutionDivisionDetail({ solution }: SolutionDivisionDetailProps
               ))
             ) : (
               <div className="rounded-[1.25rem] border border-slate-200 bg-white p-5 text-slate-600 sm:col-span-2">
-                Feature content is not available yet.
+                Content is not available yet.
               </div>
             )}
           </div>
@@ -85,9 +99,6 @@ export function SolutionDivisionDetail({ solution }: SolutionDivisionDetailProps
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
               Benefits
             </p>
-            <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-navy">
-              Business outcomes this solution supports.
-            </h2>
           </div>
 
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
@@ -106,7 +117,7 @@ export function SolutionDivisionDetail({ solution }: SolutionDivisionDetailProps
               ))
             ) : (
               <div className="rounded-[1.5rem] border border-slate-200 bg-white p-8 text-center text-slate-600 lg:col-span-3">
-                Benefit content is not available yet.
+                Content is not available yet.
               </div>
             )}
           </div>
@@ -139,32 +150,35 @@ export function SolutionDivisionDetail({ solution }: SolutionDivisionDetailProps
         </section>
       ) : null}
 
+      {hasFinalCta ? (
       <section className="px-6 py-24 lg:px-8">
         <div className="mx-auto max-w-7xl rounded-[2rem] bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.32),transparent_34%),linear-gradient(135deg,#0f172a_0%,#172554_100%)] p-8 text-white shadow-glass-lg md:p-12 lg:p-16">
           <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-200">
-                CTA
-              </p>
-              <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
-                {solution.ctaTitle || "Build with the right MIT solution."}
-              </h2>
+              {solution.ctaTitle ? (
+                <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
+                  {solution.ctaTitle}
+                </h2>
+              ) : null}
               {solution.ctaDescription ? (
                 <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
                   {solution.ctaDescription}
                 </p>
               ) : null}
             </div>
-            <Link
-              href={solution.ctaHref || "/contact"}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-semibold text-navy transition duration-300 hover:-translate-y-1 hover:bg-blue-50"
-            >
-              {solution.ctaLabel || "Start consultation"}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {solution.ctaLabel && solution.ctaHref ? (
+              <Link
+                href={solution.ctaHref}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-semibold text-navy transition duration-300 hover:-translate-y-1 hover:bg-blue-50"
+              >
+                {solution.ctaLabel}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : null}
           </div>
         </div>
       </section>
+      ) : null}
     </main>
   );
 }

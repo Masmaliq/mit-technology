@@ -13,7 +13,7 @@ export const seoFields = [
   }),
   defineField({
     name: "seoImage",
-    title: "SEO Image",
+    title: "OpenGraph Image",
     type: "image",
     options: { hotspot: true },
   }),

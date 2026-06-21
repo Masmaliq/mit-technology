@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import type { CaseStudyItem } from "@/lib/sanity/queries";
+import { getCaseStudyUrlSlug } from "@/lib/routing/slug";
 import { urlFor } from "@/sanity/lib/image";
 
 type CaseStudyCardProps = {
   caseStudy: CaseStudyItem;
   dark?: boolean;
+  ctaLabel?: string;
 };
 
 function getFeaturedImageUrl(caseStudy: CaseStudyItem) {
@@ -35,17 +37,18 @@ function getFeaturedImageUrl(caseStudy: CaseStudyItem) {
   return image.url?.startsWith("http") ? image.url : "";
 }
 
-export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
-  const href = caseStudy.slug ? `/case-studies/${caseStudy.slug}` : "/case-studies";
+export function CaseStudyCard({ caseStudy, dark = false, ctaLabel }: CaseStudyCardProps) {
+  const slug = getCaseStudyUrlSlug(caseStudy);
+  const href = slug ? `/case-studies/${slug}` : "/case-studies";
   const featuredImage = caseStudy.featuredImage;
   const featuredImageUrl = getFeaturedImageUrl(caseStudy);
 
   return (
     <article
-      className={`group h-full overflow-hidden rounded-[1.5rem] border p-4 transition duration-[350ms] ease-out hover:-translate-y-2.5 hover:scale-[1.015] hover:shadow-glass-lg ${
+      className={`group h-full overflow-hidden rounded-[1.5rem] border p-4 shadow-[0_16px_52px_rgba(15,23,42,0.045)] transition duration-[350ms] ease-out hover:-translate-y-1.5 hover:shadow-[0_28px_86px_rgba(15,23,42,0.11)] ${
         dark
-          ? "border-white/10 bg-white/10 text-white hover:border-blue-300/40 hover:bg-white/[0.14]"
-          : "border-slate-200 bg-white text-navy hover:border-primary/40"
+          ? "border-white/10 bg-white/10 text-white hover:border-blue-300/30 hover:bg-white/[0.13]"
+          : "border-slate-200/80 bg-white text-navy hover:border-primary/25"
       }`}
     >
       <div className="relative aspect-[16/10] overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-blue-500/30 via-sky-400/15 to-white/10">
@@ -77,7 +80,7 @@ export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
         <p className={`text-sm font-semibold ${dark ? "text-blue-200" : "text-primary"}`}>
           {caseStudy.industry || caseStudy.client || "Case Study"}
         </p>
-        <h3 className="mt-2 text-2xl font-semibold tracking-tight">
+        <h3 className="mt-2 text-2xl font-semibold tracking-tight transition duration-300 ease-out group-hover:translate-x-1 group-hover:text-primary">
           {caseStudy.title || "Untitled Case Study"}
         </h3>
         {caseStudy.result || caseStudy.solution ? (
@@ -106,7 +109,7 @@ export function CaseStudyCard({ caseStudy, dark = false }: CaseStudyCardProps) {
             dark ? "text-white hover:text-blue-200" : "text-primary hover:text-blue-700"
           }`}
         >
-          View Case Study
+          {ctaLabel || "View"}
           <ArrowRight className="h-4 w-4 transition duration-300 group-hover:translate-x-1" />
         </Link>
       </div>

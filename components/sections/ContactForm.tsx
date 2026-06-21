@@ -6,9 +6,30 @@ import { supabase } from "@/lib/supabase";
 type ContactFormProps = {
   formTitle?: string;
   formDescription?: string;
+  namePlaceholder?: string;
+  emailPlaceholder?: string;
+  phonePlaceholder?: string;
+  companyPlaceholder?: string;
+  messagePlaceholder?: string;
+  submitButtonLabel?: string;
+  submittingLabel?: string;
+  successMessage?: string;
+  errorPrefix?: string;
 };
 
-export function ContactForm({ formTitle, formDescription }: ContactFormProps) {
+export function ContactForm({
+  formTitle,
+  formDescription,
+  namePlaceholder,
+  emailPlaceholder,
+  phonePlaceholder,
+  companyPlaceholder,
+  messagePlaceholder,
+  submitButtonLabel,
+  submittingLabel,
+  successMessage,
+  errorPrefix,
+}: ContactFormProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -37,7 +58,7 @@ export function ContactForm({ formTitle, formDescription }: ContactFormProps) {
 
     if (error) {
       console.error("SUPABASE ERROR:", error);
-      setErrorMessage(error.message || "Pesan gagal dikirim.");
+      setErrorMessage(error.message || "Failed to send message.");
       return;
     }
 
@@ -59,7 +80,7 @@ export function ContactForm({ formTitle, formDescription }: ContactFormProps) {
       <input
         name="name"
         required
-        placeholder="Nama lengkap"
+        placeholder={namePlaceholder || "Name"}
         className="w-full rounded-2xl border border-slate-200 px-5 py-4 outline-none focus:border-slate-900"
       />
 
@@ -67,19 +88,19 @@ export function ContactForm({ formTitle, formDescription }: ContactFormProps) {
         name="email"
         type="email"
         required
-        placeholder="Email"
+        placeholder={emailPlaceholder || "Email"}
         className="w-full rounded-2xl border border-slate-200 px-5 py-4 outline-none focus:border-slate-900"
       />
 
       <input
         name="phone"
-        placeholder="Nomor WhatsApp"
+        placeholder={phonePlaceholder || "Phone"}
         className="w-full rounded-2xl border border-slate-200 px-5 py-4 outline-none focus:border-slate-900"
       />
 
       <input
         name="company"
-        placeholder="Nama perusahaan"
+        placeholder={companyPlaceholder || "Company"}
         className="w-full rounded-2xl border border-slate-200 px-5 py-4 outline-none focus:border-slate-900"
       />
 
@@ -87,7 +108,7 @@ export function ContactForm({ formTitle, formDescription }: ContactFormProps) {
         name="message"
         required
         rows={6}
-        placeholder="Ceritakan kebutuhan project Anda"
+        placeholder={messagePlaceholder || "Message"}
         className="w-full rounded-2xl border border-slate-200 px-5 py-4 outline-none focus:border-slate-900"
       />
 
@@ -96,18 +117,18 @@ export function ContactForm({ formTitle, formDescription }: ContactFormProps) {
         disabled={loading}
         className="rounded-full bg-slate-950 px-8 py-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-60"
       >
-        {loading ? "Mengirim..." : "Kirim Pesan"}
+        {loading ? submittingLabel || "Sending..." : submitButtonLabel || "Send"}
       </button>
 
       {success && (
         <p className="text-sm font-medium text-green-600">
-          Pesan berhasil dikirim. Data sudah masuk ke Supabase.
+          {successMessage || "Message sent."}
         </p>
       )}
 
       {errorMessage && (
         <p className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-700">
-          Error Supabase: {errorMessage}
+          {errorPrefix || "Error"}: {errorMessage}
         </p>
       )}
     </form>

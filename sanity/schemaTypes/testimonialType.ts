@@ -33,6 +33,13 @@ export const testimonialType = defineType({
       title: "Avatar",
       type: "image",
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+        }),
+      ],
     }),
     defineField({
       name: "rating",

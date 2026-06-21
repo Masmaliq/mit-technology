@@ -1,221 +1,935 @@
 import { defineField, defineType } from "sanity";
-import { seoFields } from "./objects/seoFields";
+
+const imageAltField = defineField({
+  name: "alt",
+  title: "Alternative Text",
+  type: "string",
+});
+
+const hiddenLegacy = { hidden: true, readOnly: true };
 
 export const homepageType = defineType({
   name: "homepage",
-  title: "Homepage",
+  title: "Homepage Settings",
   type: "document",
+  fieldsets: [
+    {
+      name: "heroContent",
+      title: "Hero Content",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "heroMedia",
+      title: "Hero Media",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "heroBackground",
+      title: "Hero Background",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "heroMotionAsset",
+      title: "Hero Motion Asset",
+      description: "Optional / experimental.",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "cinematicFlow",
+      title: "Cinematic Flow",
+      description: "Optional homepage-wide cinematic background from Hero through Case Studies Preview.",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "homepageSections",
+      title: "Homepage Sections",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "seo",
+      title: "SEO",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "legacy",
+      title: "Legacy Data",
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
 
   fields: [
+    defineField({
+      name: "heroEyebrow",
+      title: "Hero Eyebrow",
+      type: "string",
+      fieldset: "heroContent",
+    }),
     defineField({
       name: "heroTitle",
       title: "Hero Title",
       type: "string",
+      fieldset: "heroContent",
     }),
-
-    defineField({
-      name: "heroSubtitle",
-      title: "Hero Subtitle",
-      description: "Small badge text above the hero headline.",
-      type: "string",
-    }),
-
     defineField({
       name: "heroDescription",
       title: "Hero Description",
       type: "text",
+      rows: 3,
+      fieldset: "heroContent",
     }),
-
     defineField({
       name: "heroPrimaryCtaLabel",
       title: "Hero Primary CTA Label",
       type: "string",
+      fieldset: "heroContent",
     }),
-
     defineField({
-      name: "heroPrimaryCtaHref",
+      name: "heroPrimaryCtaUrl",
       title: "Hero Primary CTA URL",
       type: "string",
+      fieldset: "heroContent",
     }),
-
     defineField({
       name: "heroSecondaryCtaLabel",
       title: "Hero Secondary CTA Label",
       type: "string",
+      fieldset: "heroContent",
     }),
-
     defineField({
-      name: "heroSecondaryCtaHref",
+      name: "heroSecondaryCtaUrl",
       title: "Hero Secondary CTA URL",
       type: "string",
+      fieldset: "heroContent",
     }),
 
     defineField({
-      name: "consoleTitle",
-      title: "Hero Console Title",
+      name: "heroMainImage",
+      title: "Hero Main Image",
+      type: "image",
+      fieldset: "heroMedia",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "heroMediaType",
+      title: "Hero Media Type",
       type: "string",
+      fieldset: "heroMedia",
+      initialValue: "image",
+      options: {
+        layout: "radio",
+        list: [
+          { title: "Image", value: "image" },
+          { title: "GIF", value: "gif" },
+          { title: "Video", value: "video" },
+        ],
+      },
     }),
-
     defineField({
-      name: "consoleHeading",
-      title: "Hero Console Heading",
+      name: "heroGif",
+      title: "Hero GIF",
+      type: "file",
+      fieldset: "heroMedia",
+      options: { accept: "image/gif" },
+    }),
+    defineField({
+      name: "heroVideoMp4",
+      title: "Hero Video MP4",
+      type: "file",
+      fieldset: "heroMedia",
+      options: { accept: "video/mp4" },
+    }),
+    defineField({
+      name: "heroPosterImage",
+      title: "Hero Poster Image",
+      type: "image",
+      fieldset: "heroMedia",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "heroMediaAltText",
+      title: "Hero Media Alt Text",
       type: "string",
+      fieldset: "heroMedia",
     }),
 
     defineField({
-      name: "metricOneValue",
-      title: "Metric One Value",
+      name: "backgroundType",
+      title: "Background Type",
       type: "string",
+      fieldset: "heroBackground",
+      initialValue: "image",
+      options: {
+        layout: "radio",
+        list: [
+          { title: "Image", value: "image" },
+          { title: "Slider", value: "slider" },
+          { title: "Video", value: "video" },
+        ],
+      },
     }),
-
     defineField({
-      name: "metricOneLabel",
-      title: "Metric One Label",
-      type: "string",
+      name: "heroBackgroundImage",
+      title: "Hero Background Image",
+      type: "image",
+      fieldset: "heroBackground",
+      hidden: ({ parent }) => parent?.backgroundType && parent.backgroundType !== "image",
+      options: { hotspot: true },
+      fields: [imageAltField],
     }),
-
     defineField({
-      name: "metricTwoValue",
-      title: "Metric Two Value",
-      type: "string",
-    }),
-
-    defineField({
-      name: "metricTwoLabel",
-      title: "Metric Two Label",
-      type: "string",
-    }),
-
-    defineField({
-      name: "recommendedStack",
-      title: "Recommended Stack",
+      name: "heroSliderImages",
+      title: "Hero Slider Images",
       type: "array",
-      of: [{ type: "string" }],
+      fieldset: "heroBackground",
+      hidden: ({ parent }) => parent?.backgroundType !== "slider",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              options: { hotspot: true },
+            }),
+            defineField({
+              name: "altText",
+              title: "Alt Text",
+              type: "string",
+            }),
+            defineField({
+              name: "caption",
+              title: "Caption",
+              type: "string",
+            }),
+          ],
+          preview: {
+            select: {
+              title: "caption",
+              subtitle: "altText",
+              media: "image",
+            },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || subtitle || "Hero slider image",
+                subtitle,
+                media,
+              };
+            },
+          },
+        },
+      ],
+      validation: (rule) => rule.min(3).max(5),
+    }),
+    defineField({
+      name: "heroBackgroundVideoMp4",
+      title: "Hero Background Video MP4",
+      type: "file",
+      fieldset: "heroBackground",
+      hidden: ({ parent }) => parent?.backgroundType !== "video",
+      options: { accept: "video/mp4" },
+    }),
+    defineField({
+      name: "heroBackgroundOverlayOpacity",
+      title: "Hero Background Overlay Opacity",
+      description: "Use values from 0 to 100.",
+      type: "number",
+      fieldset: "heroBackground",
+      initialValue: 35,
+      validation: (rule) => rule.min(0).max(100),
     }),
 
+    defineField({
+      name: "heroMotionType",
+      title: "Hero Motion Type",
+      type: "string",
+      fieldset: "heroMotionAsset",
+      initialValue: "none",
+      options: {
+        layout: "radio",
+        list: [
+          { title: "None", value: "none" },
+          { title: "GIF", value: "gif" },
+          { title: "Video", value: "video" },
+        ],
+      },
+    }),
+    defineField({
+      name: "heroMotionGif",
+      title: "Hero Motion GIF",
+      type: "file",
+      fieldset: "heroMotionAsset",
+      options: { accept: "image/gif" },
+    }),
+    defineField({
+      name: "heroMotionVideoMp4",
+      title: "Hero Motion Video MP4",
+      type: "file",
+      fieldset: "heroMotionAsset",
+      options: { accept: "video/mp4" },
+    }),
+    defineField({
+      name: "heroMotionPosterImage",
+      title: "Hero Motion Poster Image",
+      type: "image",
+      fieldset: "heroMotionAsset",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "heroMotionAltText",
+      title: "Hero Motion Alt Text",
+      type: "string",
+      fieldset: "heroMotionAsset",
+    }),
+    defineField({
+      name: "heroMotionOpacity",
+      title: "Hero Motion Opacity",
+      type: "number",
+      fieldset: "heroMotionAsset",
+      initialValue: 80,
+      validation: (rule) => rule.min(0).max(100),
+    }),
+
+    defineField({
+      name: "enableCinematicFlow",
+      title: "Enable Cinematic Flow",
+      type: "boolean",
+      fieldset: "cinematicFlow",
+      initialValue: false,
+    }),
+    defineField({
+      name: "cinematicVideoMp4",
+      title: "Cinematic Video MP4",
+      type: "file",
+      fieldset: "cinematicFlow",
+      options: { accept: "video/mp4" },
+    }),
+    defineField({
+      name: "cinematicVideoWebm",
+      title: "Cinematic Video WebM",
+      type: "file",
+      fieldset: "cinematicFlow",
+      options: { accept: "video/webm" },
+    }),
+    defineField({
+      name: "cinematicPosterImage",
+      title: "Cinematic Poster Image",
+      type: "image",
+      fieldset: "cinematicFlow",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "cinematicPosterAlt",
+      title: "Cinematic Poster Alt",
+      type: "string",
+      fieldset: "cinematicFlow",
+    }),
+    defineField({
+      name: "cinematicOverlayOpacity",
+      title: "Cinematic Overlay Opacity",
+      description: "Dark navy overlay strength from 0 to 100.",
+      type: "number",
+      fieldset: "cinematicFlow",
+      initialValue: 45,
+      validation: (rule) => rule.min(0).max(100),
+    }),
+    defineField({
+      name: "cinematicStartSection",
+      title: "Cinematic Start Section",
+      type: "string",
+      fieldset: "cinematicFlow",
+      initialValue: "hero",
+    }),
+    defineField({
+      name: "cinematicEndSection",
+      title: "Cinematic End Section",
+      type: "string",
+      fieldset: "cinematicFlow",
+      initialValue: "caseStudiesPreview",
+    }),
+    defineField({
+      name: "cinematicBackgroundPosition",
+      title: "Cinematic Background Position",
+      type: "string",
+      fieldset: "cinematicFlow",
+      initialValue: "center",
+      options: {
+        layout: "dropdown",
+        list: [
+          { title: "Center", value: "center" },
+          { title: "Top", value: "top" },
+          { title: "Bottom", value: "bottom" },
+          { title: "Left", value: "left" },
+          { title: "Right", value: "right" },
+        ],
+      },
+    }),
+    defineField({
+      name: "cinematicMobileFallbackImage",
+      title: "Cinematic Mobile Fallback Image",
+      type: "image",
+      fieldset: "cinematicFlow",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "cinematicMobileFallbackAlt",
+      title: "Cinematic Mobile Fallback Alt",
+      type: "string",
+      fieldset: "cinematicFlow",
+    }),
+    defineField({
+      name: "cinematicMobileMode",
+      title: "Cinematic Mobile Mode",
+      type: "string",
+      fieldset: "cinematicFlow",
+      initialValue: "poster",
+      options: {
+        layout: "radio",
+        list: [
+          { title: "Video", value: "video" },
+          { title: "Poster", value: "poster" },
+          { title: "Disabled", value: "disabled" },
+        ],
+      },
+    }),
+
+    defineField({
+      name: "solutionsPreviewImage",
+      title: "Solutions Preview Image",
+      description: "Image used in the left visual area of the homepage Solutions preview section.",
+      type: "image",
+      fieldset: "homepageSections",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "solutionsPreviewEyebrow",
+      title: "Solutions Preview Eyebrow",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "solutionsPreviewTitle",
+      title: "Solutions Preview Title",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "solutionsPreviewDescription",
+      title: "Solutions Preview Description",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "solutionsPreviewVisualEyebrow",
+      title: "Solutions Visual Card Eyebrow",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "solutionsPreviewVisualTitle",
+      title: "Solutions Visual Card Title",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "solutionsPreviewRows",
+      title: "Solutions Preview Rows",
+      type: "array",
+      fieldset: "homepageSections",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "title", title: "Title", type: "string" }),
+            defineField({ name: "href", title: "Link", type: "string" }),
+            defineField({
+              name: "icon",
+              title: "Icon",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Website", value: "website" },
+                  { title: "AI", value: "ai" },
+                  { title: "Strategy", value: "strategy" },
+                  { title: "Workflow", value: "workflow" },
+                ],
+              },
+            }),
+          ],
+          preview: {
+            select: { title: "title", subtitle: "href" },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "clientLogosEyebrow",
+      title: "Client Logos Eyebrow",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "clientLogosTitle",
+      title: "Client Logos Title",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "clientLogosDescription",
+      title: "Client Logos Description",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
     defineField({
       name: "trustEyebrow",
       title: "Trust Eyebrow",
       type: "string",
+      fieldset: "homepageSections",
     }),
-
     defineField({
       name: "trustTitle",
       title: "Trust Title",
       type: "string",
+      fieldset: "homepageSections",
     }),
-
     defineField({
       name: "trustDescription",
       title: "Trust Description",
       type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
     }),
-
     defineField({
-      name: "trustItems",
-      title: "Trust Items",
+      name: "trustCards",
+      title: "Trust Cards",
       type: "array",
-      of: [
-        {
-          type: "object",
-          fields: [
-            defineField({ name: "label", title: "Label", type: "string" }),
-            defineField({ name: "description", title: "Description", type: "text" }),
-          ],
-        },
-      ],
-    }),
-
-    defineField({
-      name: "featuredSolutions",
-      title: "Featured Solutions",
-      type: "array",
+      fieldset: "homepageSections",
       of: [
         {
           type: "object",
           fields: [
             defineField({ name: "title", title: "Title", type: "string" }),
-            defineField({ name: "description", title: "Description", type: "text" }),
-            defineField({ name: "href", title: "URL", type: "string" }),
+            defineField({ name: "description", title: "Description", type: "text", rows: 2 }),
+            defineField({ name: "order", title: "Order", type: "number" }),
           ],
+          preview: {
+            select: { title: "title", subtitle: "description" },
+          },
         },
       ],
     }),
-
     defineField({
-      name: "packagesPreview",
-      title: "Packages Preview",
+      name: "caseStudiesPreviewEyebrow",
+      title: "Case Studies Preview Eyebrow",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "caseStudiesPreviewTitle",
+      title: "Case Studies Preview Title",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "caseStudiesPreviewDescription",
+      title: "Case Studies Preview Description",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "caseStudiesPreviewCtaLabel",
+      title: "Case Studies Preview CTA Label",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "caseStudiesPreviewCtaUrl",
+      title: "Case Studies Preview CTA URL",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "featuredBannerBackgroundImage",
+      title: "Featured Banner Background Image",
+      description: "Background image for the homepage Case Studies featured banner.",
+      type: "image",
+      fieldset: "homepageSections",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "featuredBannerOverlayOpacity",
+      title: "Featured Banner Overlay Opacity",
+      description: "Dark blue overlay strength from 0 to 100.",
+      type: "number",
+      fieldset: "homepageSections",
+      initialValue: 58,
+      validation: (rule) => rule.min(0).max(100),
+    }),
+    defineField({
+      name: "featuredBannerBackgroundPosition",
+      title: "Featured Banner Background Position",
+      type: "string",
+      fieldset: "homepageSections",
+      initialValue: "center",
+      options: {
+        layout: "dropdown",
+        list: [
+          { title: "Center", value: "center" },
+          { title: "Top", value: "top" },
+          { title: "Bottom", value: "bottom" },
+          { title: "Left", value: "left" },
+          { title: "Right", value: "right" },
+        ],
+      },
+    }),
+    defineField({
+      name: "enableFeaturedBannerWorldMap",
+      title: "Enable Featured Banner World Map",
+      type: "boolean",
+      fieldset: "homepageSections",
+      initialValue: true,
+    }),
+    defineField({
+      name: "enableFeaturedBannerGridPattern",
+      title: "Enable Featured Banner Grid Pattern",
+      type: "boolean",
+      fieldset: "homepageSections",
+      initialValue: true,
+    }),
+    defineField({
+      name: "enableFeaturedBannerOrbitLines",
+      title: "Enable Featured Banner Orbit Lines",
+      type: "boolean",
+      fieldset: "homepageSections",
+      initialValue: true,
+    }),
+    defineField({
+      name: "enableFeaturedBannerGlow",
+      title: "Enable Featured Banner Glow",
+      type: "boolean",
+      fieldset: "homepageSections",
+      initialValue: true,
+    }),
+    defineField({
+      name: "packagesPreviewEyebrow",
+      title: "Packages Preview Eyebrow",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "packagesPreviewTitle",
+      title: "Packages Preview Title",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "packagesPreviewDescription",
+      title: "Packages Preview Description",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "packagesPreviewCtaLabel",
+      title: "Packages Preview CTA Label",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "packagesPreviewCtaUrl",
+      title: "Packages Preview CTA URL",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "packagesPreviewSupportItems",
+      title: "Packages Preview Support Items",
       type: "array",
+      fieldset: "homepageSections",
       of: [
         {
           type: "object",
           fields: [
             defineField({ name: "title", title: "Title", type: "string" }),
-            defineField({ name: "price", title: "Starting Price", type: "string" }),
-            defineField({ name: "href", title: "URL", type: "string" }),
+            defineField({ name: "description", title: "Description", type: "text", rows: 2 }),
           ],
+          preview: {
+            select: { title: "title", subtitle: "description" },
+          },
         },
       ],
     }),
-
     defineField({
-      name: "portfolioPreview",
-      title: "Portfolio Preview",
+      name: "processEyebrow",
+      title: "Process Eyebrow",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "processTitle",
+      title: "Process Title",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "processDescription",
+      title: "Process Description",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "impactMetricsEyebrow",
+      title: "Impact Metrics Eyebrow",
+      description: "Small uppercase label shown above the Impact Metrics section.",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "impactMetricsTitle",
+      title: "Impact Metrics Title",
+      description: "Main heading for the Impact Metrics section.",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "impactMetricsDescription",
+      title: "Impact Metrics Description",
+      description: "Optional supporting text for the Impact Metrics section.",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "impactMetricsItems",
+      title: "Impact Metrics Items",
+      description: "Metrics displayed on the homepage, such as projects delivered, industries served, satisfaction, or growth potential.",
       type: "array",
+      fieldset: "homepageSections",
       of: [
         {
           type: "object",
           fields: [
-            defineField({ name: "title", title: "Title", type: "string" }),
-            defineField({ name: "category", title: "Category", type: "string" }),
-            defineField({ name: "description", title: "Description", type: "text" }),
-            defineField({ name: "href", title: "URL", type: "string" }),
+            defineField({
+              name: "value",
+              title: "Metric Value",
+              description: "The large metric value, for example 50+, 65%, or 5x.",
+              type: "string",
+            }),
+            defineField({
+              name: "label",
+              title: "Metric Label",
+              description: "Short label for the metric, for example Projects Delivered.",
+              type: "string",
+            }),
+            defineField({
+              name: "description",
+              title: "Metric Description",
+              description: "Optional short explanation shown below the metric label.",
+              type: "text",
+              rows: 2,
+            }),
           ],
+          preview: {
+            select: { title: "value", subtitle: "label" },
+          },
         },
       ],
     }),
-
+    defineField({
+      name: "testimonialsEyebrow",
+      title: "Testimonials Eyebrow",
+      description: "Small uppercase label shown above the homepage Testimonials section.",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "testimonialsTitle",
+      title: "Testimonials Title",
+      description: "Main heading for the homepage Testimonials section.",
+      type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "testimonialsDescription",
+      title: "Testimonials Description",
+      description: "Supporting text shown below the Testimonials heading.",
+      type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
+    }),
     defineField({
       name: "ctaEyebrow",
-      title: "CTA Eyebrow",
+      title: "Final CTA Eyebrow",
       type: "string",
+      fieldset: "homepageSections",
     }),
-
     defineField({
       name: "ctaTitle",
-      title: "CTA Title",
+      title: "Final CTA Title",
       type: "string",
+      fieldset: "homepageSections",
     }),
-
     defineField({
       name: "ctaDescription",
-      title: "CTA Description",
+      title: "Final CTA Description",
       type: "text",
+      rows: 3,
+      fieldset: "homepageSections",
     }),
-
     defineField({
       name: "ctaButtonLabel",
-      title: "CTA Button Label",
+      title: "Final CTA Button Label",
       type: "string",
+      fieldset: "homepageSections",
+    }),
+    defineField({
+      name: "ctaButtonHref",
+      title: "Final CTA Button URL",
+      type: "string",
+      fieldset: "homepageSections",
     }),
 
     defineField({
-      name: "ctaButtonHref",
-      title: "CTA Button URL",
+      name: "seoTitle",
+      title: "SEO Title",
       type: "string",
+      fieldset: "seo",
     }),
-    ...seoFields,
+    defineField({
+      name: "seoDescription",
+      title: "SEO Description",
+      type: "text",
+      rows: 3,
+      fieldset: "seo",
+    }),
+    defineField({
+      name: "openGraphImage",
+      title: "OpenGraph Image",
+      type: "image",
+      fieldset: "seo",
+      options: { hotspot: true },
+      fields: [imageAltField],
+    }),
+    defineField({
+      name: "seoKeywords",
+      title: "SEO Keywords",
+      type: "array",
+      fieldset: "seo",
+      of: [{ type: "string" }],
+    }),
+
+    defineField({ name: "heroSubtitle", title: "Legacy Hero Eyebrow", type: "string", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "heroImage", title: "Legacy Hero Image", type: "image", fieldset: "legacy", options: { hotspot: true }, ...hiddenLegacy }),
+    defineField({ name: "heroPrimaryCtaHref", title: "Legacy Primary CTA URL", type: "string", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "heroSecondaryCtaHref", title: "Legacy Secondary CTA URL", type: "string", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "backgroundVideoMp4", title: "Legacy Background Video MP4", type: "file", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "backgroundPosterImage", title: "Legacy Background Poster Image", type: "image", fieldset: "legacy", options: { hotspot: true }, ...hiddenLegacy }),
+    defineField({ name: "heroVideoPosterImage", title: "Legacy Hero Video Poster Image", type: "image", fieldset: "legacy", options: { hotspot: true }, ...hiddenLegacy }),
+    defineField({ name: "heroMotionPosition", title: "Legacy Motion Position", type: "string", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "heroMotionSize", title: "Legacy Motion Size", type: "string", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "heroMotionSpeed", title: "Legacy Motion Speed", type: "number", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({ name: "enableMotionOnMobile", title: "Legacy Enable Motion On Mobile", type: "boolean", fieldset: "legacy", ...hiddenLegacy }),
+    defineField({
+      name: "visualSettings",
+      title: "Legacy Visual Settings",
+      type: "object",
+      fieldset: "legacy",
+      ...hiddenLegacy,
+      fields: [
+        defineField({
+          name: "pageSettings",
+          title: "Page Settings",
+          type: "object",
+          fields: [
+            defineField({
+              name: "heroBackgroundImage",
+              title: "Hero Background Image",
+              type: "object",
+              fields: [
+                defineField({ name: "desktopImage", title: "Desktop Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "mobileImage", title: "Mobile Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "alt", title: "Alt Text", type: "string" }),
+              ],
+            }),
+            defineField({ name: "heroOverlayOpacity", title: "Hero Overlay Opacity", type: "number" }),
+            defineField({ name: "heroEyebrowText", title: "Hero Eyebrow Text", type: "string" }),
+            defineField({ name: "heroTitle", title: "Hero Title", type: "string" }),
+            defineField({ name: "heroDescription", title: "Hero Description", type: "text" }),
+          ],
+        }),
+        defineField({
+          name: "visualAssets",
+          title: "Visual Assets",
+          type: "object",
+          fields: [
+            defineField({
+              name: "featuredBackgroundImage",
+              title: "Featured Background Image",
+              type: "object",
+              fields: [
+                defineField({ name: "desktopImage", title: "Desktop Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "mobileImage", title: "Mobile Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "alt", title: "Alt Text", type: "string" }),
+              ],
+            }),
+            defineField({
+              name: "sectionBackgroundImage",
+              title: "Section Background Image",
+              type: "object",
+              fields: [
+                defineField({ name: "desktopImage", title: "Desktop Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "mobileImage", title: "Mobile Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "alt", title: "Alt Text", type: "string" }),
+              ],
+            }),
+            defineField({
+              name: "ctaBackgroundImage",
+              title: "CTA Background Image",
+              type: "object",
+              fields: [
+                defineField({ name: "desktopImage", title: "Desktop Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "mobileImage", title: "Mobile Image", type: "image", options: { hotspot: true } }),
+                defineField({ name: "alt", title: "Alt Text", type: "string" }),
+              ],
+            }),
+          ],
+        }),
+        defineField({
+          name: "styleSettings",
+          title: "Style Settings",
+          type: "object",
+          fields: [
+            defineField({ name: "enableGradientOverlay", title: "Enable Gradient Overlay", type: "boolean" }),
+            defineField({ name: "enableGlassEffect", title: "Enable Glass Effect", type: "boolean" }),
+            defineField({ name: "enableDarkModeSection", title: "Enable Dark Mode Section", type: "boolean" }),
+            defineField({ name: "enableParallaxEffect", title: "Enable Parallax Effect", type: "boolean" }),
+          ],
+        }),
+      ],
+    }),
+    defineField({ name: "seoImage", title: "Legacy OpenGraph Image", type: "image", fieldset: "legacy", options: { hotspot: true }, ...hiddenLegacy }),
   ],
 
   preview: {
     select: {
       title: "heroTitle",
-      subtitle: "heroSubtitle",
+      subtitle: "heroEyebrow",
     },
-    prepare({ title, subtitle }) {
+    prepare() {
       return {
-        title: title || "Homepage",
-        subtitle: subtitle || "MIT Technology homepage content",
+        title: "Homepage Settings",
+        subtitle: "Hero, homepage sections, CTA, and SEO",
       };
     },
   },

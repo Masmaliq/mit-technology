@@ -176,7 +176,7 @@ export function SiteHeaderClient({
               <Menu className="h-5 w-5" />
             </summary>
 
-            <div className="absolute right-0 mt-3 w-[min(19rem,calc(100vw-2.5rem))] rounded-3xl border border-white/18 bg-[rgba(2,10,28,0.92)] p-3 shadow-[0_28px_90px_rgba(2,8,23,0.34)] backdrop-blur-2xl">
+            <div className="absolute right-0 mt-3 w-[min(19rem,calc(100vw-2.5rem))] rounded-3xl border border-white/24 bg-[rgba(5,18,42,0.82)] p-3 shadow-[0_28px_90px_rgba(2,8,23,0.34)] backdrop-blur-2xl">
               <div className="grid gap-1">
                 {navItems.map((item) => {
                   const href = item.href;
@@ -186,10 +186,10 @@ export function SiteHeaderClient({
                     <Link
                       href={href}
                       key={href}
-                      className={`rounded-2xl px-4 py-3 text-sm font-semibold transition duration-200 ${
+                      className={`rounded-2xl px-4 py-3 text-sm font-bold transition duration-200 ${
                         active
-                          ? "bg-white text-slate-950"
-                          : "text-white/76 hover:bg-white/10 hover:text-white"
+                          ? "bg-white/95 text-slate-950"
+                          : "text-white hover:bg-white/12 hover:text-white"
                       }`}
                     >
                       {item.label}
@@ -201,7 +201,7 @@ export function SiteHeaderClient({
                   href={callToActionHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-950"
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white px-4 py-3 text-sm font-semibold text-slate-950 shadow-[0_16px_44px_rgba(2,8,23,0.22)]"
                 >
                   {callToActionLabel}
                   <ArrowRight className="h-4 w-4" />

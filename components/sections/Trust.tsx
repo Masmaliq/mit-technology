@@ -15,70 +15,58 @@ type TrustProps = {
   items?: TrustItem[];
 };
 
-const fallbackTrustCards = [
-  {
-    title: "Strategy",
-    description: "Senior-led planning before production begins.",
-  },
-  {
-    title: "Systems",
-    description: "Web, commerce, application, and AI foundations built to scale.",
-  },
-  {
-    title: "Clarity",
-    description: "Structured delivery paths for decision makers and teams.",
-  },
-  {
-    title: "Trust",
-    description: "Premium digital presence designed for credibility.",
-  },
-];
-
 export function Trust({ eyebrow, title, description, items }: TrustProps) {
-  const trustEyebrow = eyebrow || "DIBANGUN UNTUK KEPERCAYAAN";
-  const trustTitle =
-    title ||
-    "Fondasi digital untuk bisnis yang perlu tampil kredibel sejak kesan pertama.";
-  const trustDescription =
-    description ||
-    "MIT Technology menggabungkan arahan strategis, desain yang rapi, dan engineering yang stabil untuk membangun kehadiran digital yang lebih meyakinkan.";
+  const trustEyebrow = eyebrow?.trim() || "";
+  const trustTitle = title?.trim() || "";
+  const trustDescription = description?.trim() || "";
   const metrics =
     items && items.length > 0
       ? [...items]
           .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
           .map((item) => ({
-            title: item.title || item.value || "",
-            description: item.description || item.label || "",
+            title: item.title?.trim() || item.value?.trim() || "",
+            description: item.description?.trim() || item.label?.trim() || "",
           }))
-      : fallbackTrustCards;
+          .filter((item) => item.title || item.description)
+      : [];
+
+  if (!trustEyebrow && !trustTitle && !trustDescription && metrics.length === 0) {
+    return null;
+  }
 
   return (
     <section id="trust" aria-label="Trust" className="border-y border-slate-200/70 bg-white py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[0.84fr_1.16fr] lg:items-center">
           <div className="max-w-2xl">
-            <TextReveal
-              as="p"
-              className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
-              direction="down"
-              mode="chars"
-              stagger={0.018}
-              text={trustEyebrow}
-            />
-            <TextReveal
-              as="h2"
-              className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
-              direction="right"
-              mode="words"
-              text={trustTitle}
-            />
-            <TextReveal
-              as="p"
-              className="mt-5 text-lg leading-8 text-slate-600"
-              direction="up"
-              mode="lines"
-              text={trustDescription}
-            />
+            {trustEyebrow ? (
+              <TextReveal
+                as="p"
+                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                direction="down"
+                mode="chars"
+                stagger={0.018}
+                text={trustEyebrow}
+              />
+            ) : null}
+            {trustTitle ? (
+              <TextReveal
+                as="h2"
+                className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
+                direction="right"
+                mode="words"
+                text={trustTitle}
+              />
+            ) : null}
+            {trustDescription ? (
+              <TextReveal
+                as="p"
+                className="mt-5 text-lg leading-8 text-slate-600"
+                direction="up"
+                mode="lines"
+                text={trustDescription}
+              />
+            ) : null}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {metrics.map((metric) => (

@@ -696,6 +696,105 @@ export const footerControlPanel = {
   ],
 };
 
+export const pagesControlPanel = {
+  header: {
+    title: "Halaman",
+    description:
+      "Kelola status halaman utama, visibility, kesiapan konten, SEO coverage, dan jalur edit cepat untuk setiap page.",
+    badge: "Page Control",
+    action: "Tambah Page",
+  },
+  summary: [
+    { label: "Total Pages", value: "7", tone: "blue" },
+    { label: "Published", value: "5", tone: "emerald" },
+    { label: "Draft", value: "1", tone: "violet" },
+    { label: "Need Review", value: "1", tone: "amber" },
+  ],
+  pages: [
+    { title: "Home", status: "Published", type: "Landing Page", visibility: "Public", action: "Edit Homepage" },
+    { title: "About", status: "Published", type: "Company Page", visibility: "Public", action: "Edit About" },
+    { title: "Solutions", status: "Published", type: "Service Page", visibility: "Public", action: "Edit Solutions" },
+    { title: "Packages", status: "Published", type: "Pricing Page", visibility: "Public", action: "Edit Packages" },
+    { title: "Case Studies", status: "Review", type: "Proof Page", visibility: "Public", action: "Review Cases" },
+    { title: "Portfolio", status: "Draft", type: "Project Archive", visibility: "Hidden", action: "Review Portfolio" },
+    { title: "Contact CTA", status: "Published", type: "Conversion Page", visibility: "Public", action: "Edit CTA" },
+  ],
+  readiness: [
+    ["Hero Content", "Ready"],
+    ["Page Copy", "Ready"],
+    ["Media Asset", "Review"],
+    ["CTA", "Ready"],
+    ["Mobile Layout", "Ready"],
+    ["Publish Status", "Review"],
+  ],
+  seoCoverage: [
+    ["Meta Title", "Ready"],
+    ["Meta Description", "Ready"],
+    ["Open Graph Image", "Review"],
+    ["Canonical URL", "Ready"],
+    ["Sitemap", "Ready"],
+    ["Schema Markup", "Planned"],
+  ],
+  quickActions: [
+    "Add Page",
+    "Review Drafts",
+    "Update SEO",
+    "Preview Pages",
+    "Manage Visibility",
+    "Open Sanity",
+  ],
+};
+
+export const sectionsControlPanel = {
+  header: {
+    title: "Sections",
+    description:
+      "Pantau struktur section homepage, urutan tampil, status edit, readiness module, dan visibility setiap blok konten.",
+    badge: "Section Control",
+    action: "Tambah Section",
+  },
+  summary: [
+    { label: "Total Sections", value: "8", tone: "blue" },
+    { label: "Active Sections", value: "7", tone: "emerald" },
+    { label: "Hidden Sections", value: "1", tone: "violet" },
+    { label: "Need Attention", value: "2", tone: "amber" },
+  ],
+  sections: [
+    { title: "Hero", status: "Active", placement: "Top", editable: "CMS Ready", readiness: "Ready" },
+    { title: "Client Logos", status: "Active", placement: "After Hero", editable: "Collection", readiness: "Ready" },
+    { title: "Solutions", status: "Active", placement: "Homepage Preview", editable: "CMS Ready", readiness: "Ready" },
+    { title: "Packages", status: "Active", placement: "Pricing Preview", editable: "Collection", readiness: "Review" },
+    { title: "Case Studies", status: "Active", placement: "Proof Banner", editable: "CMS Ready", readiness: "Ready" },
+    { title: "Testimonials", status: "Active", placement: "Social Proof", editable: "Collection", readiness: "Review" },
+    { title: "CTA", status: "Active", placement: "Before Footer", editable: "CMS Ready", readiness: "Ready" },
+    { title: "Footer", status: "Hidden", placement: "Global Closing", editable: "Global CMS", readiness: "Ready" },
+  ],
+  orderStatus: [
+    ["Hero", "01"],
+    ["Client Logos", "02"],
+    ["Solutions", "03"],
+    ["Case Studies", "04"],
+    ["Framework", "05"],
+    ["Packages", "08"],
+  ],
+  homepageStructure: [
+    ["Hero", "Ready"],
+    ["Trust / Logos", "Ready"],
+    ["Solutions Preview", "Ready"],
+    ["Case Studies Banner", "Ready"],
+    ["Testimonials", "Review"],
+    ["Final CTA", "Ready"],
+  ],
+  quickActions: [
+    "Add Section",
+    "Reorder Sections",
+    "Toggle Visibility",
+    "Review Readiness",
+    "Preview Homepage",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

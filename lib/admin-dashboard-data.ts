@@ -616,6 +616,86 @@ export const settingsControlPanel = {
   ],
 };
 
+export const footerControlPanel = {
+  header: {
+    title: "Footer",
+    description:
+      "Atur brand closing section, informasi kontak, navigation links, social links, legal text, dan background visual footer.",
+    badge: "Global Footer",
+    action: "Edit Footer",
+  },
+  summary: [
+    { label: "Footer Status", value: "Active", tone: "emerald" },
+    { label: "Brand Info", value: "Ready", tone: "blue" },
+    { label: "Navigation Links", value: "8", tone: "violet" },
+    { label: "Social Links", value: "3", tone: "amber" },
+  ],
+  brandClosingPreview: [
+    ["Brand Name", "MIT Technology"],
+    ["Tagline", "Membangun fondasi digital untuk pertumbuhan bisnis."],
+    [
+      "Description",
+      "Website, sistem internal, automasi, dan solusi digital yang dirancang untuk bisnis yang ingin bertumbuh secara berkelanjutan.",
+    ],
+    ["CTA Label", "Start Your Project"],
+    ["Status", "Ready"],
+  ],
+  contactInformation: [
+    ["WhatsApp", "Ready"],
+    ["Email", "Ready"],
+    ["Location", "Indonesia"],
+    ["Business Hours", "Active"],
+    ["Contact CTA", "Enabled"],
+  ],
+  navigationGroups: [
+    {
+      title: "Company",
+      links: ["About", "Case Studies", "Portfolio", "Contact"],
+    },
+    {
+      title: "Services",
+      links: ["Solutions", "Packages", "Product Parallax", "Motion System"],
+    },
+  ],
+  socialLinks: [
+    ["Instagram", "Connected"],
+    ["WhatsApp", "Connected"],
+    ["Email", "Connected"],
+    ["LinkedIn", "Pending"],
+  ],
+  legalSystem: [
+    ["Copyright", "© 2026 MIT Technology"],
+    ["Privacy Policy", "Pending"],
+    ["Terms", "Pending"],
+    ["Sitemap", "Ready"],
+    ["Footer SEO", "Ready"],
+  ],
+  visualSettings: [
+    ["Background Type", "Soft Gradient"],
+    ["Logo Mode", "Monogram + Text"],
+    ["Layout", "Multi Column"],
+    ["Mobile Layout", "Stacked"],
+    ["Motion", "Soft Reveal"],
+    ["Status", "Active"],
+  ],
+  readinessChecklist: [
+    ["Brand Copy", "Ready"],
+    ["Contact Links", "Ready"],
+    ["Navigation", "Ready"],
+    ["Social Links", "Review"],
+    ["Legal Links", "Pending"],
+    ["Mobile Footer", "Ready"],
+  ],
+  quickActions: [
+    "Edit Brand Copy",
+    "Update Contact",
+    "Manage Links",
+    "Edit Social Links",
+    "Preview Footer",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

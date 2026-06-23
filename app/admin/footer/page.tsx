@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import FooterControlPanel from "@/components/admin/FooterControlPanel";
 
 export default function AdminFooterPage() {
-  return <AdminModulePlaceholder moduleKey="footer" />;
+  return (
+    <AdminShell>
+      <FooterControlPanel />
+    </AdminShell>
+  );
 }

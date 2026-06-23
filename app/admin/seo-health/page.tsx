@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import SeoHealthControlPanel from "@/components/admin/SeoHealthControlPanel";
 
 export default function AdminSeoHealthPage() {
-  return <AdminModulePlaceholder moduleKey="seo-health" />;
+  return (
+    <AdminShell>
+      <SeoHealthControlPanel />
+    </AdminShell>
+  );
 }

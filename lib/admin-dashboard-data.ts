@@ -419,6 +419,66 @@ export const backgroundSceneControlPanel = {
   ],
 };
 
+export const seoHealthControlPanel = {
+  header: {
+    title: "SEO & Health",
+    description: "Pantau SEO score, metadata, image readiness, CTA, performa, dan status kesiapan publish website.",
+    badge: "Health Check",
+    action: "Run Audit",
+  },
+  summary: [
+    { label: "SEO Score", value: "74", tone: "amber" },
+    { label: "Page Speed", value: "92", tone: "emerald" },
+    { label: "Issues", value: "2", tone: "amber" },
+    { label: "Draft Content", value: "3", tone: "violet" },
+  ],
+  seoStatus: [
+    ["Meta Title", "Ready"],
+    ["Meta Description", "Ready"],
+    ["Open Graph Image", "Uploaded"],
+    ["Sitemap", "Ready"],
+    ["Robots", "Ready"],
+    ["Canonical URL", "Ready"],
+  ],
+  contentReadiness: [
+    ["Published Pages", "5"],
+    ["Draft Pages", "3"],
+    ["Missing CTA", "0"],
+    ["Missing Images", "0"],
+    ["Missing SEO Copy", "2"],
+    ["Empty Sections", "1"],
+  ],
+  performanceStatus: [
+    ["Desktop Score", "98"],
+    ["Mobile Score", "87"],
+    ["Image Optimization", "Ready"],
+    ["Lazy Load", "Enabled"],
+    ["Video Weight", "Needs Review"],
+    ["Motion Performance", "Safe"],
+  ],
+  issues: [
+    "Mobile Fallback Missing",
+    "2 SEO descriptions need review",
+    "1 draft page not published",
+  ],
+  launchChecklist: [
+    ["Homepage", "Ready"],
+    ["About", "Ready"],
+    ["Packages", "Ready"],
+    ["Case Studies", "Review"],
+    ["Footer", "Ready"],
+    ["Contact CTA", "Ready"],
+  ],
+  quickActions: [
+    "Run SEO Audit",
+    "Review Metadata",
+    "Fix Missing Copy",
+    "Check Performance",
+    "Preview Website",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

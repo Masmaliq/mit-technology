@@ -190,6 +190,71 @@ export const packagesControlPanel = {
   ],
 };
 
+export const caseStudiesControlPanel = {
+  header: {
+    title: "Case Studies",
+    description: "Kelola studi kasus, project proof, client result, dan preview project unggulan.",
+    badge: "Proof Module",
+    action: "Tambah Case Study",
+  },
+  summary: [
+    { label: "Total Case Studies", value: "12", tone: "blue" },
+    { label: "Published", value: "9", tone: "emerald" },
+    { label: "Draft", value: "3", tone: "violet" },
+    { label: "Featured", value: "2", tone: "blue" },
+  ],
+  featuredCases: [
+    {
+      title: "MIT Technology",
+      category: "Digital Framework",
+      status: "Featured",
+      result: "Framework website reusable untuk company profile premium.",
+      metrics: ["12 Admin Routes", "3 Control Panels", "CMS Ready"],
+      cta: "Preview Case",
+      featured: true,
+    },
+    {
+      title: "Chemiko Labs",
+      category: "Manufacturing Website",
+      status: "Draft",
+      result: "Website pabrik dan product presentation untuk kebutuhan export dan makloon.",
+      metrics: ["Export Ready", "Product Catalog", "Factory Profile"],
+      cta: "Preview Case",
+    },
+    {
+      title: "Narapati Journal",
+      category: "Media Platform",
+      status: "Published",
+      result: "Journal cinematic dengan CMS editorial, artikel, visual story, dan kanal konten.",
+      metrics: ["Editorial CMS", "Story System", "Visual Journal"],
+      cta: "Preview Case",
+    },
+  ],
+  readiness: [
+    ["Thumbnail Image", "Ready"],
+    ["Client Name", "Ready"],
+    ["Challenge", "Ready"],
+    ["Solution", "Ready"],
+    ["Result", "Ready"],
+    ["Gallery", "Pending"],
+  ],
+  workflow: [
+    ["Draft Content", "3"],
+    ["Ready to Publish", "4"],
+    ["Featured Cases", "2"],
+    ["Missing Thumbnail", "0"],
+    ["Missing Result Copy", "1"],
+  ],
+  quickActions: [
+    "Add Case Study",
+    "Edit Featured Case",
+    "Manage Drafts",
+    "Upload Thumbnail",
+    "Preview Case Studies",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

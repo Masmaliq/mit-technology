@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import CaseStudiesControlPanel from "@/components/admin/CaseStudiesControlPanel";
 
 export default function AdminCaseStudiesPage() {
-  return <AdminModulePlaceholder moduleKey="case-studies" />;
+  return (
+    <AdminShell>
+      <CaseStudiesControlPanel />
+    </AdminShell>
+  );
 }

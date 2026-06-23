@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import HeroControlPanel from "@/components/admin/HeroControlPanel";
 
 export default function AdminHeroPage() {
-  return <AdminModulePlaceholder moduleKey="hero" />;
+  return (
+    <AdminShell>
+      <HeroControlPanel />
+    </AdminShell>
+  );
 }

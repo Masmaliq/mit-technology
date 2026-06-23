@@ -122,6 +122,51 @@ export const adminModulePages = {
   },
 } as const;
 
+export const heroControlPanel = {
+  header: {
+    title: "Hero",
+    description: "Kontrol hero content, visual media, CTA, dan status cinematic section setiap halaman.",
+    badge: "Hero Control",
+    action: "Edit Hero",
+  },
+  summary: [
+    { label: "Hero Content", value: "Ready", tone: "emerald" },
+    { label: "Background Asset", value: "Uploaded", tone: "blue" },
+    { label: "Hero Media", value: "Active", tone: "violet" },
+    { label: "Motion", value: "Enabled", tone: "emerald" },
+  ],
+  contentPreview: {
+    title: "Membangun Fondasi Digital untuk Pertumbuhan Bisnis",
+    description:
+      "MIT Technology membantu perusahaan merancang, membangun, dan mengembangkan ekosistem digital yang mendukung pertumbuhan jangka panjang.",
+    primaryCta: "Start Project",
+    secondaryCta: "Explore Solutions",
+    targetPage: "Homepage",
+  },
+  visualAssets: [
+    ["Background Type", "Video / Image"],
+    ["Background File", "hero-background.mp4"],
+    ["Poster Image", "Uploaded"],
+    ["Mobile Fallback", "Missing"],
+    ["Hero Object", "stupa-borobudur.png"],
+  ],
+  motionSettings: [
+    ["Enable Stars", "ON"],
+    ["Enable Airplane", "ON"],
+    ["Enable Stupa Float", "ON"],
+    ["Parallax Intensity", "Medium"],
+    ["Scroll Range", "Hero Section"],
+  ],
+  quickActions: [
+    "Edit Content",
+    "Edit Background",
+    "Edit Hero Media",
+    "Edit Motion",
+    "Preview Homepage",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

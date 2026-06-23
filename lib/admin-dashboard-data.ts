@@ -479,6 +479,68 @@ export const seoHealthControlPanel = {
   ],
 };
 
+export const settingsControlPanel = {
+  header: {
+    title: "Pengaturan",
+    description:
+      "Konfigurasi sistem admin, preferensi global, akses internal, integrasi, dan kesiapan framework.",
+    badge: "System Settings",
+    action: "Buka Pengaturan",
+  },
+  summary: [
+    { label: "Framework Version", value: "v2.4.1", tone: "blue" },
+    { label: "Active Plan", value: "Premium", tone: "violet" },
+    { label: "Environment", value: "Local", tone: "amber" },
+    { label: "System Status", value: "Stable", tone: "emerald" },
+  ],
+  generalSettings: [
+    ["Site Name", "MIT Control"],
+    ["Framework Name", "MIT Framework"],
+    ["Default Language", "Indonesia"],
+    ["Timezone", "Asia/Jakarta"],
+    ["Admin Mode", "Internal"],
+  ],
+  accessControl: [
+    ["Admin Access", "Enabled"],
+    ["Role System", "Basic"],
+    ["Owner Account", "Active"],
+    ["Team Access", "Pending"],
+    ["Login Protection", "Enabled"],
+  ],
+  integrationStatus: [
+    ["Sanity CMS", "Connected"],
+    ["Vercel Deploy", "Ready"],
+    ["GitHub Repository", "Connected"],
+    ["Supabase Admin", "Planned"],
+    ["WhatsApp CTA", "Ready"],
+    ["Analytics", "Pending"],
+  ],
+  frameworkConfiguration: [
+    ["Public Frontend", "Protected"],
+    ["Sanity Schema", "Locked"],
+    ["Admin Dashboard", "Active"],
+    ["Module Routes", "Ready"],
+    ["Visual System", "Active"],
+    ["Motion System", "Active"],
+  ],
+  systemReadiness: [
+    ["Dashboard", "Ready"],
+    ["Content Modules", "Ready"],
+    ["Visual Modules", "Ready"],
+    ["SEO Health", "Ready"],
+    ["Footer Module", "Pending"],
+    ["Production Handoff", "Review"],
+  ],
+  quickActions: [
+    "Edit General Settings",
+    "Manage Access",
+    "Check Integrations",
+    "Open Sanity",
+    "Open Vercel",
+    "View System Log",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

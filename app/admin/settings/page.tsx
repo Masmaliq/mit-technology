@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import SettingsControlPanel from "@/components/admin/SettingsControlPanel";
 
 export default function AdminSettingsPage() {
-  return <AdminModulePlaceholder moduleKey="settings" />;
+  return (
+    <AdminShell>
+      <SettingsControlPanel />
+    </AdminShell>
+  );
 }

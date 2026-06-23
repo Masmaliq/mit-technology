@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import TestimonialsControlPanel from "@/components/admin/TestimonialsControlPanel";
 
 export default function AdminTestimonialsPage() {
-  return <AdminModulePlaceholder moduleKey="testimonials" />;
+  return (
+    <AdminShell>
+      <TestimonialsControlPanel />
+    </AdminShell>
+  );
 }

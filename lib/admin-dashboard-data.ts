@@ -479,6 +479,81 @@ export const seoHealthControlPanel = {
   ],
 };
 
+export const testimonialsControlPanel = {
+  header: {
+    title: "Testimonials",
+    description: "Kelola testimoni klien, social proof, approval status, avatar/logo, dan quote yang tampil di website.",
+    badge: "Trust Module",
+    action: "Tambah Testimonial",
+  },
+  summary: [
+    { label: "Total Testimonials", value: "31", tone: "blue" },
+    { label: "Published", value: "24", tone: "emerald" },
+    { label: "Waiting Approval", value: "4", tone: "amber" },
+    { label: "Featured", value: "3", tone: "violet" },
+  ],
+  featuredTestimonials: [
+    {
+      client: "Chemiko Labs",
+      role: "Manufacturing Client",
+      status: "Published",
+      quote:
+        "MIT membantu kami menyiapkan fondasi website yang lebih rapi, modern, dan siap dikembangkan untuk kebutuhan bisnis.",
+      rating: "5.0",
+      tag: "Featured",
+    },
+    {
+      client: "Narapati Journal",
+      role: "Media Platform",
+      status: "Featured",
+      quote: "Struktur CMS dan tampilan visualnya membuat proses editorial terasa lebih tertata dan profesional.",
+      rating: "5.0",
+      tag: "Featured",
+      featured: true,
+    },
+    {
+      client: "Pangan Kawan Nusantara",
+      role: "Company Profile Client",
+      status: "Waiting Approval",
+      quote: "Website company profile menjadi lebih mudah dipresentasikan dan terlihat lebih siap untuk kebutuhan partnership.",
+      rating: "4.8",
+      tag: "Review",
+    },
+  ],
+  readiness: [
+    ["Client Name", "Ready"],
+    ["Client Role", "Ready"],
+    ["Quote", "Ready"],
+    ["Avatar / Logo", "Uploaded"],
+    ["Rating", "Ready"],
+    ["Approval Status", "Review"],
+  ],
+  workflow: [
+    ["Published", "24"],
+    ["Waiting Approval", "4"],
+    ["Draft", "3"],
+    ["Missing Avatar", "2"],
+    ["Missing Client Role", "1"],
+    ["Featured Testimonials", "3"],
+  ],
+  displaySettings: [
+    ["Homepage Section", "Active"],
+    ["Case Study Detail", "Active"],
+    ["Package Page", "Optional"],
+    ["Carousel Mode", "Enabled"],
+    ["Auto Slide", "OFF"],
+    ["Mobile Layout", "Stacked Cards"],
+  ],
+  quickActions: [
+    "Add Testimonial",
+    "Review Approval",
+    "Edit Featured",
+    "Upload Avatar",
+    "Preview Testimonials",
+    "Open Sanity",
+  ],
+};
+
 export const settingsControlPanel = {
   header: {
     title: "Pengaturan",

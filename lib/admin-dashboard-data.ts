@@ -255,6 +255,60 @@ export const caseStudiesControlPanel = {
   ],
 };
 
+export const productParallaxControlPanel = {
+  header: {
+    title: "Product Parallax",
+    description: "Kelola aset produk, scene background, scroll range, motion behavior, dan fallback visual mobile.",
+    badge: "Visual System",
+    action: "Edit Parallax",
+  },
+  summary: [
+    { label: "Product Parallax", value: "ON", tone: "emerald" },
+    { label: "Product Asset", value: "Uploaded", tone: "blue" },
+    { label: "Background Scene", value: "lab-chemical.mp4", tone: "violet" },
+    { label: "Mobile Fallback", value: "Missing", tone: "amber" },
+  ],
+  productAsset: [
+    ["Product File", "botol-sabun.png"],
+    ["Position", "Center Right"],
+    ["Scale", "Large"],
+    ["Anchor", "Product Section"],
+    ["Status", "Uploaded"],
+  ],
+  backgroundScene: [
+    ["Background Type", "Video"],
+    ["File", "lab-chemical.mp4"],
+    ["Poster Image", "Uploaded"],
+    ["Overlay", "Soft Blue"],
+    ["Status", "Active"],
+  ],
+  motionBehavior: [
+    ["Motion Style", "Product Anchor"],
+    ["Motion Intensity", "Medium"],
+    ["Scroll Range", "Hero → Packages"],
+    ["Start Section", "Hero"],
+    ["End Section", "Packages"],
+    ["Mobile Mode", "Lightweight Motion"],
+  ],
+  readiness: [
+    ["Product Asset", "Ready"],
+    ["Background Scene", "Ready"],
+    ["Poster Image", "Ready"],
+    ["Desktop Motion", "Ready"],
+    ["Mobile Fallback", "Missing"],
+    ["Performance Check", "Pending"],
+  ],
+  quickActions: [
+    "Edit Product Asset",
+    "Edit Background Scene",
+    "Edit Motion Style",
+    "Edit Start/End Section",
+    "Preview Parallax",
+    "Disable Parallax",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

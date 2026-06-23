@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import ProductParallaxControlPanel from "@/components/admin/ProductParallaxControlPanel";
 
 export default function AdminProductParallaxPage() {
-  return <AdminModulePlaceholder moduleKey="product-parallax" />;
+  return (
+    <AdminShell>
+      <ProductParallaxControlPanel />
+    </AdminShell>
+  );
 }

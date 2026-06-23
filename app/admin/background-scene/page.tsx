@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import BackgroundSceneControlPanel from "@/components/admin/BackgroundSceneControlPanel";
 
 export default function AdminBackgroundScenePage() {
-  return <AdminModulePlaceholder moduleKey="background-scene" />;
+  return (
+    <AdminShell>
+      <BackgroundSceneControlPanel />
+    </AdminShell>
+  );
 }

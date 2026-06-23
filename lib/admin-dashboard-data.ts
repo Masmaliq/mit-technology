@@ -365,6 +365,60 @@ export const motionEffectsControlPanel = {
   ],
 };
 
+export const backgroundSceneControlPanel = {
+  header: {
+    title: "Background Scene",
+    description:
+      "Kelola scene image/video, poster, overlay, cinematic background, dan fallback visual untuk halaman premium.",
+    badge: "Scene Control",
+    action: "Edit Scene",
+  },
+  summary: [
+    { label: "Scene Type", value: "Video", tone: "blue" },
+    { label: "Active Scene", value: "lab-chemical.mp4", tone: "violet" },
+    { label: "Poster Image", value: "Uploaded", tone: "emerald" },
+    { label: "Mobile Fallback", value: "Missing", tone: "amber" },
+  ],
+  sceneAsset: [
+    ["Background Type", "Video"],
+    ["File Name", "lab-chemical.mp4"],
+    ["Format", "MP4"],
+    ["Poster", "lab-poster.jpg"],
+    ["Status", "Active"],
+  ],
+  visualOverlay: [
+    ["Overlay Style", "Soft Blue Gradient"],
+    ["Opacity", "32%"],
+    ["Blend Mode", "Screen"],
+    ["Text Safety", "High"],
+    ["Status", "Enabled"],
+  ],
+  sceneUsage: [
+    ["Used On", "Hero, Product Parallax, Packages"],
+    ["Start Section", "Hero"],
+    ["End Section", "Case Studies"],
+    ["Desktop Mode", "Cinematic"],
+    ["Mobile Mode", "Poster Fallback"],
+  ],
+  performanceReadiness: [
+    ["Video Compression", "Ready"],
+    ["Poster Image", "Ready"],
+    ["Lazy Load", "Enabled"],
+    ["Mobile Fallback", "Missing"],
+    ["Reduced Motion", "Supported"],
+    ["Performance Check", "Pending"],
+  ],
+  quickActions: [
+    "Upload Scene",
+    "Edit Overlay",
+    "Replace Poster",
+    "Set Mobile Fallback",
+    "Preview Scene",
+    "Disable Scene",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

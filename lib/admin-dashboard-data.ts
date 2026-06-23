@@ -167,6 +167,29 @@ export const heroControlPanel = {
   ],
 };
 
+export const packagesControlPanel = {
+  header: {
+    title: "Packages",
+    description: "Kelola paket internal, pricing display, fitur, dan CTA paket website MIT Framework.",
+    badge: "Pricing Module",
+    action: "Tambah Package",
+  },
+  summary: [
+    { label: "Total Packages", value: "3", tone: "blue" },
+    { label: "Active Plan", value: "Premium", tone: "emerald" },
+    { label: "Price Range", value: "Rp5jt - Rp15jt+", tone: "violet" },
+    { label: "Featured Package", value: "Premium", tone: "blue" },
+  ],
+  quickActions: [
+    "Add Package",
+    "Edit Starter",
+    "Edit Growth",
+    "Edit Premium",
+    "Preview Pricing",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

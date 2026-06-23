@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import PackagesControlPanel from "@/components/admin/PackagesControlPanel";
 
 export default function AdminPackagesPage() {
-  return <AdminModulePlaceholder moduleKey="packages" />;
+  return (
+    <AdminShell>
+      <PackagesControlPanel />
+    </AdminShell>
+  );
 }

@@ -1,9 +1,27 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { sidebarSections } from "@/lib/admin-dashboard-data";
 
 type SidebarNavigationProps = {
   onNavigate?: () => void;
 };
+
+function normalizeAdminPath(path: string) {
+  if (path.length > 1 && path.endsWith("/")) {
+    return path.slice(0, -1);
+  }
+
+  return path;
+}
+
+function isActiveAdminPath(pathname: string, href: string) {
+  const currentPath = normalizeAdminPath(pathname);
+  const itemPath = normalizeAdminPath(href);
+
+  return currentPath === itemPath || currentPath.startsWith(`${itemPath}/`);
+}
 
 function SidebarBrand({ onClose }: { onClose?: () => void }) {
   return (
@@ -35,6 +53,8 @@ function SidebarBrand({ onClose }: { onClose?: () => void }) {
 }
 
 function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
+  const pathname = usePathname();
+
   return (
     <nav className="flex-1 space-y-7 overflow-y-auto px-4 py-6">
       {sidebarSections.map((section) => (
@@ -43,26 +63,31 @@ function SidebarNavigation({ onNavigate }: SidebarNavigationProps) {
             {section.label}
           </div>
           <div className="mt-3 space-y-1.5">
-            {section.items.map((item) => (
-              <Link
-                href={item.href}
-                key={item.label}
-                onClick={onNavigate}
-                className={`flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition ${
-                  item.active
-                    ? "bg-blue-50 text-blue-700 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
-                }`}
-              >
-                <span className="flex h-6 w-6 items-center justify-center text-xs">{item.icon}</span>
-                <span className="flex-1 font-semibold">{item.label}</span>
-                {item.badge ? (
-                  <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                    {item.badge}
-                  </span>
-                ) : null}
-              </Link>
-            ))}
+            {section.items.map((item) => {
+              const active = isActiveAdminPath(pathname, item.href);
+
+              return (
+                <Link
+                  aria-current={active ? "page" : undefined}
+                  href={item.href}
+                  key={item.label}
+                  onClick={onNavigate}
+                  className={`flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition ${
+                    active
+                      ? "bg-blue-50 text-blue-700 shadow-sm"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                  }`}
+                >
+                  <span className="flex h-6 w-6 items-center justify-center text-xs">{item.icon}</span>
+                  <span className="flex-1 font-semibold">{item.label}</span>
+                  {item.badge ? (
+                    <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white">
+                      {item.badge}
+                    </span>
+                  ) : null}
+                </Link>
+              );
+            })}
           </div>
         </div>
       ))}

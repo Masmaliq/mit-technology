@@ -33,19 +33,94 @@ export const sidebarSections: SidebarSection[] = [
   {
     label: "VISUAL",
     items: [
-      { label: "Product Parallax", href: "/admin/parallax", icon: "◑", badge: "!" },
-      { label: "Motion Effects", href: "/admin/motion", icon: "◈" },
-      { label: "Background Scene", href: "/admin/background", icon: "▣" },
+      { label: "Product Parallax", href: "/admin/product-parallax", icon: "◑", badge: "!" },
+      { label: "Motion Effects", href: "/admin/motion-effects", icon: "◈" },
+      { label: "Background Scene", href: "/admin/background-scene", icon: "▣" },
     ],
   },
   {
     label: "SYSTEM",
     items: [
-      { label: "SEO & Health", href: "/admin/health", icon: "◎" },
+      { label: "SEO & Health", href: "/admin/seo-health", icon: "◎" },
       { label: "Pengaturan", href: "/admin/settings", icon: "⚙" },
     ],
   },
 ];
+
+export const adminModulePages = {
+  pages: {
+    title: "Halaman",
+    description: "Kelola struktur halaman utama website sebelum setiap modul dihubungkan ke CMS penuh.",
+    badge: "Page Module",
+    action: "Tambah Halaman",
+  },
+  sections: {
+    title: "Sections",
+    description: "Atur daftar section, urutan konten, dan kesiapan modul homepage atau halaman dalam.",
+    badge: "Section Library",
+    action: "Tambah Section",
+  },
+  hero: {
+    title: "Hero",
+    description: "Kontrol hero content, visual media, CTA, dan status cinematic section setiap halaman.",
+    badge: "Hero Control",
+    action: "Edit Hero",
+  },
+  packages: {
+    title: "Packages",
+    description: "Kelola paket internal, pricing display, fitur, dan CTA paket website MIT Framework.",
+    badge: "Pricing Module",
+    action: "Tambah Package",
+  },
+  "case-studies": {
+    title: "Case Studies",
+    description: "Kelola studi kasus, project proof, client result, dan preview project unggulan.",
+    badge: "Proof Module",
+    action: "Tambah Case Study",
+  },
+  testimonials: {
+    title: "Testimonials",
+    description: "Kelola testimoni, avatar/logo klien, quote, dan status publikasi social proof.",
+    badge: "Trust Module",
+    action: "Tambah Testimonial",
+  },
+  footer: {
+    title: "Footer",
+    description: "Atur brand closing section, kontak, social links, dan background visual footer.",
+    badge: "Global Footer",
+    action: "Edit Footer",
+  },
+  "product-parallax": {
+    title: "Product Parallax",
+    description: "Kelola aset produk, scene background, scroll range, dan fallback mobile visual.",
+    badge: "Visual System",
+    action: "Edit Parallax",
+  },
+  "motion-effects": {
+    title: "Motion Effects",
+    description: "Pantau preset motion, reveal behavior, dan kesiapan animasi ringan di frontend.",
+    badge: "Motion System",
+    action: "Edit Motion",
+  },
+  "background-scene": {
+    title: "Background Scene",
+    description: "Kelola scene image/video, poster, dan status aset visual cinematic.",
+    badge: "Scene Control",
+    action: "Edit Scene",
+  },
+  "seo-health": {
+    title: "SEO & Health",
+    description: "Pantau SEO score, missing metadata, image readiness, dan status kesehatan website.",
+    badge: "Health Check",
+    action: "Run Audit",
+  },
+  settings: {
+    title: "Pengaturan",
+    description: "Konfigurasi sistem admin, preferensi global, dan kesiapan integrasi berikutnya.",
+    badge: "System Settings",
+    action: "Buka Pengaturan",
+  },
+} as const;
 
 export const dashboardHero = {
   title: "MIT Framework Control Center",

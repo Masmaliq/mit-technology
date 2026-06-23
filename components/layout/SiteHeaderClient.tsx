@@ -188,7 +188,7 @@ export function SiteHeaderClient({
                       key={href}
                       className={`rounded-2xl px-4 py-3 text-sm font-bold transition duration-200 ${
                         active
-                          ? "bg-white/95 text-slate-950"
+                          ? "bg-white/14 text-white"
                           : "text-white hover:bg-white/12 hover:text-white"
                       }`}
                     >

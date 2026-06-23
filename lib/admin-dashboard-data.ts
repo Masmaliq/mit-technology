@@ -309,6 +309,62 @@ export const productParallaxControlPanel = {
   ],
 };
 
+export const motionEffectsControlPanel = {
+  header: {
+    title: "Motion Effects",
+    description: "Kelola preset motion, reveal behavior, scroll interaction, dan fallback animasi mobile MIT Framework.",
+    badge: "Motion System",
+    action: "Edit Motion",
+  },
+  summary: [
+    { label: "Motion Preset", value: "Premium", tone: "blue" },
+    { label: "Reveal Animation", value: "Active", tone: "emerald" },
+    { label: "Scroll Behavior", value: "Calibrated", tone: "violet" },
+    { label: "Mobile Motion", value: "Lightweight", tone: "blue" },
+  ],
+  presets: [
+    ["Fade Up", "Active"],
+    ["Soft Parallax", "Active"],
+    ["Stagger Reveal", "Active"],
+    ["Section Transition", "Active"],
+  ],
+  animationBehavior: [
+    ["Reveal on Scroll", "Enabled"],
+    ["Delay", "0.08s stagger"],
+    ["Duration", "0.7s"],
+    ["Easing", "Premium ease-out"],
+    ["Repeat / Once", "Once in view"],
+  ],
+  scrollInteraction: [
+    ["Scroll Intensity", "Subtle"],
+    ["Trigger Point", "20% viewport"],
+    ["Section Start", "Hero"],
+    ["Section End", "Footer CTA"],
+    ["Behavior Mode", "Cinematic soft reveal"],
+  ],
+  mobileFallback: [
+    ["Lightweight Motion", "ON"],
+    ["Reduced Motion", "Supported"],
+    ["Disabled Heavy Effect", "Enabled"],
+    ["Status Readiness", "Ready"],
+  ],
+  readiness: [
+    ["Desktop Motion", "Ready"],
+    ["Mobile Motion", "Ready"],
+    ["Reduced Motion", "Ready"],
+    ["Performance Safe", "Ready"],
+    ["Animation Sync", "Ready"],
+  ],
+  quickActions: [
+    "Edit Preset",
+    "Edit Scroll Behavior",
+    "Edit Mobile Motion",
+    "Preview Motion",
+    "Disable Heavy Motion",
+    "Open Sanity",
+  ],
+};
+
 export const dashboardHero = {
   title: "MIT Framework Control Center",
   description:

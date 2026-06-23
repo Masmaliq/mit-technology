@@ -1,5 +1,10 @@
-import AdminModulePlaceholder from "@/components/admin/AdminModulePlaceholder";
+import AdminShell from "@/components/admin/AdminShell";
+import MotionEffectsControlPanel from "@/components/admin/MotionEffectsControlPanel";
 
 export default function AdminMotionEffectsPage() {
-  return <AdminModulePlaceholder moduleKey="motion-effects" />;
+  return (
+    <AdminShell>
+      <MotionEffectsControlPanel />
+    </AdminShell>
+  );
 }

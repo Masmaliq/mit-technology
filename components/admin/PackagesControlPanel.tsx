@@ -1,10 +1,12 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { baseFeatures, packagePlans, packagesControlPanel, premiumFeatures } from "@/lib/admin-dashboard-data";
+import type { PackageItem } from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
   emerald: "border-emerald-100 bg-emerald-50 text-emerald-700",
   violet: "border-violet-100 bg-violet-50 text-violet-700",
+  amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
 
 function FeatureGroup({
@@ -40,7 +42,42 @@ function FeatureGroup({
   );
 }
 
-export default function PackagesControlPanel() {
+function normalizePackagePlans(packages?: PackageItem[]) {
+  if (!packages?.length) {
+    return packagePlans;
+  }
+
+  const featuredPackage = packages.find((item) => item.featured);
+
+  return packages.map((item, index) => ({
+    name: item.title || `Package ${index + 1}`,
+    price: item.startingPrice || "Custom",
+    description: item.description || "Package description belum tersedia di Sanity.",
+    features: item.features?.length ? item.features : ["Scope belum tersedia"],
+    active: Boolean(item.featured || (!featuredPackage && index === 0)),
+  }));
+}
+
+function buildPackageSummary(packages?: PackageItem[]) {
+  if (!packages?.length) {
+    return packagesControlPanel.summary;
+  }
+
+  const featuredPackage = packages.find((item) => item.featured);
+  const prices = packages.map((item) => item.startingPrice).filter(Boolean);
+
+  return [
+    { label: "Total Packages", value: `${packages.length}`, tone: "blue" },
+    { label: "Active Plan", value: featuredPackage?.title || packages[0]?.title || "Ready", tone: "emerald" },
+    { label: "Price Range", value: prices.length ? prices.join(" · ") : "Custom", tone: "violet" },
+    { label: "Featured Package", value: featuredPackage?.title || "Not Set", tone: featuredPackage ? "emerald" : "amber" },
+  ];
+}
+
+export default function PackagesControlPanel({ packages }: { packages?: PackageItem[] }) {
+  const packageCards = normalizePackagePlans(packages);
+  const summaryCards = buildPackageSummary(packages);
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-violet-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -67,7 +104,7 @@ export default function PackagesControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {packagesControlPanel.summary.map((item) => (
+        {summaryCards.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -81,7 +118,7 @@ export default function PackagesControlPanel() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
-        {packagePlans.map((plan) => (
+        {packageCards.map((plan) => (
           <article
             className={`flex h-full flex-col rounded-[2rem] border p-5 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-6 ${
               plan.active

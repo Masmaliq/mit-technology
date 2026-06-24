@@ -1,10 +1,12 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { caseStudiesControlPanel } from "@/lib/admin-dashboard-data";
+import type { CaseStudyItem } from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
   emerald: "border-emerald-100 bg-emerald-50 text-emerald-700",
   violet: "border-violet-100 bg-violet-50 text-violet-700",
+  amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
 
 function DetailList({ items }: { items: string[][] }) {
@@ -20,7 +22,89 @@ function DetailList({ items }: { items: string[][] }) {
   );
 }
 
-export default function CaseStudiesControlPanel() {
+function hasImage(caseStudy: CaseStudyItem) {
+  return Boolean(caseStudy.featuredImage?.url || caseStudy.featuredImage?.asset?.url || caseStudy.featuredImage?.asset?._ref);
+}
+
+function normalizeCaseCards(caseStudies?: CaseStudyItem[]) {
+  if (!caseStudies?.length) {
+    return caseStudiesControlPanel.featuredCases;
+  }
+
+  const orderedCases = [...caseStudies].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
+
+  return orderedCases.slice(0, 3).map((item) => ({
+    title: item.title || item.client || "Untitled Case Study",
+    category: item.industry || item.client || "Case Study",
+    status: item.featured ? "Featured" : "Published",
+    result: item.result || item.solution || item.challenge || "Result copy belum tersedia di Sanity.",
+    metrics: [
+      item.client || "Client Ready",
+      hasImage(item) ? "Thumbnail Ready" : "Thumbnail Missing",
+      item.challenge && item.solution && item.result ? "Content Ready" : "Copy Review",
+    ],
+    cta: "Preview Case",
+    featured: Boolean(item.featured),
+  }));
+}
+
+function buildCaseSummary(caseStudies?: CaseStudyItem[]) {
+  if (!caseStudies?.length) {
+    return caseStudiesControlPanel.summary;
+  }
+
+  const featuredCount = caseStudies.filter((item) => item.featured).length;
+  const needsReviewCount = caseStudies.filter((item) => !item.result || !hasImage(item)).length;
+
+  return [
+    { label: "Total Case Studies", value: `${caseStudies.length}`, tone: "blue" },
+    { label: "Published", value: `${caseStudies.length}`, tone: "emerald" },
+    { label: "Need Review", value: `${needsReviewCount}`, tone: needsReviewCount ? "amber" : "emerald" },
+    { label: "Featured", value: `${featuredCount}`, tone: featuredCount ? "blue" : "violet" },
+  ];
+}
+
+function buildReadiness(caseStudies?: CaseStudyItem[]) {
+  if (!caseStudies?.length) {
+    return caseStudiesControlPanel.readiness;
+  }
+
+  const hasAny = (predicate: (item: CaseStudyItem) => boolean) => caseStudies.some(predicate);
+
+  return [
+    ["Thumbnail Image", hasAny(hasImage) ? "Ready" : "Pending"],
+    ["Client Name", hasAny((item) => Boolean(item.client)) ? "Ready" : "Pending"],
+    ["Challenge", hasAny((item) => Boolean(item.challenge)) ? "Ready" : "Pending"],
+    ["Solution", hasAny((item) => Boolean(item.solution)) ? "Ready" : "Pending"],
+    ["Result", hasAny((item) => Boolean(item.result)) ? "Ready" : "Pending"],
+    ["Gallery", hasAny((item) => Boolean(item.gallery?.length)) ? "Ready" : "Pending"],
+  ];
+}
+
+function buildWorkflow(caseStudies?: CaseStudyItem[]) {
+  if (!caseStudies?.length) {
+    return caseStudiesControlPanel.workflow;
+  }
+
+  const readyToPublish = caseStudies.filter((item) => item.title && item.client && item.result && hasImage(item)).length;
+  const missingThumbnail = caseStudies.filter((item) => !hasImage(item)).length;
+  const missingResultCopy = caseStudies.filter((item) => !item.result).length;
+
+  return [
+    ["Published Content", `${caseStudies.length}`],
+    ["Ready to Publish", `${readyToPublish}`],
+    ["Featured Cases", `${caseStudies.filter((item) => item.featured).length}`],
+    ["Missing Thumbnail", `${missingThumbnail}`],
+    ["Missing Result Copy", `${missingResultCopy}`],
+  ];
+}
+
+export default function CaseStudiesControlPanel({ caseStudies }: { caseStudies?: CaseStudyItem[] }) {
+  const summaryCards = buildCaseSummary(caseStudies);
+  const caseCards = normalizeCaseCards(caseStudies);
+  const readiness = buildReadiness(caseStudies);
+  const workflow = buildWorkflow(caseStudies);
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-violet-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -47,7 +131,7 @@ export default function CaseStudiesControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {caseStudiesControlPanel.summary.map((item) => (
+        {summaryCards.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -61,7 +145,7 @@ export default function CaseStudiesControlPanel() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
-        {caseStudiesControlPanel.featuredCases.map((item) => (
+        {caseCards.map((item) => (
           <article
             className={`flex h-full flex-col rounded-[2rem] border p-5 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-6 ${
               item.featured
@@ -113,7 +197,7 @@ export default function CaseStudiesControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Case Study Readiness</h2>
           <p className="mt-1 text-sm text-slate-500">Status kelengkapan struktur konten case study.</p>
           <div className="mt-6">
-            <DetailList items={caseStudiesControlPanel.readiness} />
+            <DetailList items={readiness} />
           </div>
         </article>
 
@@ -121,7 +205,7 @@ export default function CaseStudiesControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Content Workflow</h2>
           <p className="mt-1 text-sm text-slate-500">Ringkasan pipeline editorial dan publishing proof.</p>
           <div className="mt-6">
-            <DetailList items={caseStudiesControlPanel.workflow} />
+            <DetailList items={workflow} />
           </div>
         </article>
       </div>

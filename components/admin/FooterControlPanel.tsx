@@ -1,5 +1,6 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { footerControlPanel } from "@/lib/admin-dashboard-data";
+import type { Footer, SiteSettings } from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
@@ -7,6 +8,146 @@ const summaryTone: Record<string, string> = {
   violet: "border-violet-100 bg-violet-50 text-violet-700",
   amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
+
+function hasFooterData(footer?: Footer, siteSettings?: SiteSettings) {
+  return Boolean(
+    footer?.description ||
+      footer?.address ||
+      footer?.email ||
+      footer?.phone ||
+      footer?.whatsapp ||
+      footer?.copyright ||
+      footer?.socialLinks?.length ||
+      siteSettings?.companyName ||
+      siteSettings?.siteTitle ||
+      siteSettings?.tagline ||
+      siteSettings?.description
+  );
+}
+
+function getBrandName(siteSettings?: SiteSettings) {
+  return siteSettings?.companyName || siteSettings?.siteTitle || "MIT Technology";
+}
+
+function getFooterDescription(footer?: Footer, siteSettings?: SiteSettings) {
+  return footer?.description || siteSettings?.description || siteSettings?.siteDescription || "";
+}
+
+function getSocialCount(footer?: Footer, siteSettings?: SiteSettings) {
+  const footerLinks = footer?.socialLinks?.filter((item) => item.url).length ?? 0;
+  const settingsLinks = [siteSettings?.instagram, siteSettings?.linkedin, siteSettings?.youtube, siteSettings?.facebook].filter(Boolean).length;
+
+  return footerLinks || settingsLinks;
+}
+
+function buildSummary(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.summary;
+  }
+
+  const contactReady = Boolean(footer?.email || footer?.phone || footer?.whatsapp || siteSettings?.email || siteSettings?.phone || siteSettings?.whatsapp);
+
+  return [
+    { label: "Footer Status", value: "Active", tone: "emerald" },
+    { label: "Brand Info", value: getBrandName(siteSettings) ? "Ready" : "Review", tone: "blue" },
+    { label: "Navigation Links", value: "Fallback", tone: "violet" },
+    { label: "Social Links", value: `${getSocialCount(footer, siteSettings)}`, tone: contactReady ? "emerald" : "amber" },
+  ];
+}
+
+function buildBrandPreview(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.brandClosingPreview;
+  }
+
+  return [
+    ["Brand Name", getBrandName(siteSettings)],
+    ["Tagline", siteSettings?.tagline || "Ready"],
+    ["Description", getFooterDescription(footer, siteSettings) || "Review"],
+    ["CTA Label", footer?.whatsapp || siteSettings?.whatsapp ? "WhatsApp CTA" : "Review"],
+    ["Status", getFooterDescription(footer, siteSettings) ? "Ready" : "Review"],
+  ];
+}
+
+function buildContactInformation(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.contactInformation;
+  }
+
+  const whatsapp = footer?.whatsapp || siteSettings?.whatsapp;
+  const email = footer?.email || siteSettings?.email;
+  const phone = footer?.phone || siteSettings?.phone;
+  const address = footer?.address || siteSettings?.address;
+
+  return [
+    ["WhatsApp", whatsapp ? "Ready" : "Review"],
+    ["Email", email ? "Ready" : "Review"],
+    ["Phone", phone ? "Ready" : "Review"],
+    ["Location", address ? "Ready" : "Review"],
+    ["Contact CTA", whatsapp || email ? "Enabled" : "Review"],
+  ];
+}
+
+function buildSocialLinks(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.socialLinks;
+  }
+
+  const footerPlatforms = new Map((footer?.socialLinks ?? []).map((item) => [item.platform?.toLowerCase(), item.url]));
+
+  return [
+    ["Instagram", footerPlatforms.get("instagram") || siteSettings?.instagram ? "Connected" : "Pending"],
+    ["WhatsApp", footer?.whatsapp || siteSettings?.whatsapp ? "Connected" : "Pending"],
+    ["Email", footer?.email || siteSettings?.email ? "Connected" : "Pending"],
+    ["LinkedIn", footerPlatforms.get("linkedin") || siteSettings?.linkedin ? "Connected" : "Pending"],
+  ];
+}
+
+function buildLegalSystem(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.legalSystem;
+  }
+
+  return [
+    ["Copyright", footer?.copyright || `© 2026 ${getBrandName(siteSettings)}`],
+    ["Privacy Policy", "Pending"],
+    ["Terms", "Pending"],
+    ["Sitemap", siteSettings?.siteUrl ? "Ready" : "Review"],
+    ["Footer SEO", siteSettings?.siteTitle || siteSettings?.siteDescription ? "Ready" : "Review"],
+  ];
+}
+
+function buildVisualSettings(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.visualSettings;
+  }
+
+  return [
+    ["Background Type", footer?.enableFooterBackground ? "Image" : "Soft Gradient"],
+    ["Background Image", footer?.footerBackgroundImage?.url ? "Uploaded" : "Review"],
+    ["Overlay Opacity", footer?.enableFooterBackground ? `${footer.footerOverlayOpacity ?? 86}%` : "Default"],
+    ["Position", footer?.footerBackgroundPosition || "center"],
+    ["Size", footer?.footerBackgroundSize || "cover"],
+    ["Status", "Active"],
+  ];
+}
+
+function buildReadiness(footer?: Footer, siteSettings?: SiteSettings) {
+  if (!hasFooterData(footer, siteSettings)) {
+    return footerControlPanel.readinessChecklist;
+  }
+
+  const contactReady = Boolean(footer?.email || footer?.phone || footer?.whatsapp || siteSettings?.email || siteSettings?.phone || siteSettings?.whatsapp);
+
+  return [
+    ["Brand Copy", getFooterDescription(footer, siteSettings) ? "Ready" : "Review"],
+    ["Contact Links", contactReady ? "Ready" : "Review"],
+    ["Navigation", "Ready"],
+    ["Social Links", getSocialCount(footer, siteSettings) > 0 ? "Ready" : "Review"],
+    ["Legal Links", footer?.copyright ? "Ready" : "Pending"],
+    ["Mobile Footer", "Ready"],
+  ];
+}
 
 function DetailList({ items }: { items: string[][] }) {
   return (
@@ -62,7 +203,20 @@ function FooterPanelCard({
   );
 }
 
-export default function FooterControlPanel() {
+export default function FooterControlPanel({ footer, siteSettings }: { footer?: Footer; siteSettings?: SiteSettings }) {
+  const summaryCards = buildSummary(footer, siteSettings);
+  const brandClosingPreview = buildBrandPreview(footer, siteSettings);
+  const contactInformation = buildContactInformation(footer, siteSettings);
+  const socialLinks = buildSocialLinks(footer, siteSettings);
+  const legalSystem = buildLegalSystem(footer, siteSettings);
+  const visualSettings = buildVisualSettings(footer, siteSettings);
+  const readinessChecklist = buildReadiness(footer, siteSettings);
+  const brandName = brandClosingPreview[0]?.[1] || "MIT Technology";
+  const tagline = brandClosingPreview[1]?.[1] || "Membangun fondasi digital untuk pertumbuhan bisnis.";
+  const description = brandClosingPreview[2]?.[1] || "";
+  const ctaLabel = brandClosingPreview[3]?.[1] || "Start Your Project";
+  const previewStatus = brandClosingPreview[4]?.[1] || "Ready";
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-violet-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -89,7 +243,7 @@ export default function FooterControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {footerControlPanel.summary.map((item) => (
+        {summaryCards.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -112,18 +266,17 @@ export default function FooterControlPanel() {
             <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-bold text-blue-100">
               Brand Closing Preview
             </span>
-            <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">MIT Technology</h2>
+            <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{brandName}</h2>
             <p className="mt-3 max-w-xl text-sm leading-6 text-blue-100">
-              Membangun fondasi digital untuk pertumbuhan bisnis.
+              {tagline}
             </p>
             <p className="mt-5 max-w-2xl text-sm leading-6 text-white/72">
-              Website, sistem internal, automasi, dan solusi digital yang dirancang untuk bisnis yang ingin bertumbuh secara
-              berkelanjutan.
+              {description}
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950">Start Your Project</span>
+              <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950">{ctaLabel}</span>
               <span className="rounded-full border border-emerald-300/30 bg-emerald-400/10 px-4 py-2 text-sm font-bold text-emerald-100">
-                Ready
+                {previewStatus}
               </span>
             </div>
           </div>
@@ -132,7 +285,7 @@ export default function FooterControlPanel() {
         <FooterPanelCard
           accent="blue"
           description="Rangkuman copy dan CTA yang muncul di closing section."
-          items={footerControlPanel.brandClosingPreview}
+          items={brandClosingPreview}
           title="Brand Closing Details"
         />
       </div>
@@ -141,7 +294,7 @@ export default function FooterControlPanel() {
         <FooterPanelCard
           accent="emerald"
           description="Status informasi kontak utama pada footer."
-          items={footerControlPanel.contactInformation}
+          items={contactInformation}
           title="Contact Information"
         />
 
@@ -167,7 +320,7 @@ export default function FooterControlPanel() {
         <FooterPanelCard
           accent="amber"
           description="Status kanal sosial dan external link yang tersedia."
-          items={footerControlPanel.socialLinks}
+          items={socialLinks}
           title="Social & External Links"
         />
       </div>
@@ -175,18 +328,18 @@ export default function FooterControlPanel() {
       <div className="grid gap-6 xl:grid-cols-3">
         <FooterPanelCard
           description="Informasi legal dan sistem pendukung footer."
-          items={footerControlPanel.legalSystem}
+          items={legalSystem}
           title="Legal & System"
         />
         <FooterPanelCard
           accent="violet"
           description="Pengaturan visual footer yang menjadi bagian dari global closing."
-          items={footerControlPanel.visualSettings}
+          items={visualSettings}
           title="Visual Footer Settings"
         />
         <FooterPanelCard
           description="Checklist kesiapan footer sebelum handoff production."
-          items={footerControlPanel.readinessChecklist}
+          items={readinessChecklist}
           title="Footer Readiness Checklist"
         />
       </div>

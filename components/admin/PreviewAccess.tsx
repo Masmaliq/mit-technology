@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { previewAccess } from "@/lib/admin-dashboard-data";
 
 export default function PreviewAccess() {
@@ -7,7 +8,8 @@ export default function PreviewAccess() {
       <p className="mt-1 text-sm text-slate-500">Mode preview untuk cek tampilan website.</p>
       <div className="mt-5 grid gap-3">
         {previewAccess.map((item, index) => (
-          <button
+          <AdminActionLink
+            action={item}
             className={`rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
               index === 0
                 ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
@@ -16,7 +18,7 @@ export default function PreviewAccess() {
             key={item}
           >
             {item}
-          </button>
+          </AdminActionLink>
         ))}
       </div>
     </section>

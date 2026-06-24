@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { baseFeatures, packagePlans, packagesControlPanel, premiumFeatures } from "@/lib/admin-dashboard-data";
 
 const summaryTone: Record<string, string> = {
@@ -56,12 +57,12 @@ export default function PackagesControlPanel() {
             </p>
           </div>
 
-          <button
+          <AdminActionLink
+            action={packagesControlPanel.header.action}
             className="w-fit rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700"
-            type="button"
           >
             {packagesControlPanel.header.action}
-          </button>
+          </AdminActionLink>
         </div>
       </div>
 
@@ -138,17 +139,17 @@ export default function PackagesControlPanel() {
         <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow package dan pricing.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {packagesControlPanel.quickActions.map((action, index) => (
-            <button
+            <AdminActionLink
+              action={action}
               className={`rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
                 index === 0
                   ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                   : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
               }`}
               key={action}
-              type="button"
             >
               {action}
-            </button>
+            </AdminActionLink>
           ))}
         </div>
       </article>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import PackagePlanStatus from "./PackagePlanStatus";
 import PreviewPanel from "./PreviewPanel";
 import ProductParallaxStatus from "./ProductParallaxStatus";
@@ -56,12 +57,12 @@ function InternalPackageSummary() {
           </div>
         ))}
 
-        <button
-          onClick={() => alert("Action: Kelola Paket")}
+        <AdminActionLink
+          action="Edit Packages"
           className="mt-2 text-xs font-semibold text-blue-600 hover:text-blue-700"
         >
           Kelola Paket →
-        </button>
+        </AdminActionLink>
       </div>
     </div>
   );

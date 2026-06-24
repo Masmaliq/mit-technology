@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type AdminTopbarProps = {
   onOpenMenu: () => void;
 };
@@ -27,12 +29,12 @@ export default function AdminTopbar({ onOpenMenu }: AdminTopbarProps) {
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
             Website Live
           </span>
-          <button className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 sm:px-4">
+          <Link className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 sm:px-4" href="/">
             Preview
-          </button>
-          <button className="hidden rounded-full bg-blue-600 px-3 py-2 text-xs font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 sm:inline-flex sm:px-4">
+          </Link>
+          <Link className="hidden rounded-full bg-blue-600 px-3 py-2 text-xs font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 sm:inline-flex sm:px-4" href="/admin/sections">
             Tambah Section
-          </button>
+          </Link>
         </div>
       </div>
     </header>

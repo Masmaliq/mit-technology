@@ -1,3 +1,5 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
+
 const healthItems = [
   { label: "SEO Status", badge: "Score: 74", badgeClass: "bg-amber-100 text-amber-700" },
   { label: "Missing Images", badge: "Lengkap", badgeClass: "bg-emerald-100 text-emerald-700" },
@@ -33,7 +35,9 @@ export default function WebsiteHealthPanel() {
 
       <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-3">
         <span className="text-xs text-slate-500">2 item perlu diperbaiki</span>
-        <button className="text-xs font-semibold text-blue-600 hover:text-blue-700">Fix Issues →</button>
+        <AdminActionLink action="SEO Audit" className="text-xs font-semibold text-blue-600 hover:text-blue-700">
+          Fix Issues →
+        </AdminActionLink>
       </div>
     </div>
   );

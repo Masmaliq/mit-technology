@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { dashboardHero } from "@/lib/admin-dashboard-data";
 
 export default function DashboardHero() {
@@ -28,12 +29,12 @@ export default function DashboardHero() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50">
+          <AdminActionLink action="Review Metadata" className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50">
             {dashboardHero.actions[0]}
-          </button>
-          <button className="rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700">
+          </AdminActionLink>
+          <AdminActionLink action={dashboardHero.actions[1]} className="rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700">
             {dashboardHero.actions[1]}
-          </button>
+          </AdminActionLink>
         </div>
       </div>
     </section>

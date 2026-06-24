@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function DashboardTopbar() {
   return (
     <header className="top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-sm">
@@ -13,8 +15,8 @@ export default function DashboardTopbar() {
             <span className="h-2 w-2 rounded-full bg-emerald-500 block animate-pulse" /> Website Live
           </div>
 
-          <button className="btn btn-ghost btn-sm hidden md:inline-flex">↗ Preview</button>
-          <button className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700">+ Tambah Section</button>
+          <Link className="btn btn-ghost btn-sm hidden md:inline-flex" href="/">↗ Preview</Link>
+          <Link className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700" href="/admin/sections">+ Tambah Section</Link>
         </div>
       </div>
     </header>

@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { heroControlPanel } from "@/lib/admin-dashboard-data";
 
 const summaryTone: Record<string, string> = {
@@ -36,12 +37,12 @@ export default function HeroControlPanel() {
             </p>
           </div>
 
-          <button
+          <AdminActionLink
+            action="Hero Studio"
             className="w-fit rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700"
-            type="button"
           >
             {heroControlPanel.header.action}
-          </button>
+          </AdminActionLink>
         </div>
       </div>
 
@@ -112,17 +113,17 @@ export default function HeroControlPanel() {
           <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow hero.</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {heroControlPanel.quickActions.map((action, index) => (
-              <button
+              <AdminActionLink
+                action={action}
                 className={`rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
                   index === 0
                     ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                     : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
                 }`}
                 key={action}
-                type="button"
               >
                 {action}
-              </button>
+              </AdminActionLink>
             ))}
           </div>
         </article>

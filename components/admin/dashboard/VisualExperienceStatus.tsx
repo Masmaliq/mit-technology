@@ -1,3 +1,5 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
+
 export type VisualMode = {
   name: string;
   desc: string;
@@ -67,7 +69,9 @@ export default function VisualExperienceStatus({ modes, onToggleMode }: VisualEx
         <span className="text-xs text-slate-500">
           {modes.filter((mode) => mode.active).length} dari {modes.length} mode aktif
         </span>
-        <button className="text-xs font-semibold text-blue-600 hover:text-blue-700">Kelola Mode →</button>
+        <AdminActionLink action="Edit Motion" className="text-xs font-semibold text-blue-600 hover:text-blue-700">
+          Kelola Mode →
+        </AdminActionLink>
       </div>
     </div>
   );

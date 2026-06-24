@@ -1,3 +1,5 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
+
 type ProductParallaxStatusProps = {
   parallaxOn: boolean;
   onToggleParallax: () => void;
@@ -35,6 +37,9 @@ export default function ProductParallaxStatus({
   onPreviewParallax,
   onQuickAction,
 }: ProductParallaxStatusProps) {
+  void onPreviewParallax;
+  void onQuickAction;
+
   const statusRows = [
     ["Product Parallax", parallaxOn ? "ON" : "OFF", parallaxOn ? "text-emerald-600" : "text-slate-600"],
     ...mainStatus,
@@ -49,12 +54,12 @@ export default function ProductParallaxStatus({
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
               {parallaxOn ? "● Parallax ON" : "● Parallax OFF"}
             </span>
-            <button
-              onClick={onPreviewParallax}
+            <AdminActionLink
+              action="Preview Parallax"
               className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium transition hover:bg-slate-50"
             >
               Preview
-            </button>
+            </AdminActionLink>
             <button
               onClick={onToggleParallax}
               className={`rounded-lg px-3 py-2 text-xs font-medium text-white transition ${
@@ -107,9 +112,9 @@ export default function ProductParallaxStatus({
         <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Quick Actions Parallax</div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           {parallaxActions.map((button) => (
-            <button
+            <AdminActionLink
               key={button.action}
-              onClick={() => onQuickAction(button.action)}
+              action={button.action}
               className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
                 button.danger
                   ? "border border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
@@ -119,7 +124,7 @@ export default function ProductParallaxStatus({
               }`}
             >
               {button.label}
-            </button>
+            </AdminActionLink>
           ))}
         </div>
       </div>

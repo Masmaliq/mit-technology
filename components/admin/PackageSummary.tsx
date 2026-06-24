@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { packageSummary } from "@/lib/admin-dashboard-data";
 
 export default function PackageSummary() {
@@ -21,9 +22,9 @@ export default function PackageSummary() {
           </div>
         ))}
       </div>
-      <button className="mt-5 text-sm font-bold text-blue-600 transition hover:text-blue-700">
+      <AdminActionLink action="Edit Packages" className="mt-5 text-sm font-bold text-blue-600 transition hover:text-blue-700">
         Kelola Paket →
-      </button>
+      </AdminActionLink>
     </section>
   );
 }

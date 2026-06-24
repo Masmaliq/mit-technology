@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { quickActions } from "@/lib/admin-dashboard-data";
 
 export default function QuickActions() {
@@ -7,12 +8,13 @@ export default function QuickActions() {
       <p className="mt-1 text-sm text-slate-500">Akses cepat untuk konten utama.</p>
       <div className="mt-5 grid gap-3">
         {quickActions.map((action) => (
-          <button
+          <AdminActionLink
+            action={action}
             className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
             key={action}
           >
             {action}
-          </button>
+          </AdminActionLink>
         ))}
       </div>
     </section>

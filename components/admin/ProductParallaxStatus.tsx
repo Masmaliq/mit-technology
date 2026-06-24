@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { parallaxStatus } from "@/lib/admin-dashboard-data";
 
 export default function ProductParallaxStatus() {
@@ -52,12 +53,13 @@ export default function ProductParallaxStatus() {
         <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Quick Actions Parallax</h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {parallaxStatus.actions.map((action) => (
-            <button
+            <AdminActionLink
+              action={action}
               className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
               key={action}
             >
               {action}
-            </button>
+            </AdminActionLink>
           ))}
         </div>
       </div>

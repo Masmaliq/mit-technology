@@ -1,3 +1,5 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
+
 type QuickActionsPanelProps = {
   onQuickAction: (action: string) => void;
 };
@@ -12,6 +14,8 @@ const quickActions = [
 ];
 
 export default function QuickActionsPanel({ onQuickAction }: QuickActionsPanelProps) {
+  void onQuickAction;
+
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       <div className="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4">
@@ -21,13 +25,13 @@ export default function QuickActionsPanel({ onQuickAction }: QuickActionsPanelPr
       <div className="p-6">
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map((button) => (
-            <button
+            <AdminActionLink
               key={button.action}
-              onClick={() => onQuickAction(button.action)}
+              action={button.action}
               className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
             >
               {button.label}
-            </button>
+            </AdminActionLink>
           ))}
         </div>
       </div>

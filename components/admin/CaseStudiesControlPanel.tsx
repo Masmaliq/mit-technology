@@ -1,3 +1,4 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
 import { caseStudiesControlPanel } from "@/lib/admin-dashboard-data";
 
 const summaryTone: Record<string, string> = {
@@ -36,12 +37,12 @@ export default function CaseStudiesControlPanel() {
             </p>
           </div>
 
-          <button
+          <AdminActionLink
+            action={caseStudiesControlPanel.header.action}
             className="w-fit rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700"
-            type="button"
           >
             {caseStudiesControlPanel.header.action}
-          </button>
+          </AdminActionLink>
         </div>
       </div>
 
@@ -97,12 +98,12 @@ export default function CaseStudiesControlPanel() {
               ))}
             </div>
 
-            <button
+            <AdminActionLink
+              action={item.cta}
               className="mt-6 w-fit rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700 transition hover:bg-blue-100"
-              type="button"
             >
               {item.cta}
-            </button>
+            </AdminActionLink>
           </article>
         ))}
       </div>
@@ -130,17 +131,17 @@ export default function CaseStudiesControlPanel() {
         <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow case studies.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {caseStudiesControlPanel.quickActions.map((action, index) => (
-            <button
+            <AdminActionLink
+              action={action}
               className={`rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
                 index === 0
                   ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                   : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
               }`}
               key={action}
-              type="button"
             >
               {action}
-            </button>
+            </AdminActionLink>
           ))}
         </div>
       </article>

@@ -1,3 +1,5 @@
+import AdminActionLink from "@/components/admin/AdminActionLink";
+
 export default function WelcomePanel() {
   return (
     <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-br from-sky-50 via-purple-50 to-emerald-50 p-6">
@@ -27,12 +29,12 @@ export default function WelcomePanel() {
         </div>
 
         <div className="flex flex-shrink-0 items-center gap-2 md:gap-3">
-          <button className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium transition hover:bg-slate-50 md:px-4 md:text-sm">
+          <AdminActionLink action="Review Metadata" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium transition hover:bg-slate-50 md:px-4 md:text-sm">
             Lihat Log
-          </button>
-          <button className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 md:px-4 md:text-sm">
+          </AdminActionLink>
+          <AdminActionLink action="Edit Homepage" className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 md:px-4 md:text-sm">
             Edit Homepage
-          </button>
+          </AdminActionLink>
         </div>
       </div>
     </div>

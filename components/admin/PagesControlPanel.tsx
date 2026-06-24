@@ -1,5 +1,19 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { pagesControlPanel } from "@/lib/admin-dashboard-data";
+import type {
+  About,
+  CaseStudiesPageSettings,
+  CaseStudyItem,
+  Contact,
+  Footer,
+  Homepage,
+  PackageItem,
+  PackagesPageSettings,
+  PortfolioItem,
+  SiteSettings,
+  SolutionItem,
+  SolutionsPage,
+} from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
@@ -7,6 +21,163 @@ const summaryTone: Record<string, string> = {
   violet: "border-violet-100 bg-violet-50 text-violet-700",
   amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
+
+type AdminPageStatus = {
+  title: string;
+  status: string;
+  type: string;
+  visibility: string;
+  action: string;
+};
+
+type PagesAdminData = {
+  homepage?: Homepage;
+  about?: About;
+  solutionsPage?: SolutionsPage;
+  solutions?: SolutionItem[];
+  packagesPageSettings?: PackagesPageSettings;
+  packages?: PackageItem[];
+  caseStudiesPageSettings?: CaseStudiesPageSettings;
+  caseStudies?: CaseStudyItem[];
+  portfolio?: PortfolioItem[];
+  contact?: Contact;
+  footer?: Footer;
+  siteSettings?: SiteSettings;
+};
+
+function hasObjectValue(value?: Record<string, unknown>) {
+  return Boolean(value && Object.values(value).some((item) => Array.isArray(item) ? item.length > 0 : Boolean(item)));
+}
+
+function hasPagesData(data?: PagesAdminData) {
+  return Boolean(
+    hasObjectValue(data?.homepage as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.about as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.solutionsPage as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.packagesPageSettings as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.caseStudiesPageSettings as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.contact as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.footer as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.siteSettings as Record<string, unknown> | undefined) ||
+      data?.solutions?.length ||
+      data?.packages?.length ||
+      data?.caseStudies?.length ||
+      data?.portfolio?.length
+  );
+}
+
+function pageStatus(hasContent: boolean, needsReview = false) {
+  if (!hasContent) return "Draft";
+  return needsReview ? "Review" : "Published";
+}
+
+function hasSeo(page?: { seoTitle?: string; seoDescription?: string; seoImage?: unknown }) {
+  return Boolean(page?.seoTitle || page?.seoDescription || page?.seoImage);
+}
+
+function buildPages(data?: PagesAdminData): AdminPageStatus[] {
+  if (!hasPagesData(data)) {
+    return pagesControlPanel.pages;
+  }
+
+  const homeReady = Boolean(data?.homepage?.heroTitle || data?.homepage?.heroDescription);
+  const aboutReady = Boolean(data?.about?.heroTitle || data?.about?.storyTitle || data?.about?.storyDescription);
+  const solutionsReady = Boolean(data?.solutionsPage?.heroTitle || data?.solutions?.length);
+  const packagesReady = Boolean(data?.packagesPageSettings?.pageTitle || data?.packages?.length);
+  const caseStudiesReady = Boolean(data?.caseStudiesPageSettings?.pageTitle || data?.caseStudies?.length);
+  const portfolioReady = Boolean(data?.portfolio?.length);
+  const contactReady = Boolean(data?.contact?.heroTitle || data?.contact?.email || data?.contact?.whatsapp || data?.siteSettings?.email || data?.siteSettings?.whatsapp);
+
+  return [
+    { title: "Home", status: pageStatus(homeReady, !hasSeo(data?.homepage)), type: "Landing Page", visibility: "Public", action: "Edit Homepage" },
+    { title: "About", status: pageStatus(aboutReady, !hasSeo(data?.about)), type: "Company Page", visibility: "Public", action: "Edit About" },
+    {
+      title: "Solutions",
+      status: pageStatus(solutionsReady, !hasSeo(data?.solutionsPage)),
+      type: `${data?.solutions?.length ?? 0} Solution Items`,
+      visibility: "Public",
+      action: "Edit Solutions",
+    },
+    {
+      title: "Packages",
+      status: pageStatus(packagesReady, !hasSeo(data?.packagesPageSettings)),
+      type: `${data?.packages?.length ?? 0} Package Items`,
+      visibility: "Public",
+      action: "Edit Packages",
+    },
+    {
+      title: "Case Studies",
+      status: pageStatus(caseStudiesReady, !hasSeo(data?.caseStudiesPageSettings)),
+      type: `${data?.caseStudies?.length ?? 0} Case Items`,
+      visibility: "Public",
+      action: "Review Cases",
+    },
+    {
+      title: "Portfolio",
+      status: pageStatus(portfolioReady, !data?.portfolio?.length),
+      type: `${data?.portfolio?.length ?? 0} Portfolio Items`,
+      visibility: portfolioReady ? "Public" : "Hidden",
+      action: "Review Portfolio",
+    },
+    { title: "Contact CTA", status: pageStatus(contactReady, !hasSeo(data?.contact)), type: "Conversion Page", visibility: "Public", action: "Edit CTA" },
+  ];
+}
+
+function buildSummary(data?: PagesAdminData) {
+  if (!hasPagesData(data)) {
+    return pagesControlPanel.summary;
+  }
+
+  const pages = buildPages(data);
+
+  return [
+    { label: "Total Pages", value: `${pages.length}`, tone: "blue" },
+    { label: "Published", value: `${pages.filter((page) => page.status === "Published").length}`, tone: "emerald" },
+    { label: "Draft", value: `${pages.filter((page) => page.status === "Draft").length}`, tone: "violet" },
+    { label: "Need Review", value: `${pages.filter((page) => page.status === "Review").length}`, tone: "amber" },
+  ];
+}
+
+function buildReadiness(data?: PagesAdminData) {
+  if (!hasPagesData(data)) {
+    return pagesControlPanel.readiness;
+  }
+
+  const pages = buildPages(data);
+  const hasHeroContent = Boolean(data?.homepage?.heroTitle || data?.about?.heroTitle || data?.solutionsPage?.heroTitle);
+  const hasPageCopy = pages.some((page) => page.status !== "Draft");
+  const hasMedia = Boolean(data?.homepage?.heroBackgroundImage || data?.about?.image || data?.packagesPageSettings?.heroBackgroundImage || data?.caseStudiesPageSettings?.heroBackgroundImage);
+  const hasCta = Boolean(data?.homepage?.ctaTitle || data?.about?.ctaTitle || data?.contact?.ctaTitle || data?.footer?.whatsapp || data?.siteSettings?.whatsapp);
+
+  return [
+    ["Hero Content", hasHeroContent ? "Ready" : "Review"],
+    ["Page Copy", hasPageCopy ? "Ready" : "Review"],
+    ["Media Asset", hasMedia ? "Ready" : "Review"],
+    ["CTA", hasCta ? "Ready" : "Review"],
+    ["Mobile Layout", "Ready"],
+    ["Publish Status", pages.some((page) => page.status === "Review" || page.status === "Draft") ? "Review" : "Ready"],
+  ];
+}
+
+function buildSeoCoverage(data?: PagesAdminData) {
+  if (!hasPagesData(data)) {
+    return pagesControlPanel.seoCoverage;
+  }
+
+  const seoPages = [data?.homepage, data?.about, data?.solutionsPage, data?.packagesPageSettings, data?.caseStudiesPageSettings, data?.contact];
+  const titleCount = seoPages.filter((page) => page?.seoTitle).length;
+  const descriptionCount = seoPages.filter((page) => page?.seoDescription).length;
+  const imageCount = seoPages.filter((page) => page?.seoImage).length;
+
+  return [
+    ["Meta Title", titleCount ? "Ready" : "Review"],
+    ["Meta Description", descriptionCount ? "Ready" : "Review"],
+    ["Open Graph Image", imageCount ? "Ready" : "Review"],
+    ["Canonical URL", data?.siteSettings?.siteUrl ? "Ready" : "Review"],
+    ["Sitemap", "Ready"],
+    ["Schema Markup", "Planned"],
+  ];
+}
 
 function DetailList({ items }: { items: string[][] }) {
   return (
@@ -28,7 +199,12 @@ function DetailList({ items }: { items: string[][] }) {
   );
 }
 
-export default function PagesControlPanel() {
+export default function PagesControlPanel({ pagesData }: { pagesData?: PagesAdminData }) {
+  const summaryCards = buildSummary(pagesData);
+  const pageCards = buildPages(pagesData);
+  const readiness = buildReadiness(pagesData);
+  const seoCoverage = buildSeoCoverage(pagesData);
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-violet-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -55,7 +231,7 @@ export default function PagesControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {pagesControlPanel.summary.map((item) => (
+        {summaryCards.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -69,7 +245,7 @@ export default function PagesControlPanel() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {pagesControlPanel.pages.map((page) => (
+        {pageCards.map((page) => (
           <article
             className={`rounded-[2rem] border p-5 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-6 ${
               page.status === "Review"
@@ -116,7 +292,7 @@ export default function PagesControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Page Readiness</h2>
           <p className="mt-1 text-sm text-slate-500">Kesiapan struktur halaman sebelum publish.</p>
           <div className="mt-6">
-            <DetailList items={pagesControlPanel.readiness} />
+            <DetailList items={readiness} />
           </div>
         </article>
 
@@ -124,7 +300,7 @@ export default function PagesControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">SEO Coverage</h2>
           <p className="mt-1 text-sm text-slate-500">Status metadata dan coverage SEO per halaman.</p>
           <div className="mt-6">
-            <DetailList items={pagesControlPanel.seoCoverage} />
+            <DetailList items={seoCoverage} />
           </div>
         </article>
       </div>

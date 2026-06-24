@@ -1,10 +1,13 @@
 import AdminShell from "@/components/admin/AdminShell";
 import TestimonialsControlPanel from "@/components/admin/TestimonialsControlPanel";
+import { getTestimonials } from "@/lib/sanity/fetch";
 
-export default function AdminTestimonialsPage() {
+export default async function AdminTestimonialsPage() {
+  const testimonials = await getTestimonials();
+
   return (
     <AdminShell>
-      <TestimonialsControlPanel />
+      <TestimonialsControlPanel testimonials={testimonials} />
     </AdminShell>
   );
 }

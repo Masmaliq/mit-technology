@@ -1,5 +1,6 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { testimonialsControlPanel } from "@/lib/admin-dashboard-data";
+import type { TestimonialItem } from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
@@ -7,6 +8,88 @@ const summaryTone: Record<string, string> = {
   violet: "border-violet-100 bg-violet-50 text-violet-700",
   amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
+
+function hasAvatar(testimonial: TestimonialItem) {
+  return Boolean(
+    testimonial.avatar?.url ||
+      testimonial.avatar?.asset?.url ||
+      testimonial.image?.url ||
+      testimonial.image?.asset?.url ||
+      testimonial.logo?.url ||
+      testimonial.logo?.asset?.url ||
+      testimonial.photo?.url ||
+      testimonial.photo?.asset?.url ||
+      testimonial.clientLogo?.url ||
+      testimonial.clientLogo?.asset?.url
+  );
+}
+
+function normalizeTestimonials(testimonials?: TestimonialItem[]) {
+  if (!testimonials?.length) {
+    return testimonialsControlPanel.featuredTestimonials;
+  }
+
+  return [...testimonials]
+    .sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)))
+    .slice(0, 3)
+    .map((testimonial) => ({
+      client: testimonial.name || testimonial.company || "Untitled Testimonial",
+      role: testimonial.position || testimonial.company || "Client Testimonial",
+      status: testimonial.featured ? "Featured" : "Published",
+      quote: testimonial.quote || "Quote belum tersedia dari Sanity.",
+      rating: testimonial.rating ? testimonial.rating.toFixed(1) : "N/A",
+      tag: testimonial.featured ? "Featured" : hasAvatar(testimonial) ? "Published" : "Review",
+      featured: Boolean(testimonial.featured),
+    }));
+}
+
+function buildSummary(testimonials?: TestimonialItem[]) {
+  if (!testimonials?.length) {
+    return testimonialsControlPanel.summary;
+  }
+
+  const featuredCount = testimonials.filter((item) => item.featured).length;
+  const needReviewCount = testimonials.filter((item) => !item.quote || !hasAvatar(item) || !item.position).length;
+
+  return [
+    { label: "Total Testimonials", value: `${testimonials.length}`, tone: "blue" },
+    { label: "Published", value: `${testimonials.length}`, tone: "emerald" },
+    { label: "Need Review", value: `${needReviewCount}`, tone: "amber" },
+    { label: "Featured", value: `${featuredCount}`, tone: "violet" },
+  ];
+}
+
+function buildReadiness(testimonials?: TestimonialItem[]) {
+  if (!testimonials?.length) {
+    return testimonialsControlPanel.readiness;
+  }
+
+  const hasAny = (predicate: (item: TestimonialItem) => boolean) => testimonials.some(predicate);
+
+  return [
+    ["Client Name", hasAny((item) => Boolean(item.name || item.company)) ? "Ready" : "Review"],
+    ["Client Role", hasAny((item) => Boolean(item.position || item.company)) ? "Ready" : "Review"],
+    ["Quote", hasAny((item) => Boolean(item.quote)) ? "Ready" : "Review"],
+    ["Avatar / Logo", hasAny(hasAvatar) ? "Uploaded" : "Review"],
+    ["Rating", hasAny((item) => typeof item.rating === "number") ? "Ready" : "Review"],
+    ["Approval Status", testimonials.some((item) => item.featured) ? "Ready" : "Review"],
+  ];
+}
+
+function buildWorkflow(testimonials?: TestimonialItem[]) {
+  if (!testimonials?.length) {
+    return testimonialsControlPanel.workflow;
+  }
+
+  return [
+    ["Published Content", `${testimonials.length}`],
+    ["Need Review", `${testimonials.filter((item) => !item.quote || !hasAvatar(item) || !item.position).length}`],
+    ["Draft", "0"],
+    ["Missing Avatar", `${testimonials.filter((item) => !hasAvatar(item)).length}`],
+    ["Missing Client Role", `${testimonials.filter((item) => !item.position && !item.company).length}`],
+    ["Featured Testimonials", `${testimonials.filter((item) => item.featured).length}`],
+  ];
+}
 
 function DetailList({ items }: { items: string[][] }) {
   return (
@@ -27,7 +110,12 @@ function DetailList({ items }: { items: string[][] }) {
   );
 }
 
-export default function TestimonialsControlPanel() {
+export default function TestimonialsControlPanel({ testimonials }: { testimonials?: TestimonialItem[] }) {
+  const summaryCards = buildSummary(testimonials);
+  const featuredTestimonials = normalizeTestimonials(testimonials);
+  const readiness = buildReadiness(testimonials);
+  const workflow = buildWorkflow(testimonials);
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-violet-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -54,7 +142,7 @@ export default function TestimonialsControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {testimonialsControlPanel.summary.map((item) => (
+        {summaryCards.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -68,7 +156,7 @@ export default function TestimonialsControlPanel() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
-        {testimonialsControlPanel.featuredTestimonials.map((item) => (
+        {featuredTestimonials.map((item) => (
           <article
             className={`flex h-full flex-col rounded-[2rem] border p-5 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-6 ${
               item.featured
@@ -116,7 +204,7 @@ export default function TestimonialsControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Testimonial Readiness</h2>
           <p className="mt-1 text-sm text-slate-500">Status kelengkapan struktur testimonial.</p>
           <div className="mt-6">
-            <DetailList items={testimonialsControlPanel.readiness} />
+            <DetailList items={readiness} />
           </div>
         </article>
 
@@ -124,7 +212,7 @@ export default function TestimonialsControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Approval Workflow</h2>
           <p className="mt-1 text-sm text-slate-600">Pipeline approval dan kelengkapan data testimonial.</p>
           <div className="mt-6">
-            <DetailList items={testimonialsControlPanel.workflow} />
+            <DetailList items={workflow} />
           </div>
         </article>
 

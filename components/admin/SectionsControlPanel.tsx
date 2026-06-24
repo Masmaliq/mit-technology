@@ -1,5 +1,16 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { sectionsControlPanel } from "@/lib/admin-dashboard-data";
+import type {
+  CaseStudyItem,
+  ClientLogoItem,
+  Footer,
+  Homepage,
+  PackageItem,
+  ProcessItem,
+  SiteSettings,
+  SolutionItem,
+  TestimonialItem,
+} from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
@@ -7,6 +18,160 @@ const summaryTone: Record<string, string> = {
   violet: "border-violet-100 bg-violet-50 text-violet-700",
   amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
+
+type SectionsAdminData = {
+  homepage?: Homepage;
+  clientLogos?: ClientLogoItem[];
+  solutions?: SolutionItem[];
+  packages?: PackageItem[];
+  caseStudies?: CaseStudyItem[];
+  testimonials?: TestimonialItem[];
+  footer?: Footer;
+  siteSettings?: SiteSettings;
+  processes?: ProcessItem[];
+};
+
+type SectionStatus = {
+  title: string;
+  status: string;
+  placement: string;
+  editable: string;
+  readiness: string;
+};
+
+function hasObjectValue(value?: Record<string, unknown>) {
+  return Boolean(value && Object.values(value).some((item) => Array.isArray(item) ? item.length > 0 : Boolean(item)));
+}
+
+function hasSectionsData(data?: SectionsAdminData) {
+  return Boolean(
+    hasObjectValue(data?.homepage as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.footer as Record<string, unknown> | undefined) ||
+      hasObjectValue(data?.siteSettings as Record<string, unknown> | undefined) ||
+      data?.clientLogos?.length ||
+      data?.solutions?.length ||
+      data?.packages?.length ||
+      data?.caseStudies?.length ||
+      data?.testimonials?.length ||
+      data?.processes?.length
+  );
+}
+
+function sectionStatus(ready: boolean) {
+  return ready ? "Active" : "Hidden";
+}
+
+function sectionReadiness(ready: boolean) {
+  return ready ? "Ready" : "Review";
+}
+
+function buildSections(data?: SectionsAdminData): SectionStatus[] {
+  if (!hasSectionsData(data)) {
+    return sectionsControlPanel.sections;
+  }
+
+  const homepage = data?.homepage;
+  const hasHero = Boolean(homepage?.heroTitle || homepage?.heroDescription || homepage?.heroBackgroundImage || homepage?.heroBackgroundVideoMp4);
+  const hasClientLogos = Boolean(data?.clientLogos?.length || homepage?.clientLogosTitle || homepage?.clientLogosDescription);
+  const hasSolutions = Boolean(data?.solutions?.length || homepage?.solutionsPreviewTitle || homepage?.solutionsPreviewDescription);
+  const hasPackages = Boolean(data?.packages?.length);
+  const hasCaseStudies = Boolean(data?.caseStudies?.length || homepage?.caseStudiesPreviewTitle || homepage?.caseStudiesPreviewDescription);
+  const hasTestimonials = Boolean(data?.testimonials?.length || homepage?.testimonialsTitle || homepage?.testimonialsDescription);
+  const hasCta = Boolean(homepage?.ctaTitle || homepage?.ctaDescription || homepage?.ctaButtonLabel);
+  const hasFooter = Boolean(data?.footer?.description || data?.footer?.email || data?.footer?.whatsapp || data?.siteSettings?.companyName || data?.siteSettings?.siteTitle);
+
+  return [
+    { title: "Hero", status: sectionStatus(hasHero), placement: "Top", editable: "Homepage CMS", readiness: sectionReadiness(hasHero) },
+    {
+      title: "Client Logos",
+      status: sectionStatus(hasClientLogos),
+      placement: `${data?.clientLogos?.length ?? 0} Logos`,
+      editable: "Collection",
+      readiness: sectionReadiness(hasClientLogos),
+    },
+    {
+      title: "Solutions",
+      status: sectionStatus(hasSolutions),
+      placement: `${data?.solutions?.length ?? 0} Items`,
+      editable: "Collection",
+      readiness: sectionReadiness(hasSolutions),
+    },
+    {
+      title: "Packages",
+      status: sectionStatus(hasPackages),
+      placement: `${data?.packages?.length ?? 0} Packages`,
+      editable: "Collection",
+      readiness: sectionReadiness(hasPackages),
+    },
+    {
+      title: "Case Studies",
+      status: sectionStatus(hasCaseStudies),
+      placement: `${data?.caseStudies?.length ?? 0} Cases`,
+      editable: "Collection",
+      readiness: sectionReadiness(hasCaseStudies),
+    },
+    {
+      title: "Testimonials",
+      status: sectionStatus(hasTestimonials),
+      placement: `${data?.testimonials?.length ?? 0} Quotes`,
+      editable: "Collection",
+      readiness: sectionReadiness(hasTestimonials),
+    },
+    { title: "CTA", status: sectionStatus(hasCta), placement: "Before Footer", editable: "Homepage CMS", readiness: sectionReadiness(hasCta) },
+    { title: "Footer", status: sectionStatus(hasFooter), placement: "Global Closing", editable: "Global CMS", readiness: sectionReadiness(hasFooter) },
+  ];
+}
+
+function buildSummary(data?: SectionsAdminData) {
+  if (!hasSectionsData(data)) {
+    return sectionsControlPanel.summary;
+  }
+
+  const sections = buildSections(data);
+  const activeCount = sections.filter((section) => section.status === "Active").length;
+  const hiddenCount = sections.length - activeCount;
+  const reviewCount = sections.filter((section) => section.readiness === "Review").length;
+
+  return [
+    { label: "Total Sections", value: `${sections.length}`, tone: "blue" },
+    { label: "Active Sections", value: `${activeCount}`, tone: "emerald" },
+    { label: "Hidden Sections", value: `${hiddenCount}`, tone: "violet" },
+    { label: "Need Attention", value: `${reviewCount}`, tone: "amber" },
+  ];
+}
+
+function buildHomepageStructure(data?: SectionsAdminData) {
+  if (!hasSectionsData(data)) {
+    return sectionsControlPanel.homepageStructure;
+  }
+
+  const sections = buildSections(data);
+  const findReadiness = (title: string) => sections.find((section) => section.title === title)?.readiness || "Review";
+
+  return [
+    ["Hero", findReadiness("Hero")],
+    ["Trust / Logos", findReadiness("Client Logos")],
+    ["Solutions Preview", findReadiness("Solutions")],
+    ["Case Studies Banner", findReadiness("Case Studies")],
+    ["Testimonials", findReadiness("Testimonials")],
+    ["Final CTA", findReadiness("CTA")],
+  ];
+}
+
+function buildOrderStatus(data?: SectionsAdminData) {
+  if (!hasSectionsData(data)) {
+    return sectionsControlPanel.orderStatus;
+  }
+
+  return [
+    ["Hero", "01"],
+    ["Client Logos", "02"],
+    ["Solutions", "03"],
+    ["Case Studies", "04"],
+    ["Framework", data?.processes?.length ? "05" : "Review"],
+    ["Packages", "08"],
+  ];
+}
 
 function DetailList({ items }: { items: string[][] }) {
   return (
@@ -28,7 +193,12 @@ function DetailList({ items }: { items: string[][] }) {
   );
 }
 
-export default function SectionsControlPanel() {
+export default function SectionsControlPanel({ sectionsData }: { sectionsData?: SectionsAdminData }) {
+  const summaryCards = buildSummary(sectionsData);
+  const sectionCards = buildSections(sectionsData);
+  const orderStatus = buildOrderStatus(sectionsData);
+  const homepageStructure = buildHomepageStructure(sectionsData);
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-emerald-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -55,7 +225,7 @@ export default function SectionsControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {sectionsControlPanel.summary.map((item) => (
+        {summaryCards.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -69,7 +239,7 @@ export default function SectionsControlPanel() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {sectionsControlPanel.sections.map((section) => (
+        {sectionCards.map((section) => (
           <article
             className={`rounded-[2rem] border p-5 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-6 ${
               section.status === "Hidden"
@@ -115,7 +285,7 @@ export default function SectionsControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Section Order Status</h2>
           <p className="mt-1 text-sm text-slate-500">Urutan utama section homepage yang sedang aktif.</p>
           <div className="mt-6">
-            <DetailList items={sectionsControlPanel.orderStatus} />
+            <DetailList items={orderStatus} />
           </div>
         </article>
 
@@ -123,7 +293,7 @@ export default function SectionsControlPanel() {
           <h2 className="text-xl font-bold text-slate-950">Homepage Structure</h2>
           <p className="mt-1 text-sm text-slate-500">Kesiapan struktur section yang membentuk homepage.</p>
           <div className="mt-6">
-            <DetailList items={sectionsControlPanel.homepageStructure} />
+            <DetailList items={homepageStructure} />
           </div>
         </article>
       </div>

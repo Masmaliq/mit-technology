@@ -19,7 +19,7 @@ export default function PackageSummary({ items = packageSummary }: { items?: str
         {items.map(([label, value]) => (
           <Link
             aria-label={`Open package summary: ${label}`}
-            className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
             href="/admin/packages"
             key={label}
           >

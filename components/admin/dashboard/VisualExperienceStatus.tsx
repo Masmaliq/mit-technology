@@ -1,4 +1,5 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
+import Link from "next/link";
 
 export type VisualMode = {
   name: string;
@@ -9,6 +10,13 @@ export type VisualMode = {
 type VisualExperienceStatusProps = {
   modes: VisualMode[];
   onToggleMode: (index: number) => void;
+};
+
+const visualRoutes: Record<string, string> = {
+  "Basic Hero": "/admin/hero",
+  "Motion Effects": "/admin/motion-effects",
+  "Cinematic Flow": "/admin/background-scene",
+  "Product Parallax": "/admin/product-parallax",
 };
 
 export default function VisualExperienceStatus({ modes, onToggleMode }: VisualExperienceStatusProps) {
@@ -29,7 +37,11 @@ export default function VisualExperienceStatus({ modes, onToggleMode }: VisualEx
             key={mode.name}
             className="flex items-center justify-between border-b border-slate-100 pb-4 last:border-b-0 last:pb-0"
           >
-            <div className="flex-1">
+            <Link
+              aria-label={`Open ${mode.name}`}
+              className="flex-1 cursor-pointer rounded-lg transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              href={visualRoutes[mode.name] ?? "/admin/motion-effects"}
+            >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-sm">✦</div>
                 <div>
@@ -37,7 +49,7 @@ export default function VisualExperienceStatus({ modes, onToggleMode }: VisualEx
                   <div className="text-xs text-slate-500">{mode.desc}</div>
                 </div>
               </div>
-            </div>
+            </Link>
 
             <div className="flex flex-shrink-0 items-center gap-3">
               <span

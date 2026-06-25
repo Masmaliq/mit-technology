@@ -1,4 +1,5 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
+import Link from "next/link";
 
 const healthItems = [
   { label: "SEO Status", badge: "Score: 74", badgeClass: "bg-amber-100 text-amber-700" },
@@ -9,6 +10,20 @@ const healthItems = [
   { label: "Poster Image", badge: "Uploaded", badgeClass: "bg-emerald-100 text-emerald-700" },
   { label: "Mobile Fallback", badge: "Missing", badgeClass: "bg-red-100 text-red-700" },
 ];
+
+const healthRoutes: Array<[string, string]> = [
+  ["SEO", "/admin/seo-health"],
+  ["Missing Images", "/admin/sections"],
+  ["Missing CTA", "/admin/sections"],
+  ["Draft Content", "/admin/pages"],
+  ["Product Asset", "/admin/product-parallax"],
+  ["Poster Image", "/admin/background-scene"],
+  ["Mobile Fallback", "/admin/product-parallax"],
+];
+
+function getHealthHref(label: string) {
+  return healthRoutes.find(([routeLabel]) => label.toLowerCase().includes(routeLabel.toLowerCase()))?.[1];
+}
 
 export default function WebsiteHealthPanel() {
   return (
@@ -24,12 +39,17 @@ export default function WebsiteHealthPanel() {
 
       <div className="space-y-3 p-6">
         {healthItems.map((item) => (
-          <div key={item.label} className="flex items-center justify-between">
+          <Link
+            aria-label={`Open website health item: ${item.label}`}
+            className="flex cursor-pointer items-center justify-between rounded-lg transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            href={getHealthHref(item.label) ?? "/admin/seo-health"}
+            key={item.label}
+          >
             <span className="text-sm text-slate-700">{item.label}</span>
             <span className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold ${item.badgeClass}`}>
               {item.badge}
             </span>
-          </div>
+          </Link>
         ))}
       </div>
 

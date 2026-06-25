@@ -1,4 +1,5 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
+import Link from "next/link";
 
 type ProductParallaxStatusProps = {
   parallaxOn: boolean;
@@ -30,6 +31,17 @@ const parallaxActions = [
   { label: "▶ Preview Parallax", action: "Preview Parallax", primary: true },
   { label: "⏸ Disable Parallax", action: "Disable Parallax", danger: true },
 ];
+
+const productStatusRoutes: Array<[string, string]> = [
+  ["Background", "/admin/background-scene"],
+  ["Poster", "/admin/background-scene"],
+  ["Product", "/admin/product-parallax"],
+  ["Mobile", "/admin/product-parallax"],
+];
+
+function getProductStatusHref(label: string) {
+  return productStatusRoutes.find(([routeLabel]) => label.toLowerCase().includes(routeLabel.toLowerCase()))?.[1] ?? "/admin/product-parallax";
+}
 
 export default function ProductParallaxStatus({
   parallaxOn,
@@ -77,10 +89,15 @@ export default function ProductParallaxStatus({
           <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Status Utama</div>
           <div className="space-y-3">
             {statusRows.map(([key, value, color]) => (
-              <div key={key} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+              <Link
+                aria-label={`Open product parallax status: ${key}`}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                href={getProductStatusHref(key)}
+                key={key}
+              >
                 <span className="text-sm text-slate-600">{key}</span>
                 <span className={`text-sm font-semibold ${color}`}>{value}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -89,10 +106,15 @@ export default function ProductParallaxStatus({
           <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Motion Status</div>
           <div className="grid grid-cols-2 gap-3">
             {motionStatus.map(([key, value]) => (
-              <div key={key} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+              <Link
+                aria-label={`Open motion status: ${key}`}
+                className="cursor-pointer rounded-lg border border-slate-100 bg-slate-50 p-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                href={key.includes("Motion") ? "/admin/motion-effects" : "/admin/product-parallax"}
+                key={key}
+              >
                 <div className="mb-1 text-xs text-slate-500">{key}</div>
                 <div className="text-sm font-semibold text-slate-900">{value}</div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

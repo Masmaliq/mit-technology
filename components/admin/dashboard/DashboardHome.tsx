@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AdminActionLink from "@/components/admin/AdminActionLink";
+import Link from "next/link";
 import PackagePlanStatus from "./PackagePlanStatus";
 import PreviewPanel from "./PreviewPanel";
 import ProductParallaxStatus from "./ProductParallaxStatus";
@@ -51,10 +52,15 @@ function InternalPackageSummary() {
           ["Price Range", "Rp5jt · Rp10jt · Rp15jt+"],
           ["Status", "Internal Active"],
         ].map(([label, value]) => (
-          <div key={label} className="flex items-center justify-between gap-4 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+          <Link
+            aria-label={`Open package summary: ${label}`}
+            className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            href="/admin/packages"
+            key={label}
+          >
             <span className="text-sm text-slate-600">{label}</span>
             <span className="text-sm font-semibold text-slate-900">{value}</span>
-          </div>
+          </Link>
         ))}
 
         <AdminActionLink

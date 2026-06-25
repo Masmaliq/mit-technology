@@ -33,7 +33,7 @@ export default function VisualStatus() {
           return href ? (
             <Link
               aria-label={`Open ${mode.name}`}
-              className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 transition hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              className="flex cursor-pointer items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 transition hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               href={href}
               key={mode.name}
             >

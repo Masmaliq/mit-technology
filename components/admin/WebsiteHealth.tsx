@@ -35,7 +35,7 @@ export default function WebsiteHealth({ items = websiteHealth }: { items?: strin
           return href ? (
             <Link
               aria-label={`Open ${label}`}
-              className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               href={href}
               key={label}
             >

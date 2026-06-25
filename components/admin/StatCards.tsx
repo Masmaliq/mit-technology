@@ -48,7 +48,7 @@ export default function StatCards({ items = stats }: { items?: AdminStat[] }) {
         return href ? (
           <Link
             aria-label={`Open ${stat.label}`}
-            className="block rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)] transition hover:border-blue-200 hover:shadow-[0_22px_64px_rgba(37,99,235,0.09)] focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            className="block cursor-pointer rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)] transition hover:border-blue-200 hover:shadow-[0_22px_64px_rgba(37,99,235,0.09)] focus:outline-none focus:ring-2 focus:ring-blue-500/40"
             href={href}
             key={stat.label}
           >

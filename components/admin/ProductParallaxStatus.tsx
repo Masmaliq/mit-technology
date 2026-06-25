@@ -3,9 +3,9 @@ import { parallaxStatus } from "@/lib/admin-dashboard-data";
 import Link from "next/link";
 
 const mainStatusRoutes: Array<[string, string]> = [
+  ["Mobile", "/admin/product-parallax"],
   ["Product", "/admin/product-parallax"],
   ["Background", "/admin/background-scene"],
-  ["Mobile", "/admin/background-scene"],
 ];
 
 function getMainStatusHref(label: string) {
@@ -37,7 +37,7 @@ export default function ProductParallaxStatus() {
               return (
                 <Link
                   aria-label={`Open product parallax status: ${label}`}
-                  className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  className="flex cursor-pointer items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                   href={href}
                   key={label}
                 >
@@ -55,7 +55,7 @@ export default function ProductParallaxStatus() {
             {parallaxStatus.motion.map(([label, value]) => (
               <Link
                 aria-label={`Open motion status: ${label}`}
-                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 transition hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                className="cursor-pointer rounded-2xl border border-slate-100 bg-slate-50 p-4 transition hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                 href="/admin/motion-effects"
                 key={label}
               >

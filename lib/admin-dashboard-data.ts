@@ -560,7 +560,7 @@ export const settingsControlPanel = {
     description:
       "Konfigurasi sistem admin, preferensi global, akses internal, integrasi, dan kesiapan framework.",
     badge: "Pengaturan Sistem",
-    action: "Buka Pengaturan",
+    action: "Edit Pengaturan Situs",
   },
   summary: [
     { label: "Versi Framework", value: "v2.4.1", tone: "blue" },

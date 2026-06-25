@@ -4,6 +4,15 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 const studioHref = "/studio";
+const singletonIntentHref = (id: string, type: string) => `/studio/intent/edit/id=${id};type=${type}`;
+
+const studioSingletons = {
+  homepage: singletonIntentHref("homepage", "homepage"),
+  siteSettings: singletonIntentHref("siteSettings", "siteSettings"),
+  navbar: singletonIntentHref("navbar", "navbar"),
+  contact: singletonIntentHref("contact", "contact"),
+  footer: singletonIntentHref("footer", "footer"),
+};
 
 const actionRoutes: Array<[string, string]> = [
   ["Open Sanity", studioHref],
@@ -18,7 +27,7 @@ const actionRoutes: Array<[string, string]> = [
   ["Mobile 375px view", "/"],
   ["Mobile Preview", "/"],
   ["Preview Homepage", "/"],
-  ["Edit Homepage", studioHref],
+  ["Edit Homepage", studioSingletons.homepage],
   ["Add Page", "/admin/pages"],
   ["Tambah Page", "/admin/pages"],
   ["Review Drafts", "/admin/pages"],
@@ -30,12 +39,12 @@ const actionRoutes: Array<[string, string]> = [
   ["Edit CTA", studioHref],
   ["Review Cases", "/admin/case-studies"],
   ["Review Portfolio", "/admin/pages"],
-  ["Hero Studio", studioHref],
+  ["Hero Studio", studioSingletons.homepage],
   ["Edit Content", studioHref],
   ["Edit Background Scene", "/admin/background-scene"],
   ["Edit Background", studioHref],
   ["Edit Hero Media", studioHref],
-  ["Edit Hero", studioHref],
+  ["Edit Hero", studioSingletons.homepage],
   ["Edit Packages", "/admin/packages"],
   ["Edit Package", "/admin/packages"],
   ["Packages Page Settings", studioHref],
@@ -61,7 +70,7 @@ const actionRoutes: Array<[string, string]> = [
   ["Upload Avatar", studioHref],
   ["Preview Testimonials", "/admin/testimonials"],
   ["Update Footer", "/admin/footer"],
-  ["Edit Footer", studioHref],
+  ["Edit Footer", studioSingletons.footer],
   ["Edit Brand Copy", studioHref],
   ["Update Contact", studioHref],
   ["Manage Links", studioHref],
@@ -100,15 +109,15 @@ const actionRoutes: Array<[string, string]> = [
   ["Settings", "/admin/settings"],
   ["Buka Pengaturan", "/admin/settings"],
   ["General Settings", "/admin/settings"],
-  ["Edit Site Settings", studioHref],
-  ["Edit Pengaturan Situs", studioHref],
-  ["Edit General Settings", studioHref],
-  ["Edit Navbar", studioHref],
-  ["Edit Navigasi", studioHref],
-  ["Navbar Settings", studioHref],
-  ["Edit Contact", studioHref],
-  ["Edit Kontak", studioHref],
-  ["Contact Settings", studioHref],
+  ["Edit Site Settings", studioSingletons.siteSettings],
+  ["Edit Pengaturan Situs", studioSingletons.siteSettings],
+  ["Edit General Settings", studioSingletons.siteSettings],
+  ["Edit Navbar", studioSingletons.navbar],
+  ["Edit Navigasi", studioSingletons.navbar],
+  ["Navbar Settings", studioSingletons.navbar],
+  ["Edit Contact", studioSingletons.contact],
+  ["Edit Kontak", studioSingletons.contact],
+  ["Contact Settings", studioSingletons.contact],
   ["Manage Access", "/admin/settings"],
   ["Kelola Akses", "/admin/settings"],
   ["Check Integrations", "/admin/settings"],

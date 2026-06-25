@@ -1,5 +1,6 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { settingsControlPanel } from "@/lib/admin-dashboard-data";
+import type { Contact, Footer, Navbar, SiteSettings } from "@/lib/sanity/queries";
 
 const summaryTone: Record<string, string> = {
   blue: "border-blue-100 bg-blue-50 text-blue-700",
@@ -12,8 +13,18 @@ function DetailList({ items }: { items: string[][] }) {
   return (
     <div className="space-y-3">
       {items.map(([label, value]) => {
-        const pending = value === "Pending" || value === "Planned" || value === "Review";
-        const ready = value === "Ready" || value === "Stable" || value === "Connected" || value === "Active" || value === "Enabled";
+        const pending = ["Pending", "Planned", "Review", "Tertunda", "Rencana"].includes(value);
+        const ready = [
+          "Ready",
+          "Stable",
+          "Connected",
+          "Active",
+          "Enabled",
+          "Siap",
+          "Stabil",
+          "Terhubung",
+          "Aktif",
+        ].includes(value);
 
         return (
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
@@ -30,6 +41,105 @@ function DetailList({ items }: { items: string[][] }) {
       })}
     </div>
   );
+}
+
+function hasValue(value?: string | unknown[]) {
+  return Array.isArray(value) ? value.length > 0 : Boolean(value);
+}
+
+function readyLabel(isReady: boolean) {
+  return isReady ? "Siap" : "Review";
+}
+
+function connectedLabel(isConnected: boolean) {
+  return isConnected ? "Terhubung" : "Review";
+}
+
+function buildSummary(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
+  const hasCmsData = Boolean(
+    siteSettings?.companyName ||
+      siteSettings?.siteTitle ||
+      navbar?.menuItems?.length ||
+      contact?.email ||
+      contact?.whatsapp ||
+      footer?.description
+  );
+
+  if (!hasCmsData) {
+    return settingsControlPanel.summary;
+  }
+
+  return [
+    { label: "Versi Framework", value: "v2.4.1", tone: "blue" },
+    { label: "Paket Aktif", value: "Premium", tone: "violet" },
+    { label: "Lingkungan", value: process.env.NODE_ENV === "production" ? "Production" : "Local", tone: "amber" },
+    { label: "Status Sistem", value: "Terhubung", tone: "emerald" },
+  ];
+}
+
+function buildGeneralSettings(siteSettings?: SiteSettings, contact?: Contact, footer?: Footer) {
+  const siteName = siteSettings?.siteTitle || siteSettings?.companyName;
+  const brandName = siteSettings?.companyName;
+  const tagline = siteSettings?.tagline || siteSettings?.siteDescription || siteSettings?.description;
+  const email = siteSettings?.email || contact?.email || footer?.email;
+  const whatsapp = siteSettings?.whatsapp || contact?.whatsapp || footer?.whatsapp;
+
+  if (!siteName && !brandName && !tagline && !email && !whatsapp) {
+    return settingsControlPanel.generalSettings;
+  }
+
+  return [
+    ["Nama Situs", siteName || "Review"],
+    ["Nama Brand", brandName || "Review"],
+    ["Tagline", tagline || "Review"],
+    ["Email", email || "Review"],
+    ["WhatsApp", whatsapp || "Review"],
+  ];
+}
+
+function buildAccessControl() {
+  return [
+    ["Akses Admin", "Aktif"],
+    ["Sistem Role", "Basic"],
+    ["Akun Owner", "Aktif"],
+    ["Akses Tim", "Tertunda"],
+    ["Proteksi Login", "Aktif"],
+  ];
+}
+
+function buildIntegrationStatus(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
+  return [
+    ["Sanity CMS", connectedLabel(Boolean(siteSettings || navbar || contact || footer))],
+    ["Deploy Vercel", "Siap"],
+    ["Repository GitHub", "Terhubung"],
+    ["Kontak Global", readyLabel(Boolean(contact?.email || contact?.whatsapp || siteSettings?.email || siteSettings?.whatsapp))],
+    ["Footer Global", readyLabel(Boolean(footer?.description || footer?.copyright || footer?.email || siteSettings?.companyName))],
+    ["Navigasi", readyLabel(Boolean(navbar?.menuItems?.length || navbar?.ctaLabel))],
+  ];
+}
+
+function buildFrameworkConfiguration(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
+  return [
+    ["Frontend Publik", "Protected"],
+    ["Sanity Schema", "Locked"],
+    ["Admin Dashboard", "Aktif"],
+    ["Menu Navigasi", navbar?.menuItems?.length ? `${navbar.menuItems.length} Menu` : "Review"],
+    ["CTA Navbar", readyLabel(Boolean(navbar?.ctaLabel || navbar?.ctaHref))],
+    ["Kontak", readyLabel(Boolean(contact?.email || contact?.whatsapp || contact?.phone))],
+    ["Footer", readyLabel(Boolean(footer?.description || footer?.copyright || footer?.socialLinks?.length))],
+    ["SEO Situs", readyLabel(Boolean(siteSettings?.siteTitle || siteSettings?.siteDescription || siteSettings?.pageSeo?.length))],
+  ];
+}
+
+function buildSystemReadiness(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
+  return [
+    ["Pengaturan Situs", readyLabel(Boolean(siteSettings?.companyName || siteSettings?.siteTitle))],
+    ["Navigasi", readyLabel(Boolean(navbar?.menuItems?.length || navbar?.ctaLabel))],
+    ["Kontak", readyLabel(Boolean(contact?.email || contact?.whatsapp || siteSettings?.email || siteSettings?.whatsapp))],
+    ["Footer", readyLabel(Boolean(footer?.description || footer?.copyright || footer?.email))],
+    ["Social Links", readyLabel(Boolean(hasValue(footer?.socialLinks) || siteSettings?.instagram || siteSettings?.linkedin))],
+    ["Handoff Produksi", "Review"],
+  ];
 }
 
 function SettingsCard({
@@ -61,7 +171,24 @@ function SettingsCard({
   );
 }
 
-export default function SettingsControlPanel() {
+export default function SettingsControlPanel({
+  contact,
+  footer,
+  navbar,
+  siteSettings,
+}: {
+  contact?: Contact;
+  footer?: Footer;
+  navbar?: Navbar;
+  siteSettings?: SiteSettings;
+}) {
+  const summary = buildSummary(siteSettings, navbar, contact, footer);
+  const generalSettings = buildGeneralSettings(siteSettings, contact, footer);
+  const accessControl = buildAccessControl();
+  const integrationStatus = buildIntegrationStatus(siteSettings, navbar, contact, footer);
+  const frameworkConfiguration = buildFrameworkConfiguration(siteSettings, navbar, contact, footer);
+  const systemReadiness = buildSystemReadiness(siteSettings, navbar, contact, footer);
+
   return (
     <section className="space-y-6">
       <div className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white via-blue-50/60 to-violet-50 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8">
@@ -88,7 +215,7 @@ export default function SettingsControlPanel() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {settingsControlPanel.summary.map((item) => (
+        {summary.map((item) => (
           <article
             className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.05)]"
             key={item.label}
@@ -105,19 +232,19 @@ export default function SettingsControlPanel() {
         <SettingsCard
           accent="blue"
           description="Preferensi dasar framework dan identitas sistem internal."
-          items={settingsControlPanel.generalSettings}
-          title="General Settings"
+          items={generalSettings}
+          title="Pengaturan Umum"
         />
         <SettingsCard
           description="Status akses admin, owner, dan proteksi login internal."
-          items={settingsControlPanel.accessControl}
-          title="Access Control"
+          items={accessControl}
+          title="Kontrol Akses"
         />
         <SettingsCard
           accent="emerald"
           description="Koneksi layanan utama yang mendukung workflow website."
-          items={settingsControlPanel.integrationStatus}
-          title="Integration Status"
+          items={integrationStatus}
+          title="Status Integrasi"
         />
       </div>
 
@@ -125,19 +252,19 @@ export default function SettingsControlPanel() {
         <SettingsCard
           accent="violet"
           description="Konfigurasi modul dan status sistem visual yang sedang aktif."
-          items={settingsControlPanel.frameworkConfiguration}
-          title="Framework Configuration"
+          items={frameworkConfiguration}
+          title="Konfigurasi Framework"
         />
 
         <SettingsCard
           description="Kesiapan modul utama sebelum handoff production."
-          items={settingsControlPanel.systemReadiness}
-          title="System Readiness"
+          items={systemReadiness}
+          title="Kesiapan Sistem"
         />
       </div>
 
       <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-        <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
+        <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
         <p className="mt-1 text-sm text-slate-500">Akses cepat untuk pengaturan sistem dan integrasi admin.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {settingsControlPanel.quickActions.map((action, index) => (

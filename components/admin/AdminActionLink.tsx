@@ -5,6 +5,20 @@ import type { ReactNode } from "react";
 
 const studioHref = "/studio/default/structure";
 
+function studioSingletonHref(type: string, id: string) {
+  return `/studio/default/intent/edit/id=${id};type=${type}`;
+}
+
+const studioSingletons = {
+  homepage: studioSingletonHref("homepage", "homepage"),
+  footer: studioSingletonHref("footer", "footer"),
+  siteSettings: studioSingletonHref("siteSettings", "siteSettings"),
+  navbar: studioSingletonHref("navbar", "navbar"),
+  packagesPageSettings: studioSingletonHref("packagesPageSettings", "packagesPageSettings"),
+  caseStudiesPageSettings: studioSingletonHref("caseStudiesPageSettings", "caseStudiesPageSettings"),
+  contact: studioSingletonHref("contact", "contact"),
+};
+
 const actionRoutes: Array<[string, string]> = [
   ["Open Sanity", studioHref],
   ["Studio", studioHref],
@@ -16,7 +30,7 @@ const actionRoutes: Array<[string, string]> = [
   ["Mobile 375px view", "/"],
   ["Mobile Preview", "/"],
   ["Preview Homepage", "/"],
-  ["Edit Homepage", studioHref],
+  ["Edit Homepage", studioSingletons.homepage],
   ["Add Page", "/admin/pages"],
   ["Tambah Page", "/admin/pages"],
   ["Review Drafts", "/admin/pages"],
@@ -25,17 +39,18 @@ const actionRoutes: Array<[string, string]> = [
   ["Manage Visibility", "/admin/pages"],
   ["Edit About", "/admin/pages"],
   ["Edit Solutions", "/admin/pages"],
-  ["Edit CTA", "/admin/sections"],
+  ["Edit CTA", studioSingletons.contact],
   ["Review Cases", "/admin/case-studies"],
   ["Review Portfolio", "/admin/pages"],
-  ["Hero Studio", studioHref],
-  ["Edit Content", studioHref],
+  ["Hero Studio", studioSingletons.homepage],
+  ["Edit Content", studioSingletons.homepage],
   ["Edit Background Scene", "/admin/background-scene"],
   ["Edit Background", "/admin/background-scene"],
-  ["Edit Hero Media", studioHref],
-  ["Edit Hero", "/admin/hero"],
+  ["Edit Hero Media", studioSingletons.homepage],
+  ["Edit Hero", studioSingletons.homepage],
   ["Edit Packages", "/admin/packages"],
   ["Edit Package", "/admin/packages"],
+  ["Packages Page Settings", studioSingletons.packagesPageSettings],
   ["Add Package", studioHref],
   ["Tambah Package", studioHref],
   ["Edit Starter", studioHref],
@@ -43,6 +58,7 @@ const actionRoutes: Array<[string, string]> = [
   ["Edit Premium", studioHref],
   ["Preview Pricing", "/admin/packages"],
   ["Edit Case Studies", "/admin/case-studies"],
+  ["Case Studies Page Settings", studioSingletons.caseStudiesPageSettings],
   ["Add Case Study", studioHref],
   ["Tambah Case Study", studioHref],
   ["Edit Featured Case", studioHref],
@@ -57,11 +73,11 @@ const actionRoutes: Array<[string, string]> = [
   ["Upload Avatar", studioHref],
   ["Preview Testimonials", "/admin/testimonials"],
   ["Update Footer", "/admin/footer"],
-  ["Edit Footer", studioHref],
-  ["Edit Brand Copy", studioHref],
-  ["Update Contact", studioHref],
-  ["Manage Links", studioHref],
-  ["Edit Social Links", studioHref],
+  ["Edit Footer", studioSingletons.footer],
+  ["Edit Brand Copy", studioSingletons.footer],
+  ["Update Contact", studioSingletons.contact],
+  ["Manage Links", studioSingletons.footer],
+  ["Edit Social Links", studioSingletons.footer],
   ["Preview Footer", "/admin/footer"],
   ["Edit Parallax Studio", studioHref],
   ["Edit Parallax", "/admin/product-parallax"],
@@ -95,7 +111,7 @@ const actionRoutes: Array<[string, string]> = [
   ["Settings", "/admin/settings"],
   ["Buka Pengaturan", "/admin/settings"],
   ["General Settings", "/admin/settings"],
-  ["Edit General Settings", "/admin/settings"],
+  ["Edit General Settings", studioSingletons.siteSettings],
   ["Manage Access", "/admin/settings"],
   ["Check Integrations", "/admin/settings"],
   ["Add Section", "/admin/sections"],

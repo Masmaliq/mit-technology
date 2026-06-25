@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-const studioHref = "/studio/default/structure";
+const studioHref = "/studio";
 
 const actionRoutes: Array<[string, string]> = [
   ["Open Sanity", studioHref],

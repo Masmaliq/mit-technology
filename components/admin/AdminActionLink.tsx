@@ -16,7 +16,7 @@ const actionRoutes: Array<[string, string]> = [
   ["Mobile 375px view", "/"],
   ["Mobile Preview", "/"],
   ["Preview Homepage", "/"],
-  ["Edit Homepage", "/admin/pages"],
+  ["Edit Homepage", studioHref],
   ["Add Page", "/admin/pages"],
   ["Tambah Page", "/admin/pages"],
   ["Review Drafts", "/admin/pages"],

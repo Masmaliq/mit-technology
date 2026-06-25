@@ -1,5 +1,16 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { parallaxStatus } from "@/lib/admin-dashboard-data";
+import Link from "next/link";
+
+const mainStatusRoutes: Array<[string, string]> = [
+  ["Product", "/admin/product-parallax"],
+  ["Background", "/admin/background-scene"],
+  ["Mobile", "/admin/background-scene"],
+];
+
+function getMainStatusHref(label: string) {
+  return mainStatusRoutes.find(([routeLabel]) => label.toLowerCase().includes(routeLabel.toLowerCase()))?.[1];
+}
 
 export default function ProductParallaxStatus() {
   return (
@@ -20,12 +31,21 @@ export default function ProductParallaxStatus() {
         <div className="border-b border-slate-100 p-6 lg:border-b-0 lg:border-r">
           <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Status Utama</h3>
           <div className="mt-4 space-y-3">
-            {parallaxStatus.main.map(([label, value]) => (
-              <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3" key={label}>
-                <span className="text-sm text-slate-500">{label}</span>
-                <span className="text-sm font-bold text-slate-900">{value}</span>
-              </div>
-            ))}
+            {parallaxStatus.main.map(([label, value]) => {
+              const href = getMainStatusHref(label) ?? "/admin/product-parallax";
+
+              return (
+                <Link
+                  aria-label={`Open product parallax status: ${label}`}
+                  className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  href={href}
+                  key={label}
+                >
+                  <span className="text-sm text-slate-500">{label}</span>
+                  <span className="text-sm font-bold text-slate-900">{value}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -33,10 +53,15 @@ export default function ProductParallaxStatus() {
           <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Motion Status</h3>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {parallaxStatus.motion.map(([label, value]) => (
-              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4" key={label}>
+              <Link
+                aria-label={`Open motion status: ${label}`}
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 transition hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                href="/admin/motion-effects"
+                key={label}
+              >
                 <div className="text-xs text-slate-500">{label}</div>
                 <div className="mt-1 text-sm font-bold text-slate-950">{value}</div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,5 +1,6 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { packageSummary } from "@/lib/admin-dashboard-data";
+import Link from "next/link";
 
 export default function PackageSummary({ items = packageSummary }: { items?: string[][] }) {
   return (
@@ -16,10 +17,15 @@ export default function PackageSummary({ items = packageSummary }: { items?: str
 
       <div className="mt-6 space-y-3">
         {items.map(([label, value]) => (
-          <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
+          <Link
+            aria-label={`Open package summary: ${label}`}
+            className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            href="/admin/packages"
+            key={label}
+          >
             <span className="text-sm text-slate-500">{label}</span>
             <span className="text-sm font-bold text-slate-900">{value}</span>
-          </div>
+          </Link>
         ))}
       </div>
       <AdminActionLink action="Edit Packages" className="mt-5 text-sm font-bold text-blue-600 transition hover:text-blue-700">

@@ -1,4 +1,12 @@
+import Link from "next/link";
 import { visualModes } from "@/lib/admin-dashboard-data";
+
+const visualRoutes: Record<string, string> = {
+  "Basic Hero": "/admin/hero",
+  "Motion Effects": "/admin/motion-effects",
+  "Cinematic Flow": "/admin/background-scene",
+  "Product Parallax": "/admin/product-parallax",
+};
 
 export default function VisualStatus() {
   return (
@@ -11,17 +19,35 @@ export default function VisualStatus() {
         <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">Live</span>
       </div>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {visualModes.map((mode) => (
-          <div
-            className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3"
-            key={mode.name}
-          >
+        {visualModes.map((mode) => {
+          const href = visualRoutes[mode.name];
+          const content = (
+            <>
             <span className="text-sm font-semibold text-slate-800">{mode.name}</span>
             <span className={`text-xs font-bold ${mode.active ? "text-emerald-600" : "text-slate-400"}`}>
               {mode.status}
             </span>
-          </div>
-        ))}
+            </>
+          );
+
+          return href ? (
+            <Link
+              aria-label={`Open ${mode.name}`}
+              className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 transition hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              href={href}
+              key={mode.name}
+            >
+              {content}
+            </Link>
+          ) : (
+            <div
+              className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3"
+              key={mode.name}
+            >
+              {content}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

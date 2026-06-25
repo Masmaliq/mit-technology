@@ -43,8 +43,8 @@ function DetailList({ items }: { items: string[][] }) {
   );
 }
 
-function hasValue(value?: string | unknown[]) {
-  return Array.isArray(value) ? value.length > 0 : Boolean(value);
+function firstAvailable(...values: Array<string | undefined>) {
+  return values.find((value) => Boolean(value?.trim()));
 }
 
 function readyLabel(isReady: boolean) {
@@ -53,6 +53,28 @@ function readyLabel(isReady: boolean) {
 
 function connectedLabel(isConnected: boolean) {
   return isConnected ? "Terhubung" : "Review";
+}
+
+function hasContactInfo(siteSettings?: SiteSettings, contact?: Contact, footer?: Footer) {
+  return Boolean(contact?.email || contact?.whatsapp || siteSettings?.email || siteSettings?.whatsapp || footer?.email || footer?.whatsapp);
+}
+
+function hasFooterBrand(footer?: Footer, siteSettings?: SiteSettings) {
+  return Boolean(footer?.description || footer?.copyright || siteSettings?.companyName || siteSettings?.siteTitle);
+}
+
+function getSocialLinksCount(siteSettings?: SiteSettings, footer?: Footer) {
+  return [
+    ...(footer?.socialLinks || []).filter((item) => item?.url),
+    siteSettings?.instagram,
+    siteSettings?.linkedin,
+    siteSettings?.youtube,
+    siteSettings?.facebook,
+  ].filter(Boolean).length;
+}
+
+function hasSiteSeo(siteSettings?: SiteSettings) {
+  return Boolean(siteSettings?.siteTitle && siteSettings?.siteDescription);
 }
 
 function buildSummary(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
@@ -72,7 +94,7 @@ function buildSummary(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Co
   return [
     { label: "Versi Framework", value: "v2.4.1", tone: "blue" },
     { label: "Paket Aktif", value: "Premium", tone: "violet" },
-    { label: "Lingkungan", value: process.env.NODE_ENV === "production" ? "Production" : "Local", tone: "amber" },
+    { label: "Lingkungan", value: process.env.NODE_ENV === "production" ? "Produksi" : "Lokal", tone: "amber" },
     { label: "Status Sistem", value: "Terhubung", tone: "emerald" },
   ];
 }
@@ -83,8 +105,12 @@ function buildGeneralSettings(siteSettings?: SiteSettings, contact?: Contact, fo
   const tagline = siteSettings?.tagline || siteSettings?.siteDescription || siteSettings?.description;
   const email = siteSettings?.email || contact?.email || footer?.email;
   const whatsapp = siteSettings?.whatsapp || contact?.whatsapp || footer?.whatsapp;
+  const phone = firstAvailable(siteSettings?.phone, contact?.phone, footer?.phone);
+  const address = firstAvailable(siteSettings?.address, contact?.address, footer?.address);
+  const seoTitle = siteSettings?.siteTitle;
+  const seoDescription = siteSettings?.siteDescription;
 
-  if (!siteName && !brandName && !tagline && !email && !whatsapp) {
+  if (!siteName && !brandName && !tagline && !email && !whatsapp && !phone && !address && !seoTitle && !seoDescription) {
     return settingsControlPanel.generalSettings;
   }
 
@@ -94,6 +120,10 @@ function buildGeneralSettings(siteSettings?: SiteSettings, contact?: Contact, fo
     ["Tagline", tagline || "Review"],
     ["Email", email || "Review"],
     ["WhatsApp", whatsapp || "Review"],
+    ["Telepon", phone || "Review"],
+    ["Alamat", address || "Review"],
+    ["SEO Title", seoTitle || "Review"],
+    ["SEO Description", seoDescription || "Review"],
   ];
 }
 
@@ -112,32 +142,35 @@ function buildIntegrationStatus(siteSettings?: SiteSettings, navbar?: Navbar, co
     ["Sanity CMS", connectedLabel(Boolean(siteSettings || navbar || contact || footer))],
     ["Deploy Vercel", "Siap"],
     ["Repository GitHub", "Terhubung"],
-    ["Kontak Global", readyLabel(Boolean(contact?.email || contact?.whatsapp || siteSettings?.email || siteSettings?.whatsapp))],
-    ["Footer Global", readyLabel(Boolean(footer?.description || footer?.copyright || footer?.email || siteSettings?.companyName))],
-    ["Navigasi", readyLabel(Boolean(navbar?.menuItems?.length || navbar?.ctaLabel))],
+    ["Kontak Global", readyLabel(hasContactInfo(siteSettings, contact, footer))],
+    ["Footer Global", readyLabel(hasFooterBrand(footer, siteSettings))],
+    ["Navigasi", readyLabel(Boolean(navbar?.menuItems?.length))],
+    ["Social Links", readyLabel(getSocialLinksCount(siteSettings, footer) > 0)],
   ];
 }
 
 function buildFrameworkConfiguration(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
   return [
-    ["Frontend Publik", "Protected"],
-    ["Sanity Schema", "Locked"],
+    ["Frontend Publik", "Terlindungi"],
+    ["Sanity Schema", "Terkunci"],
     ["Admin Dashboard", "Aktif"],
     ["Menu Navigasi", navbar?.menuItems?.length ? `${navbar.menuItems.length} Menu` : "Review"],
     ["CTA Navbar", readyLabel(Boolean(navbar?.ctaLabel || navbar?.ctaHref))],
-    ["Kontak", readyLabel(Boolean(contact?.email || contact?.whatsapp || contact?.phone))],
-    ["Footer", readyLabel(Boolean(footer?.description || footer?.copyright || footer?.socialLinks?.length))],
-    ["SEO Situs", readyLabel(Boolean(siteSettings?.siteTitle || siteSettings?.siteDescription || siteSettings?.pageSeo?.length))],
+    ["Kontak", readyLabel(hasContactInfo(siteSettings, contact, footer))],
+    ["Footer", readyLabel(hasFooterBrand(footer, siteSettings))],
+    ["Copyright Footer", footer?.copyright || "Review"],
+    ["SEO Situs", readyLabel(hasSiteSeo(siteSettings))],
   ];
 }
 
 function buildSystemReadiness(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
   return [
     ["Pengaturan Situs", readyLabel(Boolean(siteSettings?.companyName || siteSettings?.siteTitle))],
-    ["Navigasi", readyLabel(Boolean(navbar?.menuItems?.length || navbar?.ctaLabel))],
-    ["Kontak", readyLabel(Boolean(contact?.email || contact?.whatsapp || siteSettings?.email || siteSettings?.whatsapp))],
-    ["Footer", readyLabel(Boolean(footer?.description || footer?.copyright || footer?.email))],
-    ["Social Links", readyLabel(Boolean(hasValue(footer?.socialLinks) || siteSettings?.instagram || siteSettings?.linkedin))],
+    ["Navigasi", readyLabel(Boolean(navbar?.menuItems?.length))],
+    ["Kontak", readyLabel(hasContactInfo(siteSettings, contact, footer))],
+    ["Footer", readyLabel(hasFooterBrand(footer, siteSettings))],
+    ["SEO Situs", readyLabel(hasSiteSeo(siteSettings))],
+    ["Social Links", readyLabel(getSocialLinksCount(siteSettings, footer) > 0)],
     ["Handoff Produksi", "Review"],
   ];
 }
@@ -273,7 +306,7 @@ export default function SettingsControlPanel({
               className={`rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
                 index === 0
                   ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                  : action === "View System Log"
+                  : action === "Lihat Log Sistem"
                     ? "border-amber-100 bg-amber-50 text-amber-700 hover:bg-amber-100"
                     : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
               }`}

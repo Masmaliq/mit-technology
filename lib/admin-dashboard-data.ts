@@ -607,9 +607,10 @@ export const settingsControlPanel = {
     ["Production Handoff", "Review"],
   ],
   quickActions: [
-    "Edit General Settings",
+    "Edit Site Settings",
+    "Edit Navbar",
+    "Edit Contact",
     "Manage Access",
-    "Check Integrations",
     "Open Sanity",
     "Open Vercel",
     "View System Log",

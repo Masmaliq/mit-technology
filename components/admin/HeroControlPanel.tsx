@@ -42,6 +42,14 @@ function uploadedStatus(active: boolean) {
   return active ? "Uploaded" : "Missing";
 }
 
+function readyStatus(active: boolean) {
+  return active ? "Ready" : "Review";
+}
+
+function optionalStatus(active: boolean) {
+  return active ? "Ready" : "Optional";
+}
+
 function formatBackgroundType(type?: Homepage["backgroundType"]) {
   if (!type) {
     return null;
@@ -51,15 +59,29 @@ function formatBackgroundType(type?: Homepage["backgroundType"]) {
 }
 
 function buildHeroAdminData(homepage?: Homepage) {
-  const hasCmsContent = Boolean(
-    homepage?.heroTitle ||
-      homepage?.heroDescription ||
-      homepage?.heroPrimaryCtaLabel ||
-      homepage?.heroSecondaryCtaLabel
+  const hasHeroCopy = Boolean(homepage?.heroTitle || homepage?.heroDescription);
+  const hasHeroCta = Boolean(homepage?.heroPrimaryCtaLabel || homepage?.heroSecondaryCtaLabel);
+  const hasBackgroundImage = hasImage(homepage?.heroBackgroundImage);
+  const hasBackgroundVideo = hasFile(homepage?.heroBackgroundVideoMp4) || hasFile(homepage?.backgroundVideoMp4);
+  const hasCinematicVideo = hasFile(homepage?.cinematicVideoMp4);
+  const hasPoster = Boolean(
+    hasImage(homepage?.backgroundPosterImage) ||
+      hasImage(homepage?.heroPosterImage) ||
+      hasImage(homepage?.cinematicPosterImage)
+  );
+  const hasMobileFallback = hasImage(homepage?.cinematicMobileFallbackImage);
+  const hasPrimaryVisual = Boolean(
+    hasBackgroundImage ||
+      hasBackgroundVideo ||
+      hasCinematicVideo ||
+      hasPoster ||
+      hasMobileFallback ||
+      (homepage?.heroSliderImages?.length ?? 0) > 0
   );
   const hasBackgroundAsset = Boolean(
-    hasImage(homepage?.heroBackgroundImage) ||
-      hasFile(homepage?.heroBackgroundVideoMp4) ||
+    hasBackgroundImage ||
+      hasBackgroundVideo ||
+      hasCinematicVideo ||
       (homepage?.heroSliderImages?.length ?? 0) > 0
   );
   const hasHeroMedia = Boolean(
@@ -74,7 +96,7 @@ function buildHeroAdminData(homepage?: Homepage) {
       hasFile(homepage?.heroMotionGif) ||
       hasFile(homepage?.heroMotionVideoMp4)
   );
-  const hasHomepageData = Boolean(hasCmsContent || hasBackgroundAsset || hasHeroMedia || hasMotion);
+  const hasHomepageData = Boolean(hasHeroCopy || hasHeroCta || hasPrimaryVisual || hasHeroMedia || hasMotion);
 
   if (!hasHomepageData) {
     return heroControlPanel;
@@ -82,8 +104,10 @@ function buildHeroAdminData(homepage?: Homepage) {
 
   const backgroundFile =
     fileLabel(homepage?.heroBackgroundVideoMp4) ??
+    fileLabel(homepage?.backgroundVideoMp4) ??
     (hasImage(homepage?.heroBackgroundImage) ? "Image Uploaded" : null) ??
     ((homepage?.heroSliderImages?.length ?? 0) > 0 ? `${homepage?.heroSliderImages?.length} Slides` : null);
+  const cinematicFile = fileLabel(homepage?.cinematicVideoMp4);
   const motionAsset =
     fileLabel(homepage?.heroMotionVideoMp4) ??
     fileLabel(homepage?.heroMotionGif) ??
@@ -92,31 +116,26 @@ function buildHeroAdminData(homepage?: Homepage) {
   return {
     ...heroControlPanel,
     summary: [
-      { label: "Hero Content", value: hasCmsContent ? "Ready" : "Missing", tone: hasCmsContent ? "emerald" : "amber" },
-      { label: "Background Asset", value: hasBackgroundAsset ? "Uploaded" : "Missing", tone: hasBackgroundAsset ? "blue" : "amber" },
-      { label: "Hero Media", value: hasHeroMedia ? "Active" : "Missing", tone: hasHeroMedia ? "violet" : "amber" },
-      { label: "Motion", value: hasMotion ? "Enabled" : "Disabled", tone: hasMotion ? "emerald" : "amber" },
+      { label: "Hero Overall", value: readyStatus(hasPrimaryVisual), tone: hasPrimaryVisual ? "emerald" : "amber" },
+      { label: "Hero Copy", value: hasHeroCopy ? "Ready" : "Hidden", tone: hasHeroCopy ? "emerald" : "blue" },
+      { label: "Background Video", value: readyStatus(hasBackgroundVideo), tone: hasBackgroundVideo ? "blue" : "amber" },
+      { label: "Cinematic Video", value: readyStatus(hasCinematicVideo), tone: hasCinematicVideo ? "violet" : "amber" },
     ],
     contentPreview: {
-      title: homepage?.heroTitle || heroControlPanel.contentPreview.title,
-      description: homepage?.heroDescription || heroControlPanel.contentPreview.description,
-      primaryCta: homepage?.heroPrimaryCtaLabel || heroControlPanel.contentPreview.primaryCta,
-      secondaryCta: homepage?.heroSecondaryCtaLabel || heroControlPanel.contentPreview.secondaryCta,
+      title: homepage?.heroTitle || "Cinematic-only hero",
+      description: homepage?.heroDescription || "Hero title and description are optional for this video-first layout.",
+      primaryCta: homepage?.heroPrimaryCtaLabel || "Optional",
+      secondaryCta: homepage?.heroSecondaryCtaLabel || "Optional",
       targetPage: "Homepage",
     },
     visualAssets: [
       ["Background Type", formatBackgroundType(homepage?.backgroundType) || heroControlPanel.visualAssets[0][1]],
-      ["Background File", backgroundFile || heroControlPanel.visualAssets[1][1]],
-      [
-        "Poster Image",
-        uploadedStatus(
-          hasImage(homepage?.backgroundPosterImage) ||
-            hasImage(homepage?.heroPosterImage) ||
-            hasImage(homepage?.cinematicPosterImage)
-        ),
-      ],
-      ["Mobile Fallback", uploadedStatus(hasImage(homepage?.cinematicMobileFallbackImage))],
-      ["Hero Object", hasHeroMedia ? "Uploaded" : heroControlPanel.visualAssets[4][1]],
+      ["Background Image", hasBackgroundImage ? "Ready" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
+      ["Background Video", backgroundFile || "Review"],
+      ["Cinematic Video", cinematicFile || "Review"],
+      ["Poster / Fallback", hasPoster ? "Ready" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
+      ["Mobile Fallback", hasMobileFallback ? "Ready" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
+      ["Hero Object", hasHeroMedia ? "Uploaded" : "Optional"],
     ],
     motionSettings: [
       ["Hero Motion Type", homepage?.heroMotionType || "none"],

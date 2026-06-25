@@ -85,11 +85,29 @@ function hasSeo(page?: { seoTitle?: string; seoDescription?: string; seoImage?: 
   return Boolean(page?.seoTitle || page?.seoDescription || page?.seoImage);
 }
 
+function hasMediaAsset(media?: { url?: string; asset?: { url?: string; _ref?: string } }) {
+  return Boolean(media?.url || media?.asset?.url || media?.asset?._ref);
+}
+
+function hasHeroPrimaryVisual(homepage?: Homepage) {
+  return Boolean(
+    hasMediaAsset(homepage?.heroBackgroundImage) ||
+      hasMediaAsset(homepage?.heroBackgroundVideoMp4) ||
+      hasMediaAsset(homepage?.backgroundVideoMp4) ||
+      hasMediaAsset(homepage?.cinematicVideoMp4) ||
+      hasMediaAsset(homepage?.backgroundPosterImage) ||
+      hasMediaAsset(homepage?.cinematicPosterImage) ||
+      hasMediaAsset(homepage?.cinematicMobileFallbackImage) ||
+      (homepage?.heroSliderImages?.length ?? 0) > 0
+  );
+}
+
 function buildDashboardStats(data: DashboardSanityData): AdminStat[] | undefined {
   if (!hasDashboardData(data)) return undefined;
 
+  const heroReady = hasHeroPrimaryVisual(data.homepage);
   const pageItems = [
-    Boolean(data.homepage?.heroTitle || data.homepage?.heroDescription),
+    heroReady,
     Boolean(data.about?.heroTitle || data.about?.storyTitle),
     Boolean(data.solutionsPage?.heroTitle || data.solutions?.length),
     Boolean(data.packagesPageSettings?.pageTitle || data.packages?.length),
@@ -100,7 +118,7 @@ function buildDashboardStats(data: DashboardSanityData): AdminStat[] | undefined
   const publishedPages = pageItems.filter(Boolean).length;
   const draftPages = pageItems.length - publishedPages;
   const sectionItems = [
-    Boolean(data.homepage?.heroTitle || data.homepage?.heroDescription),
+    heroReady,
     Boolean(data.clientLogos?.length || data.homepage?.clientLogosTitle),
     Boolean(data.homepage?.trustTitle || data.homepage?.trustCards?.length),
     Boolean(data.solutions?.length || data.homepage?.solutionsPreviewTitle),
@@ -115,7 +133,6 @@ function buildDashboardStats(data: DashboardSanityData): AdminStat[] | undefined
   const seoPages = [data.homepage, data.about, data.solutionsPage, data.packagesPageSettings, data.caseStudiesPageSettings];
   const missingSeo = seoPages.filter((page) => page && !hasSeo(page)).length;
   const footerReady = Boolean(data.footer?.description || data.footer?.email || data.footer?.whatsapp || data.siteSettings?.companyName);
-  const heroReady = Boolean(data.homepage?.heroTitle || data.homepage?.heroDescription || data.homepage?.heroBackgroundImage);
   const issueCount = [!footerReady, !heroReady, missingSeo > 0].filter(Boolean).length;
 
   return [
@@ -147,14 +164,15 @@ function buildPackageSummary(data: DashboardSanityData): string[][] | undefined 
 function buildWebsiteHealth(data: DashboardSanityData): string[][] | undefined {
   if (!hasDashboardData(data)) return undefined;
 
+  const heroReady = hasHeroPrimaryVisual(data.homepage);
   const missingImages = [
-    !data.homepage?.heroBackgroundImage && !data.homepage?.heroMainImage,
+    !heroReady && !hasMediaAsset(data.homepage?.heroMainImage),
     !data.about?.image,
     Boolean(data.caseStudies?.some((item) => !item.featuredImage)),
   ].filter(Boolean).length;
   const hasCta = Boolean(data.homepage?.ctaTitle || data.homepage?.ctaButtonLabel || data.footer?.whatsapp || data.siteSettings?.whatsapp);
   const draftContent = [
-    !data.homepage?.heroTitle,
+    !heroReady,
     !data.about?.heroTitle,
     !data.packages?.length,
     !data.caseStudies?.length,
@@ -167,7 +185,7 @@ function buildWebsiteHealth(data: DashboardSanityData): string[][] | undefined {
     ["Missing Images", missingImages ? `${missingImages} Review` : "Lengkap"],
     ["Missing CTA", hasCta ? "Lengkap" : "Review"],
     ["Draft Content", `${draftContent} Review`],
-    ["Hero Status", data.homepage?.heroTitle ? "Ready" : "Review"],
+    ["Hero Status", heroReady ? "Ready" : "Review"],
     ["Footer Status", data.footer?.description || data.siteSettings?.companyName ? "Ready" : "Review"],
   ];
 }

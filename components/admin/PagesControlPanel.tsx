@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { pagesControlPanel } from "@/lib/admin-dashboard-data";
 import type {
@@ -28,6 +30,10 @@ type AdminPageStatus = {
   type: string;
   visibility: string;
   action: string;
+  route: string;
+  source: string;
+  seoStatus: string;
+  previewHref: string;
 };
 
 type PagesAdminData = {
@@ -75,12 +81,64 @@ function hasSeo(page?: { seoTitle?: string; seoDescription?: string; seoImage?: 
   return Boolean(page?.seoTitle || page?.seoDescription || page?.seoImage);
 }
 
+function seoStatus(page?: { seoTitle?: string; seoDescription?: string; seoImage?: unknown }) {
+  return hasSeo(page) ? "Ready" : "Review";
+}
+
+function buildPage({
+  action,
+  hasContent,
+  pageSeo,
+  previewHref,
+  route,
+  source,
+  title,
+  type,
+  visibility = "Public",
+}: {
+  action: string;
+  hasContent: boolean;
+  pageSeo?: { seoTitle?: string; seoDescription?: string; seoImage?: unknown };
+  previewHref: string;
+  route: string;
+  source: string;
+  title: string;
+  type: string;
+  visibility?: string;
+}): AdminPageStatus {
+  const seo = seoStatus(pageSeo);
+
+  return {
+    action,
+    previewHref,
+    route,
+    seoStatus: seo,
+    source,
+    status: pageStatus(hasContent, seo === "Review"),
+    title,
+    type,
+    visibility,
+  };
+}
+
 function buildPages(data?: PagesAdminData): AdminPageStatus[] {
   if (!hasPagesData(data)) {
-    return pagesControlPanel.pages;
+    return pagesControlPanel.pages.map((page) => ({
+      ...page,
+      route: page.route || "/admin/pages",
+      source: page.source || "Blueprint",
+      seoStatus: page.seoStatus || "Review",
+      previewHref: page.previewHref || "/admin/pages",
+    }));
   }
 
-  const homeReady = Boolean(data?.homepage?.heroTitle || data?.homepage?.heroDescription);
+  const homeReady = Boolean(
+    data?.homepage?.heroTitle ||
+      data?.homepage?.heroDescription ||
+      data?.homepage?.heroBackgroundImage ||
+      data?.homepage?.heroBackgroundVideoMp4 ||
+      data?.homepage?.cinematicVideoMp4
+  );
   const aboutReady = Boolean(data?.about?.heroTitle || data?.about?.storyTitle || data?.about?.storyDescription);
   const solutionsReady = Boolean(data?.solutionsPage?.heroTitle || data?.solutions?.length);
   const packagesReady = Boolean(data?.packagesPageSettings?.pageTitle || data?.packages?.length);
@@ -89,37 +147,100 @@ function buildPages(data?: PagesAdminData): AdminPageStatus[] {
   const contactReady = Boolean(data?.contact?.heroTitle || data?.contact?.email || data?.contact?.whatsapp || data?.siteSettings?.email || data?.siteSettings?.whatsapp);
 
   return [
-    { title: "Home", status: pageStatus(homeReady, !hasSeo(data?.homepage)), type: "Landing Page", visibility: "Public", action: "Edit Homepage" },
-    { title: "About", status: pageStatus(aboutReady, !hasSeo(data?.about)), type: "Company Page", visibility: "Public", action: "Edit About" },
-    {
-      title: "Solutions",
-      status: pageStatus(solutionsReady, !hasSeo(data?.solutionsPage)),
-      type: `${data?.solutions?.length ?? 0} Solution Items`,
-      visibility: "Public",
+    buildPage({
+      action: "Edit Homepage",
+      hasContent: homeReady,
+      pageSeo: data?.homepage,
+      previewHref: "/",
+      route: "/",
+      source: "Homepage Settings",
+      title: "Home",
+      type: "Landing Page",
+    }),
+    buildPage({
+      action: "Edit About",
+      hasContent: aboutReady,
+      pageSeo: data?.about,
+      previewHref: "/about",
+      route: "/about",
+      source: "About Page Settings",
+      title: "About",
+      type: "Company Page",
+    }),
+    buildPage({
       action: "Edit Solutions",
-    },
-    {
-      title: "Packages",
-      status: pageStatus(packagesReady, !hasSeo(data?.packagesPageSettings)),
-      type: `${data?.packages?.length ?? 0} Package Items`,
-      visibility: "Public",
+      hasContent: solutionsReady,
+      pageSeo: data?.solutionsPage,
+      previewHref: "/solutions",
+      route: "/solutions",
+      source: `${data?.solutions?.length ?? 0} Solution Items`,
+      title: "Solutions",
+      type: `${data?.solutions?.length ?? 0} Solution Items`,
+    }),
+    buildPage({
       action: "Edit Packages",
-    },
-    {
-      title: "Case Studies",
-      status: pageStatus(caseStudiesReady, !hasSeo(data?.caseStudiesPageSettings)),
-      type: `${data?.caseStudies?.length ?? 0} Case Items`,
-      visibility: "Public",
+      hasContent: packagesReady,
+      pageSeo: data?.packagesPageSettings,
+      previewHref: "/packages",
+      route: "/packages",
+      source: `${data?.packages?.length ?? 0} Package Items`,
+      title: "Packages",
+      type: `${data?.packages?.length ?? 0} Package Items`,
+    }),
+    buildPage({
       action: "Review Cases",
-    },
-    {
+      hasContent: caseStudiesReady,
+      pageSeo: data?.caseStudiesPageSettings,
+      previewHref: "/case-studies",
+      route: "/case-studies",
+      source: `${data?.caseStudies?.length ?? 0} Case Items`,
+      title: "Case Studies",
+      type: `${data?.caseStudies?.length ?? 0} Case Items`,
+    }),
+    buildPage({
+      action: "Review Portfolio",
+      hasContent: portfolioReady,
+      previewHref: "/portfolio",
+      route: "/portfolio",
+      source: `${data?.portfolio?.length ?? 0} Portfolio Items`,
       title: "Portfolio",
-      status: pageStatus(portfolioReady, !data?.portfolio?.length),
       type: `${data?.portfolio?.length ?? 0} Portfolio Items`,
       visibility: portfolioReady ? "Public" : "Hidden",
-      action: "Review Portfolio",
-    },
-    { title: "Contact CTA", status: pageStatus(contactReady, !hasSeo(data?.contact)), type: "Conversion Page", visibility: "Public", action: "Edit CTA" },
+    }),
+    buildPage({
+      action: "Edit CTA",
+      hasContent: contactReady,
+      pageSeo: data?.contact,
+      previewHref: "/contact",
+      route: "/contact",
+      source: "Contact Settings",
+      title: "Contact",
+      type: "Conversion Page",
+    }),
+  ];
+}
+
+function buildPagesOverview(data?: PagesAdminData) {
+  if (!hasPagesData(data)) {
+    return [
+      ["Sumber Data", "Blueprint fallback"],
+      ["Page Registry", "Review"],
+      ["Public Routes", "Blueprint Ready"],
+      ["SEO Coverage", "Review"],
+      ["Content Source", "Blueprint"],
+    ];
+  }
+
+  const pages = buildPages(data);
+  const publicCount = pages.filter((page) => page.visibility === "Public").length;
+  const reviewCount = pages.filter((page) => page.status === "Review" || page.seoStatus === "Review").length;
+
+  return [
+    ["Sumber Data", "Sanity + Admin Registry"],
+    ["Page Registry", `${pages.length} Halaman`],
+    ["Public Routes", `${publicCount} Public`],
+    ["SEO Coverage", reviewCount ? `${reviewCount} Review` : "Ready"],
+    ["Content Source", "Read-only"],
   ];
 }
 
@@ -189,7 +310,7 @@ function DetailList({ items }: { items: string[][] }) {
         return (
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
             <span className="text-sm text-slate-500">{label}</span>
-            <span className={`text-sm font-bold ${warning ? "text-amber-700" : ready ? "text-emerald-700" : "text-slate-900"}`}>
+            <span className={`max-w-[58%] break-words text-right text-sm font-bold ${warning ? "text-amber-700" : ready ? "text-emerald-700" : "text-slate-900"}`}>
               {value}
             </span>
           </div>
@@ -202,8 +323,10 @@ function DetailList({ items }: { items: string[][] }) {
 export default function PagesControlPanel({ pagesData }: { pagesData?: PagesAdminData }) {
   const summaryCards = buildSummary(pagesData);
   const pageCards = buildPages(pagesData);
+  const overview = buildPagesOverview(pagesData);
   const readiness = buildReadiness(pagesData);
   const seoCoverage = buildSeoCoverage(pagesData);
+  const hasData = hasPagesData(pagesData);
 
   return (
     <section className="space-y-6">
@@ -244,6 +367,38 @@ export default function PagesControlPanel({ pagesData }: { pagesData?: PagesAdmi
         ))}
       </div>
 
+      {!hasData ? (
+        <article className="rounded-[2rem] border border-amber-100 bg-amber-50/70 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <span className="inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-bold text-amber-700">
+                Empty State
+              </span>
+              <h2 className="mt-4 text-xl font-bold text-slate-950">Page registry belum membaca data Sanity.</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                Panel menampilkan blueprint halaman utama sebagai preview aman. Hubungkan konten di Sanity agar status halaman membaca data real.
+              </p>
+            </div>
+            <AdminActionLink
+              action="Open Sanity"
+              className="w-fit rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700"
+            >
+              Open Sanity
+            </AdminActionLink>
+          </div>
+        </article>
+      ) : null}
+
+      <article className="rounded-[2rem] border border-blue-100 bg-blue-50/55 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
+        <h2 className="text-xl font-bold text-slate-950">Pages Overview</h2>
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          Ringkasan route publik, sumber konten, status SEO, dan kesiapan halaman.
+        </p>
+        <div className="mt-6">
+          <DetailList items={overview} />
+        </div>
+      </article>
+
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {pageCards.map((page) => (
           <article
@@ -260,6 +415,7 @@ export default function PagesControlPanel({ pagesData }: { pagesData?: PagesAdmi
               <div>
                 <div className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{page.type}</div>
                 <h2 className="mt-3 text-xl font-bold tracking-tight text-slate-950">{page.title}</h2>
+                <p className="mt-2 font-mono text-sm font-semibold text-blue-700">{page.route}</p>
               </div>
               <span
                 className={`rounded-full px-3 py-1.5 text-xs font-bold ${
@@ -279,9 +435,25 @@ export default function PagesControlPanel({ pagesData }: { pagesData?: PagesAdmi
                 <span className="text-sm text-slate-500">Visibility</span>
                 <span className="text-sm font-bold text-slate-900">{page.visibility}</span>
               </div>
+              <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3">
+                <span className="text-sm text-slate-500">Content Source</span>
+                <span className="max-w-[58%] break-words text-right text-sm font-bold text-slate-900">{page.source}</span>
+              </div>
+              <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+                <span className="text-sm text-slate-500">SEO Status</span>
+                <span className={`text-sm font-bold ${page.seoStatus === "Ready" ? "text-emerald-700" : "text-amber-700"}`}>
+                  {page.seoStatus}
+                </span>
+              </div>
               <AdminActionLink action={page.action} className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-left text-sm font-bold text-blue-700 transition hover:bg-blue-100">
                 {page.action}
               </AdminActionLink>
+              <Link
+                className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                href={page.previewHref}
+              >
+                Preview Page
+              </Link>
             </div>
           </article>
         ))}
@@ -306,8 +478,8 @@ export default function PagesControlPanel({ pagesData }: { pagesData?: PagesAdmi
       </div>
 
       <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-        <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
-        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk page workflow dan publish readiness.</p>
+        <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
+        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk struktur halaman, SEO, preview, dan publish readiness.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {pagesControlPanel.quickActions.map((action, index) => (
             <AdminActionLink

@@ -35,15 +35,15 @@ const sections: DashboardNavSection[] = [
   {
     label: "Visual",
     items: [
-      { label: "Product Parallax", href: "/admin/parallax", icon: "◑", badge: "!" },
-      { label: "Motion Effects", href: "/admin/motion", icon: "◈" },
-      { label: "Background Scene", href: "/admin/background", icon: "▣" },
+      { label: "Product Parallax", href: "/admin/product-parallax", icon: "◑", badge: "!" },
+      { label: "Motion Effects", href: "/admin/motion-effects", icon: "◈" },
+      { label: "Background Scene", href: "/admin/background-scene", icon: "▣" },
     ],
   },
   {
     label: "Sistem",
     items: [
-      { label: "SEO & Health", href: "/admin/health", icon: "◎" },
+      { label: "SEO & Health", href: "/admin/seo-health", icon: "◎" },
       { label: "Pengaturan", href: "/admin/settings", icon: "⚙" },
     ],
   },

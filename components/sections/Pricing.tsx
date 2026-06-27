@@ -42,40 +42,51 @@ function PricingPreview({
   emptyStateText,
 }: PricingProps) {
   const items = packages?.filter((item) => item.title).slice(0, 3) ?? [];
-  const displayEyebrow = eyebrow?.trim() || "Packages";
-  const displayTitle = title?.trim() || "Packages";
+  const displayEyebrow = eyebrow?.trim() || "";
+  const displayTitle = title?.trim() || "";
   const displayDescription = description?.trim() || "";
-  const displayCtaLabel = ctaLabel?.trim() || "View";
-  const displayCtaHref = ctaHref?.trim() || "/packages";
+  const displayCtaLabel = ctaLabel?.trim() || "";
+  const displayCtaHref = ctaHref?.trim() || "";
   const displayCardLabel = cardLabel?.trim() || "Engagement";
   const displayFeaturedCardLabel = featuredCardLabel?.trim() || displayCardLabel;
   const displayFeaturedBadgeLabel = featuredBadgeLabel?.trim() || "Featured";
   const displayPriceLabel = priceLabel?.trim() || "Starting from";
-  const displayPackageCtaLabel = packageCtaLabel?.trim() || "Contact";
-  const displayPackageCtaHref = packageCtaHref?.trim() || "/contact";
+  const displayPackageCtaLabel = packageCtaLabel?.trim() || "";
+  const displayPackageCtaHref = packageCtaHref?.trim() || "";
   const displaySupportItems = supportItems?.filter((item) => item.title || item.description) ?? [];
   const cleanDescription = (value?: string) => value?.replace(/\s+D\s*$/, "").trim();
+  const hasHeading = Boolean(displayEyebrow || displayTitle || displayDescription || (displayCtaLabel && displayCtaHref));
+  const hasPackageCta = Boolean(displayPackageCtaLabel && displayPackageCtaHref);
+
+  if (!hasHeading && items.length === 0 && displaySupportItems.length === 0) {
+    return null;
+  }
 
   return (
     <section id="pricing" aria-label="Packages" className="bg-white py-10 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {hasHeading ? (
         <FadeUp subtle className="grid gap-5 md:gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
-            <TextReveal
-              as="p"
-              className="text-xs font-semibold uppercase tracking-[0.32em] text-primary"
-              direction="down"
-              mode="chars"
-              stagger={0.018}
-              text={displayEyebrow}
-            />
-            <TextReveal
-              as="h2"
-              className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 md:mt-4 md:text-5xl"
-              direction="left"
-              mode="words"
-              text={displayTitle}
-            />
+            {displayEyebrow ? (
+              <TextReveal
+                as="p"
+                className="text-xs font-semibold uppercase tracking-[0.32em] text-primary"
+                direction="down"
+                mode="chars"
+                stagger={0.018}
+                text={displayEyebrow}
+              />
+            ) : null}
+            {displayTitle ? (
+              <TextReveal
+                as="h2"
+                className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 md:mt-4 md:text-5xl"
+                direction="left"
+                mode="words"
+                text={displayTitle}
+              />
+            ) : null}
           </div>
           <div className="max-w-2xl lg:justify-self-end">
             {displayDescription ? (
@@ -87,6 +98,7 @@ function PricingPreview({
                   text={displayDescription}
                 />
               ) : null}
+              {displayCtaLabel && displayCtaHref ? (
               <Link
                 href={displayCtaHref}
                 className="group mt-6 hidden items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_44px_rgba(15,23,42,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#1c1c1c] md:inline-flex"
@@ -94,8 +106,10 @@ function PricingPreview({
                 {displayCtaLabel}
                 <ArrowRight className="h-4 w-4 transition duration-300 ease-out group-hover:translate-x-1" />
               </Link>
+              ) : null}
           </div>
         </FadeUp>
+        ) : null}
 
         <StaggerContainer className="mt-8 grid gap-4 lg:grid-cols-3">
           {items.length > 0 ? items.map((item) => {
@@ -162,6 +176,7 @@ function PricingPreview({
                   </div>
                 </div>
 
+                {hasPackageCta ? (
                 <div className="mt-auto pt-4 md:pt-5">
                   <Link
                     className={`group/package-cta inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition duration-300 ${
@@ -175,12 +190,13 @@ function PricingPreview({
                     <ArrowRight className="h-4 w-4 transition duration-300 ease-out group-hover/package-cta:translate-x-1" />
                   </Link>
                 </div>
+                ) : null}
               </article>
             </StaggerItem>
           );
           }) : (
             <div className="rounded-[1.5rem] border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-sm text-slate-600 lg:col-span-3">
-              {emptyStateText || "Content is not available."}
+              {emptyStateText || "Packages are not available yet."}
             </div>
           )}
         </StaggerContainer>

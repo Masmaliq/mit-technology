@@ -7,13 +7,19 @@ const summaryTone: Record<string, string> = {
   violet: "border-violet-100 bg-violet-50 text-violet-700",
 };
 
+const effectStatusTone: Record<string, string> = {
+  Active: "border-emerald-100 bg-emerald-50 text-emerald-700",
+  Review: "border-amber-100 bg-amber-50 text-amber-700",
+  Optional: "border-slate-200 bg-slate-50 text-slate-600",
+};
+
 function DetailList({ items }: { items: string[][] }) {
   return (
     <div className="space-y-3">
       {items.map(([label, value]) => (
         <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
           <span className="text-sm text-slate-500">{label}</span>
-          <span className="text-sm font-bold text-slate-900">{value}</span>
+          <span className="max-w-[58%] break-words text-right text-sm font-bold text-slate-900">{value}</span>
         </div>
       ))}
     </div>
@@ -43,6 +49,53 @@ function MotionCard({
       <p className="mt-1 text-sm text-slate-500">{description}</p>
       <div className="mt-6">
         <DetailList items={items} />
+      </div>
+    </article>
+  );
+}
+
+function EffectCard({
+  area,
+  intensity,
+  name,
+  note,
+  source,
+  status,
+}: {
+  area: string;
+  intensity: string;
+  name: string;
+  note: string;
+  source: string;
+  status: string;
+}) {
+  return (
+    <article className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.04)]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">{area}</p>
+          <h3 className="mt-2 text-base font-bold text-slate-950">{name}</h3>
+        </div>
+        <span
+          className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-bold ${
+            effectStatusTone[status] ?? effectStatusTone.Optional
+          }`}
+        >
+          {status}
+        </span>
+      </div>
+
+      <p className="mt-4 text-sm leading-6 text-slate-500">{note}</p>
+
+      <div className="mt-5 grid gap-2 text-xs font-semibold text-slate-500 sm:grid-cols-2">
+        <div className="rounded-2xl bg-slate-50 px-3 py-2">
+          <span className="block text-slate-400">Intensity</span>
+          <span className="mt-1 block text-slate-800">{intensity}</span>
+        </div>
+        <div className="rounded-2xl bg-slate-50 px-3 py-2">
+          <span className="block text-slate-400">Source</span>
+          <span className="mt-1 block text-slate-800">{source}</span>
+        </div>
       </div>
     </article>
   );
@@ -88,43 +141,92 @@ export default function MotionEffectsControlPanel() {
         ))}
       </div>
 
+      <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+        <MotionCard
+          description="Ringkasan status motion global, sumber preset, dan area penggunaan utama."
+          items={motionEffectsControlPanel.overview}
+          title="Motion Effects Overview"
+        />
+
+        <article className="overflow-hidden rounded-[2rem] border border-blue-100 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-6 text-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] sm:p-7">
+          <span className="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-blue-100">
+            Performance Safe
+          </span>
+          <h2 className="mt-5 text-2xl font-bold">Reduced motion tetap dihormati.</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-blue-100/80">
+            Motion system dipakai untuk memberi ritme visual, bukan membuat halaman terasa berat. Efek berat tetap
+            dibatasi, mobile memakai mode ringan, dan preference reduced motion tetap menjadi prioritas.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {["Mobile ringan", "Once in view", "No heavy loop"].map((label) => (
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-bold text-white/90" key={label}>
+                {label}
+              </div>
+            ))}
+          </div>
+        </article>
+      </div>
+
+      <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-slate-950">Global Motion Status</h2>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
+              Daftar efek utama yang membentuk reveal, parallax, dan cinematic detail pada website.
+            </p>
+          </div>
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">
+            Static Blueprint
+          </span>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {motionEffectsControlPanel.effects.map((effect) => (
+            <EffectCard {...effect} key={effect.name} />
+          ))}
+        </div>
+      </article>
+
       <div className="grid gap-6 xl:grid-cols-2">
         <MotionCard
           description="Preset animasi utama yang menjaga ritme premium di halaman publik."
           items={motionEffectsControlPanel.presets}
-          title="Motion Preset Status"
+          title="Scroll Reveal Effects"
         />
         <MotionCard
           accent="violet"
           description="Konfigurasi reveal agar tidak terasa terlalu lambat atau terlalu ramai."
           items={motionEffectsControlPanel.animationBehavior}
-          title="Animation Behavior"
+          title="Section Motion Effects"
         />
         <MotionCard
           accent="emerald"
           description="Pengaturan scroll interaction yang ringan dan aman untuk performa."
           items={motionEffectsControlPanel.scrollInteraction}
-          title="Scroll Interaction"
+          title="Parallax Effects"
         />
         <MotionCard
           description="Fallback mobile agar motion tetap halus di perangkat kecil."
           items={motionEffectsControlPanel.mobileFallback}
-          title="Mobile Fallback"
+          title="Performance / Reduced Motion"
         />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-          <h2 className="text-xl font-bold text-slate-950">Readiness Checklist</h2>
-          <p className="mt-1 text-sm text-slate-500">Checklist kesiapan motion system sebelum production.</p>
+          <h2 className="text-xl font-bold text-slate-950">Preview / Usage Status</h2>
+          <p className="mt-1 text-sm text-slate-500">Status penggunaan motion pada hero, section, card, dan scene.</p>
           <div className="mt-6">
+            <DetailList items={motionEffectsControlPanel.usageStatus} />
+          </div>
+          <div className="mt-4">
             <DetailList items={motionEffectsControlPanel.readiness} />
           </div>
         </article>
 
         <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-          <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
-          <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow motion effects.</p>
+          <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
+          <p className="mt-1 text-sm text-slate-500">Akses aman untuk mengelola, mengecek, dan preview motion system.</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {motionEffectsControlPanel.quickActions.map((action, index) => (
               <AdminActionLink

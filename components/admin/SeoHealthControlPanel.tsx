@@ -7,16 +7,30 @@ const summaryTone: Record<string, string> = {
   amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
 
+const pageStatusTone: Record<string, string> = {
+  Ready: "border-emerald-100 bg-emerald-50 text-emerald-700",
+  Connected: "border-emerald-100 bg-emerald-50 text-emerald-700",
+  "Needs Review": "border-amber-100 bg-amber-50 text-amber-700",
+  Review: "border-amber-100 bg-amber-50 text-amber-700",
+  "Missing Data": "border-rose-100 bg-rose-50 text-rose-700",
+};
+
 function DetailList({ items }: { items: string[][] }) {
   return (
     <div className="space-y-3">
       {items.map(([label, value]) => {
-        const warning = value === "Review" || value === "Needs Review" || value === "1" || value === "2" || value === "3";
+        const warning =
+          value === "Review" ||
+          value === "Needs Review" ||
+          value === "Missing Data" ||
+          value === "1" ||
+          value === "2" ||
+          value === "3";
 
         return (
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
             <span className="text-sm text-slate-500">{label}</span>
-            <span className={`text-sm font-bold ${warning ? "text-amber-700" : "text-slate-900"}`}>
+            <span className={`max-w-[58%] break-words text-right text-sm font-bold ${warning ? "text-amber-700" : "text-slate-900"}`}>
               {value}
             </span>
           </div>
@@ -49,6 +63,61 @@ function HealthCard({
       <p className="mt-1 text-sm text-slate-500">{description}</p>
       <div className="mt-6">
         <DetailList items={items} />
+      </div>
+    </article>
+  );
+}
+
+function PageSeoCard({
+  description,
+  image,
+  page,
+  route,
+  source,
+  status,
+  title,
+}: {
+  description: string;
+  image: string;
+  page: string;
+  route: string;
+  source: string;
+  status: string;
+  title: string;
+}) {
+  return (
+    <article className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_18px_54px_rgba(15,23,42,0.04)]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">{route}</p>
+          <h3 className="mt-2 text-base font-bold text-slate-950">{page}</h3>
+        </div>
+        <span
+          className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-bold ${
+            pageStatusTone[status] ?? pageStatusTone.Review
+          }`}
+        >
+          {status}
+        </span>
+      </div>
+
+      <div className="mt-5 grid gap-2 text-xs font-semibold text-slate-500 sm:grid-cols-2">
+        <div className="rounded-2xl bg-slate-50 px-3 py-2">
+          <span className="block text-slate-400">Title</span>
+          <span className="mt-1 block text-slate-800">{title}</span>
+        </div>
+        <div className="rounded-2xl bg-slate-50 px-3 py-2">
+          <span className="block text-slate-400">Description</span>
+          <span className="mt-1 block text-slate-800">{description}</span>
+        </div>
+        <div className="rounded-2xl bg-slate-50 px-3 py-2">
+          <span className="block text-slate-400">OG Image</span>
+          <span className="mt-1 block text-slate-800">{image}</span>
+        </div>
+        <div className="rounded-2xl bg-slate-50 px-3 py-2">
+          <span className="block text-slate-400">Source</span>
+          <span className="mt-1 block text-slate-800">{source}</span>
+        </div>
       </div>
     </article>
   );
@@ -94,23 +163,90 @@ export default function SeoHealthControlPanel() {
         ))}
       </div>
 
+      <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+        <HealthCard
+          accent="blue"
+          description="Ringkasan metadata default, social preview, dan sumber pengecekan SEO."
+          items={seoHealthControlPanel.overview}
+          title="SEO Overview"
+        />
+
+        <article className="overflow-hidden rounded-[2rem] border border-amber-100 bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950 p-6 text-white shadow-[0_24px_80px_rgba(15,23,42,0.14)] sm:p-7">
+          <span className="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-amber-100">
+            Honest SEO Check
+          </span>
+          <h2 className="mt-5 max-w-xl text-2xl font-bold">Panel ini adalah checklist readiness, bukan crawler otomatis.</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-amber-100/80">
+            Status SEO dipakai untuk membaca kesiapan metadata dasar, image, dan route penting. Item yang belum terhubung
+            ditandai Review agar tidak memberi klaim berlebihan.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {["Ready", "Needs Review", "Missing Data"].map((label) => (
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-bold text-white/90" key={label}>
+                {label}
+              </div>
+            ))}
+          </div>
+        </article>
+      </div>
+
+      <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-slate-950">Page SEO Status</h2>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
+              Kesiapan title, description, Open Graph image, dan sumber konten untuk halaman utama.
+            </p>
+          </div>
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">
+            Static Checklist
+          </span>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {seoHealthControlPanel.pageSeoStatus.map((page) => (
+            <PageSeoCard {...page} key={page.page} />
+          ))}
+        </div>
+      </article>
+
       <div className="grid gap-6 xl:grid-cols-3">
         <HealthCard
           accent="blue"
           description="Status metadata teknis yang dibutuhkan mesin pencari dan social preview."
           items={seoHealthControlPanel.seoStatus}
-          title="SEO Status"
+          title="Global SEO Status"
         />
         <HealthCard
-          description="Kesiapan konten sebelum publish dan handoff ke production."
-          items={seoHealthControlPanel.contentReadiness}
-          title="Content Readiness"
+          description="Checklist metadata yang perlu dipantau sebelum production handoff."
+          items={seoHealthControlPanel.metadataChecklist}
+          title="Metadata Checklist"
         />
         <HealthCard
           accent="emerald"
-          description="Status performa utama untuk desktop, mobile, media, dan motion."
+          description="Status Open Graph dan social preview untuk halaman yang dibagikan."
+          items={seoHealthControlPanel.socialPreviewStatus}
+          title="Open Graph / Social Preview"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <HealthCard
+          description="Status sitemap, robots, canonical, dan dynamic slug readiness."
+          items={seoHealthControlPanel.sitemapRobotsStatus}
+          title="Sitemap / Robots Status"
+        />
+        <HealthCard
+          accent="blue"
+          description="Status alt text dan fallback image untuk asset utama."
+          items={seoHealthControlPanel.imageAltStatus}
+          title="Image Alt Text Status"
+        />
+        <HealthCard
+          accent="emerald"
+          description="Catatan performa yang berpengaruh pada SEO teknis dan pengalaman mobile."
           items={seoHealthControlPanel.performanceStatus}
-          title="Performance Status"
+          title="Performance Note"
         />
       </div>
 
@@ -137,8 +273,8 @@ export default function SeoHealthControlPanel() {
       </div>
 
       <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-        <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
-        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk audit SEO, metadata, dan performance.</p>
+        <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
+        <p className="mt-1 text-sm text-slate-500">Akses aman untuk audit SEO, metadata, preview, dan performance.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {seoHealthControlPanel.quickActions.map((action, index) => (
             <AdminActionLink

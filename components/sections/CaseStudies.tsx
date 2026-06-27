@@ -66,13 +66,18 @@ export function CaseStudies({
   enableGlow,
   cinematicFlowEnabled,
 }: CaseStudiesProps) {
-  const displayEyebrow = eyebrow?.trim() || "Case Studies";
-  const displayTitle = title?.trim() || "Case studies";
+  const displayEyebrow = eyebrow?.trim() || "";
+  const displayTitle = title?.trim() || "";
   const displayDescription = description?.trim() || "";
-  const displayCtaLabel = ctaLabel?.trim() || "View";
-  const displayCtaHref = ctaHref?.trim() || "/case-studies";
+  const displayCtaLabel = ctaLabel?.trim() || "";
+  const displayCtaHref = ctaHref?.trim() || "";
   const bannerImageUrl = getBannerImageUrl(backgroundImage);
   const overlayOpacity = Math.min(Math.max(cinematicFlowEnabled ? Math.min(backgroundOverlayOpacity ?? 42, 42) : backgroundOverlayOpacity ?? 58, 0), 100) / 100;
+  const hasContent = Boolean(displayEyebrow || displayTitle || displayDescription || (displayCtaLabel && displayCtaHref) || bannerImageUrl);
+
+  if (!hasContent) {
+    return null;
+  }
 
   return (
     <section
@@ -139,21 +144,25 @@ export function CaseStudies({
 
           <div className="relative z-10 max-w-3xl lg:ml-32">
             <div>
-              <TextReveal
-                as="p"
-                className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300"
-                direction="down"
-                mode="chars"
-                stagger={0.018}
-                text={displayEyebrow}
-              />
-              <TextReveal
-                as="h2"
-                className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl"
-                direction="right"
-                mode="words"
-                text={displayTitle}
-              />
+              {displayEyebrow ? (
+                <TextReveal
+                  as="p"
+                  className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300"
+                  direction="down"
+                  mode="chars"
+                  stagger={0.018}
+                  text={displayEyebrow}
+                />
+              ) : null}
+              {displayTitle ? (
+                <TextReveal
+                  as="h2"
+                  className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl"
+                  direction="right"
+                  mode="words"
+                  text={displayTitle}
+                />
+              ) : null}
               {displayDescription ? (
                 <TextReveal
                   as="p"
@@ -165,13 +174,15 @@ export function CaseStudies({
               ) : null}
             </div>
 
-            <Link
-              href={displayCtaHref}
-              className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#031230] shadow-[0_18px_60px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-sky-50"
-            >
-              {displayCtaLabel}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {displayCtaLabel && displayCtaHref ? (
+              <Link
+                href={displayCtaHref}
+                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#031230] shadow-[0_18px_60px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-sky-50"
+              >
+                {displayCtaLabel}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

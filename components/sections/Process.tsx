@@ -8,46 +8,52 @@ type ProcessProps = {
   description?: string;
 };
 
-const processFallback = {
-  eyebrow: "MIT GROWTH FRAMEWORK",
-  title: "Framework konsultasi untuk digital infrastructure, automation, dan AI.",
-  description:
-    "Dari arah strategi hingga sistem yang scalable, setiap tahap dirancang agar pertumbuhan bisnis lebih terstruktur.",
-};
-
 export function Process({ processes = [], eyebrow, title, description }: ProcessProps) {
   const visibleProcesses = processes.filter((item) => item.title && item.featured !== false);
-  const displayEyebrow = eyebrow?.trim() || processFallback.eyebrow;
-  const displayTitle = title?.trim() || processFallback.title;
-  const displayDescription = description?.trim() || processFallback.description;
+  const displayEyebrow = eyebrow?.trim() || "";
+  const displayTitle = title?.trim() || "";
+  const displayDescription = description?.trim() || "";
+  const hasHeading = Boolean(displayEyebrow || displayTitle || displayDescription);
+
+  if (!hasHeading && visibleProcesses.length === 0) {
+    return null;
+  }
 
   return (
     <section id="process" aria-label="Process" className="bg-white py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <TextReveal
-            as="p"
-            className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
-            direction="down"
-            mode="chars"
-            stagger={0.018}
-            text={displayEyebrow}
-          />
-          <TextReveal
-            as="h2"
-            className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
-            direction="up"
-            mode="words"
-            text={displayTitle}
-          />
-          <TextReveal
-            as="p"
-            className="mt-5 text-lg leading-8 text-slate-600"
-            direction="up"
-            mode="lines"
-            text={displayDescription}
-          />
-        </div>
+        {hasHeading ? (
+          <div className="mx-auto max-w-3xl text-center">
+            {displayEyebrow ? (
+              <TextReveal
+                as="p"
+                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                direction="down"
+                mode="chars"
+                stagger={0.018}
+                text={displayEyebrow}
+              />
+            ) : null}
+            {displayTitle ? (
+              <TextReveal
+                as="h2"
+                className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
+                direction="up"
+                mode="words"
+                text={displayTitle}
+              />
+            ) : null}
+            {displayDescription ? (
+              <TextReveal
+                as="p"
+                className="mt-5 text-lg leading-8 text-slate-600"
+                direction="up"
+                mode="lines"
+                text={displayDescription}
+              />
+            ) : null}
+          </div>
+        ) : null}
 
         {visibleProcesses.length > 0 ? (
           <StaggerContainer className="mt-8 grid gap-2 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-200 md:grid-cols-2 lg:mt-12 lg:grid-cols-5 lg:gap-px lg:rounded-[2rem]">
@@ -75,7 +81,7 @@ export function Process({ processes = [], eyebrow, title, description }: Process
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 px-8 py-10 text-center">
             <p className="text-sm font-medium text-slate-500">
-              Process Framework content is ready to be managed from Sanity Studio.
+              Process content is not available yet.
             </p>
           </div>
         )}

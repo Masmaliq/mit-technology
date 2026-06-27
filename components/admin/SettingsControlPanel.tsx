@@ -1,4 +1,5 @@
 import AdminActionLink from "@/components/admin/AdminActionLink";
+import { ADMIN_STUDIO_URL, ADMIN_VERCEL_URL } from "@/lib/admin-links";
 import { settingsControlPanel } from "@/lib/admin-dashboard-data";
 import type { Contact, Footer, Navbar, SiteSettings } from "@/lib/sanity/queries";
 
@@ -30,7 +31,7 @@ function DetailList({ items }: { items: string[][] }) {
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
             <span className="text-sm text-slate-500">{label}</span>
             <span
-              className={`text-right text-sm font-bold ${
+              className={`max-w-[58%] break-words text-right text-sm font-bold ${
                 pending ? "text-amber-700" : ready ? "text-emerald-700" : "text-slate-900"
               }`}
             >
@@ -45,6 +46,18 @@ function DetailList({ items }: { items: string[][] }) {
 
 function firstAvailable(...values: Array<string | undefined>) {
   return values.find((value) => Boolean(value?.trim()));
+}
+
+function shortUrl(value?: string) {
+  if (!value) {
+    return "Review";
+  }
+
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return value;
+  }
 }
 
 function readyLabel(isReady: boolean) {
@@ -75,6 +88,79 @@ function getSocialLinksCount(siteSettings?: SiteSettings, footer?: Footer) {
 
 function hasSiteSeo(siteSettings?: SiteSettings) {
   return Boolean(siteSettings?.siteTitle && siteSettings?.siteDescription);
+}
+
+function hasLogo(siteSettings?: SiteSettings, navbar?: Navbar) {
+  return Boolean(navbar?.logo?.url || navbar?.logo?.asset?.url || siteSettings?.logo?.url || siteSettings?.logo?.asset?.url);
+}
+
+function buildSiteSettings(siteSettings?: SiteSettings, navbar?: Navbar) {
+  const siteName = firstAvailable(siteSettings?.siteTitle, siteSettings?.companyName);
+  const brandName = siteSettings?.companyName;
+  const tagline = firstAvailable(siteSettings?.tagline, siteSettings?.siteDescription, siteSettings?.description);
+
+  if (!siteName && !brandName && !tagline && !hasLogo(siteSettings, navbar)) {
+    return [
+      ["Nama Situs", "Review"],
+      ["Nama Brand", "Review"],
+      ["Logo", "Review"],
+      ["Tagline", "Review"],
+      ["URL Website", "Review"],
+    ];
+  }
+
+  return [
+    ["Nama Situs", siteName || "Review"],
+    ["Nama Brand", brandName || "Review"],
+    ["Logo", hasLogo(siteSettings, navbar) ? "Siap" : "Review"],
+    ["Tagline", tagline || "Review"],
+    ["URL Website", shortUrl(siteSettings?.siteUrl)],
+  ];
+}
+
+function buildNavbarSettings(navbar?: Navbar) {
+  return [
+    ["Menu Navigasi", navbar?.menuItems?.length ? `${navbar.menuItems.length} Menu` : "Review"],
+    ["Logo Navbar", navbar?.logo?.url || navbar?.logo?.asset?.url || navbar?.logo?.asset?._ref ? "Siap" : "Review"],
+    ["Mode Brand", navbar?.brandMode || "Review"],
+    ["CTA Navbar", navbar?.ctaLabel || "Review"],
+    ["URL CTA", navbar?.ctaHref || "Review"],
+  ];
+}
+
+function buildContactSettings(siteSettings?: SiteSettings, contact?: Contact, footer?: Footer) {
+  const email = firstAvailable(contact?.email, siteSettings?.email, footer?.email);
+  const whatsapp = firstAvailable(contact?.whatsapp, siteSettings?.whatsapp, footer?.whatsapp);
+  const phone = firstAvailable(contact?.phone, siteSettings?.phone, footer?.phone);
+  const address = firstAvailable(contact?.address, siteSettings?.address, footer?.address);
+
+  return [
+    ["Email", email || "Review"],
+    ["WhatsApp", whatsapp || "Review"],
+    ["Telepon", phone || "Review"],
+    ["Lokasi", address || "Review"],
+    ["Contact CTA", contact?.ctaTitle || whatsapp || email ? "Siap" : "Review"],
+  ];
+}
+
+function buildSeoSettings(siteSettings?: SiteSettings) {
+  return [
+    ["Default SEO Title", siteSettings?.siteTitle || "Review"],
+    ["Default SEO Description", siteSettings?.siteDescription || "Review"],
+    ["Open Graph Image", siteSettings?.ogImage?.url || siteSettings?.ogImage?.asset?.url ? "Siap" : "Review"],
+    ["Keywords", siteSettings?.keywords?.length ? `${siteSettings.keywords.length} Keyword` : "Review"],
+    ["Page SEO", siteSettings?.pageSeo?.length ? `${siteSettings.pageSeo.length} Halaman` : "Review"],
+  ];
+}
+
+function buildIntegrationLinks() {
+  return [
+    ["Sanity Studio", ADMIN_STUDIO_URL],
+    ["Vercel Dashboard", shortUrl(ADMIN_VERCEL_URL)],
+    ["Website Preview", "/"],
+    ["Admin Access", "/admin/settings"],
+    ["System Log", "/admin/seo-health"],
+  ];
 }
 
 function buildSummary(siteSettings?: SiteSettings, navbar?: Navbar, contact?: Contact, footer?: Footer) {
@@ -216,6 +302,11 @@ export default function SettingsControlPanel({
   siteSettings?: SiteSettings;
 }) {
   const summary = buildSummary(siteSettings, navbar, contact, footer);
+  const siteIdentity = buildSiteSettings(siteSettings, navbar);
+  const navbarSettings = buildNavbarSettings(navbar);
+  const contactSettings = buildContactSettings(siteSettings, contact, footer);
+  const seoSettings = buildSeoSettings(siteSettings);
+  const integrationLinks = buildIntegrationLinks();
   const generalSettings = buildGeneralSettings(siteSettings, contact, footer);
   const accessControl = buildAccessControl();
   const integrationStatus = buildIntegrationStatus(siteSettings, navbar, contact, footer);
@@ -264,12 +355,45 @@ export default function SettingsControlPanel({
       <div className="grid gap-6 xl:grid-cols-3">
         <SettingsCard
           accent="blue"
+          description="Identitas website, brand, logo, dan URL utama project."
+          items={siteIdentity}
+          title="Site Settings"
+        />
+        <SettingsCard
+          description="Status logo, menu utama, mode brand, dan CTA navigasi."
+          items={navbarSettings}
+          title="Navbar Settings"
+        />
+        <SettingsCard
+          accent="emerald"
+          description="Kontak bisnis yang digunakan untuk CTA, footer, dan halaman kontak."
+          items={contactSettings}
+          title="Contact Settings"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <SettingsCard
+          accent="violet"
+          description="Metadata default, Open Graph, keywords, dan coverage SEO global."
+          items={seoSettings}
+          title="SEO Settings"
+        />
+        <SettingsCard
+          description="URL kerja utama untuk Studio, deployment, preview, dan monitoring admin."
+          items={integrationLinks}
+          title="Integration Links"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <SettingsCard
           description="Preferensi dasar framework dan identitas sistem internal."
           items={generalSettings}
           title="Pengaturan Umum"
         />
         <SettingsCard
-          description="Status akses admin, owner, dan proteksi login internal."
+          description="Placeholder aman untuk akses admin, owner, dan proteksi login internal."
           items={accessControl}
           title="Kontrol Akses"
         />

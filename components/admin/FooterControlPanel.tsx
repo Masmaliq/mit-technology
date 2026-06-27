@@ -48,9 +48,9 @@ function buildSummary(footer?: Footer, siteSettings?: SiteSettings) {
   const contactReady = Boolean(footer?.email || footer?.phone || footer?.whatsapp || siteSettings?.email || siteSettings?.phone || siteSettings?.whatsapp);
 
   return [
-    { label: "Footer Status", value: "Active", tone: "emerald" },
-    { label: "Brand Info", value: getBrandName(siteSettings) ? "Ready" : "Review", tone: "blue" },
-    { label: "Navigation Links", value: "Fallback", tone: "violet" },
+    { label: "Status Footer", value: "Aktif", tone: "emerald" },
+    { label: "Brand Info", value: getBrandName(siteSettings) ? "Siap" : "Review", tone: "blue" },
+    { label: "Link Navigasi", value: "Fallback", tone: "violet" },
     { label: "Social Links", value: `${getSocialCount(footer, siteSettings)}`, tone: contactReady ? "emerald" : "amber" },
   ];
 }
@@ -62,10 +62,10 @@ function buildBrandPreview(footer?: Footer, siteSettings?: SiteSettings) {
 
   return [
     ["Brand Name", getBrandName(siteSettings)],
-    ["Tagline", siteSettings?.tagline || "Ready"],
+    ["Tagline", siteSettings?.tagline || "Siap"],
     ["Description", getFooterDescription(footer, siteSettings) || "Review"],
     ["CTA Label", footer?.whatsapp || siteSettings?.whatsapp ? "WhatsApp CTA" : "Review"],
-    ["Status", getFooterDescription(footer, siteSettings) ? "Ready" : "Review"],
+    ["Status", getFooterDescription(footer, siteSettings) ? "Siap" : "Review"],
   ];
 }
 
@@ -80,11 +80,11 @@ function buildContactInformation(footer?: Footer, siteSettings?: SiteSettings) {
   const address = footer?.address || siteSettings?.address;
 
   return [
-    ["WhatsApp", whatsapp ? "Ready" : "Review"],
-    ["Email", email ? "Ready" : "Review"],
-    ["Phone", phone ? "Ready" : "Review"],
-    ["Location", address ? "Ready" : "Review"],
-    ["Contact CTA", whatsapp || email ? "Enabled" : "Review"],
+    ["WhatsApp", whatsapp ? "Siap" : "Review"],
+    ["Email", email ? "Siap" : "Review"],
+    ["Phone", phone ? "Siap" : "Review"],
+    ["Location", address ? "Siap" : "Review"],
+    ["Contact CTA", whatsapp || email ? "Aktif" : "Review"],
   ];
 }
 
@@ -96,10 +96,10 @@ function buildSocialLinks(footer?: Footer, siteSettings?: SiteSettings) {
   const footerPlatforms = new Map((footer?.socialLinks ?? []).map((item) => [item.platform?.toLowerCase(), item.url]));
 
   return [
-    ["Instagram", footerPlatforms.get("instagram") || siteSettings?.instagram ? "Connected" : "Pending"],
-    ["WhatsApp", footer?.whatsapp || siteSettings?.whatsapp ? "Connected" : "Pending"],
-    ["Email", footer?.email || siteSettings?.email ? "Connected" : "Pending"],
-    ["LinkedIn", footerPlatforms.get("linkedin") || siteSettings?.linkedin ? "Connected" : "Pending"],
+    ["Instagram", footerPlatforms.get("instagram") || siteSettings?.instagram ? "Terhubung" : "Pending"],
+    ["WhatsApp", footer?.whatsapp || siteSettings?.whatsapp ? "Terhubung" : "Pending"],
+    ["Email", footer?.email || siteSettings?.email ? "Terhubung" : "Pending"],
+    ["LinkedIn", footerPlatforms.get("linkedin") || siteSettings?.linkedin ? "Terhubung" : "Pending"],
   ];
 }
 
@@ -112,8 +112,8 @@ function buildLegalSystem(footer?: Footer, siteSettings?: SiteSettings) {
     ["Copyright", footer?.copyright || `© 2026 ${getBrandName(siteSettings)}`],
     ["Privacy Policy", "Pending"],
     ["Terms", "Pending"],
-    ["Sitemap", siteSettings?.siteUrl ? "Ready" : "Review"],
-    ["Footer SEO", siteSettings?.siteTitle || siteSettings?.siteDescription ? "Ready" : "Review"],
+    ["Sitemap", siteSettings?.siteUrl ? "Siap" : "Review"],
+    ["Footer SEO", siteSettings?.siteTitle || siteSettings?.siteDescription ? "Siap" : "Review"],
   ];
 }
 
@@ -124,11 +124,11 @@ function buildVisualSettings(footer?: Footer, siteSettings?: SiteSettings) {
 
   return [
     ["Background Type", footer?.enableFooterBackground ? "Image" : "Soft Gradient"],
-    ["Background Image", footer?.footerBackgroundImage?.url ? "Uploaded" : "Review"],
+    ["Background Image", footer?.footerBackgroundImage?.url ? "Terunggah" : "Review"],
     ["Overlay Opacity", footer?.enableFooterBackground ? `${footer.footerOverlayOpacity ?? 86}%` : "Default"],
     ["Position", footer?.footerBackgroundPosition || "center"],
     ["Size", footer?.footerBackgroundSize || "cover"],
-    ["Status", "Active"],
+    ["Status", "Aktif"],
   ];
 }
 
@@ -140,12 +140,12 @@ function buildReadiness(footer?: Footer, siteSettings?: SiteSettings) {
   const contactReady = Boolean(footer?.email || footer?.phone || footer?.whatsapp || siteSettings?.email || siteSettings?.phone || siteSettings?.whatsapp);
 
   return [
-    ["Brand Copy", getFooterDescription(footer, siteSettings) ? "Ready" : "Review"],
-    ["Contact Links", contactReady ? "Ready" : "Review"],
-    ["Navigation", "Ready"],
-    ["Social Links", getSocialCount(footer, siteSettings) > 0 ? "Ready" : "Review"],
+    ["Brand Copy", getFooterDescription(footer, siteSettings) ? "Siap" : "Review"],
+    ["Contact Links", contactReady ? "Siap" : "Review"],
+    ["Navigation", "Siap"],
+    ["Social Links", getSocialCount(footer, siteSettings) > 0 ? "Siap" : "Review"],
     ["Legal Links", footer?.copyright ? "Ready" : "Pending"],
-    ["Mobile Footer", "Ready"],
+    ["Mobile Footer", "Siap"],
   ];
 }
 
@@ -154,7 +154,7 @@ function DetailList({ items }: { items: string[][] }) {
     <div className="space-y-3">
       {items.map(([label, value]) => {
         const warning = value === "Pending" || value === "Review";
-        const ready = value === "Ready" || value === "Active" || value === "Connected" || value === "Enabled";
+        const ready = ["Ready", "Active", "Connected", "Enabled", "Siap", "Aktif", "Terhubung"].includes(value);
 
         return (
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
@@ -263,8 +263,8 @@ export default function FooterControlPanel({ footer, siteSettings }: { footer?: 
           <div className="absolute bottom-8 right-8 h-28 w-28 rounded-full border border-white/10" />
 
           <div className="relative">
-            <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-bold text-blue-100">
-              Brand Closing Preview
+          <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-bold text-blue-100">
+              Preview Closing Brand
             </span>
             <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{brandName}</h2>
             <p className="mt-3 max-w-xl text-sm leading-6 text-blue-100">
@@ -286,7 +286,7 @@ export default function FooterControlPanel({ footer, siteSettings }: { footer?: 
           accent="blue"
           description="Rangkuman copy dan CTA yang muncul di closing section."
           items={brandClosingPreview}
-          title="Brand Closing Details"
+          title="Detail Closing Brand"
         />
       </div>
 
@@ -295,11 +295,11 @@ export default function FooterControlPanel({ footer, siteSettings }: { footer?: 
           accent="emerald"
           description="Status informasi kontak utama pada footer."
           items={contactInformation}
-          title="Contact Information"
+          title="Informasi Kontak"
         />
 
         <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
-          <h2 className="text-xl font-bold text-slate-950">Footer Navigation</h2>
+          <h2 className="text-xl font-bold text-slate-950">Navigasi Footer</h2>
           <p className="mt-1 text-sm text-slate-500">Struktur link footer yang dikelompokkan untuk akses cepat.</p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
             {footerControlPanel.navigationGroups.map((group) => (
@@ -329,23 +329,23 @@ export default function FooterControlPanel({ footer, siteSettings }: { footer?: 
         <FooterPanelCard
           description="Informasi legal dan sistem pendukung footer."
           items={legalSystem}
-          title="Legal & System"
+          title="Legal & Sistem"
         />
         <FooterPanelCard
           accent="violet"
           description="Pengaturan visual footer yang menjadi bagian dari global closing."
           items={visualSettings}
-          title="Visual Footer Settings"
+          title="Pengaturan Visual Footer"
         />
         <FooterPanelCard
           description="Checklist kesiapan footer sebelum handoff production."
           items={readinessChecklist}
-          title="Footer Readiness Checklist"
+          title="Checklist Kesiapan Footer"
         />
       </div>
 
       <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-        <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
+        <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
         <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow footer dan global closing section.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {footerControlPanel.quickActions.map((action, index) => (

@@ -11,30 +11,40 @@ type ImpactMetricsProps = {
 export function ImpactMetrics({ metrics = [], eyebrow, title, description }: ImpactMetricsProps) {
   const visibleMetrics = metrics.filter((item) => item.value && item.label);
   const cleanLabel = (label?: string) => label?.replace(/\s+De$/, "").trim();
-  const displayEyebrow = eyebrow?.trim() || "Impact Metrics";
-  const displayTitle = title?.trim() || "Dampak terukur untuk pertumbuhan jangka panjang.";
+  const displayEyebrow = eyebrow?.trim() || "";
+  const displayTitle = title?.trim() || "";
   const displayDescription = description?.trim() || "";
+  const hasHeading = Boolean(displayEyebrow || displayTitle || displayDescription);
+
+  if (!hasHeading && visibleMetrics.length === 0) {
+    return null;
+  }
 
   return (
     <section aria-label="Impact metrics" className="bg-white py-5 md:py-10 lg:py-16">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <TextReveal
-            as="p"
-            className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
-            direction="down"
-            mode="chars"
-            stagger={0.018}
-            text={displayEyebrow}
-          />
-          <TextReveal
-            as="h2"
-            className="mt-3 text-3xl font-semibold tracking-tight text-navy md:mt-4 md:text-5xl"
-            direction="up"
-            mode="words"
-            text={displayTitle}
-          />
-          {displayDescription ? (
+        {hasHeading ? (
+          <div className="mx-auto max-w-3xl text-center">
+            {displayEyebrow ? (
+              <TextReveal
+                as="p"
+                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                direction="down"
+                mode="chars"
+                stagger={0.018}
+                text={displayEyebrow}
+              />
+            ) : null}
+            {displayTitle ? (
+              <TextReveal
+                as="h2"
+                className="mt-3 text-3xl font-semibold tracking-tight text-navy md:mt-4 md:text-5xl"
+                direction="up"
+                mode="words"
+                text={displayTitle}
+              />
+            ) : null}
+            {displayDescription ? (
             <TextReveal
               as="p"
               className="mt-4 text-base leading-7 text-slate-600 md:text-lg md:leading-8"
@@ -42,8 +52,9 @@ export function ImpactMetrics({ metrics = [], eyebrow, title, description }: Imp
               mode="lines"
               text={displayDescription}
             />
-          ) : null}
-        </div>
+            ) : null}
+          </div>
+        ) : null}
 
         {visibleMetrics.length > 0 ? (
           <StaggerContainer className="mt-5 grid grid-cols-1 gap-2.5 min-[390px]:grid-cols-2 md:mt-10 md:divide-y md:divide-slate-200 md:border-y md:border-slate-200 lg:mt-12 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
@@ -69,7 +80,7 @@ export function ImpactMetrics({ metrics = [], eyebrow, title, description }: Imp
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 px-8 py-10 text-center">
             <p className="text-sm font-medium text-slate-500">
-              Impact metrics are ready to be managed from Sanity Studio.
+              Impact metrics are not available yet.
             </p>
           </div>
         )}

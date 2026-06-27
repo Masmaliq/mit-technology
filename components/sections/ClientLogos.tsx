@@ -123,7 +123,7 @@ export function ClientLogos({ eyebrow, title, description, logos = [] }: ClientL
         ) : (
           <div className="mx-auto mt-10 max-w-2xl rounded-[1.5rem] border border-dashed border-white/20 bg-white/5 px-8 py-8 text-center">
             <p className="text-sm font-medium text-slate-300">
-              Client logos are ready to be managed from Sanity Studio.
+              Client logos are not available yet.
             </p>
           </div>
         )}

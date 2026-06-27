@@ -49,39 +49,50 @@ export function Testimonials({ eyebrow, title, description, testimonials = [] }:
   const visibleTestimonials = testimonials
     .filter((item) => item.quote && item.name && item.featured !== false)
     .slice(0, 3);
-  const displayEyebrow = eyebrow?.trim() || "Testimonials";
-  const displayTitle = title?.trim() || "Client testimonials";
+  const displayEyebrow = eyebrow?.trim() || "";
+  const displayTitle = title?.trim() || "";
   const displayDescription = description?.trim() || "";
+  const hasHeading = Boolean(displayEyebrow || displayTitle || displayDescription);
+
+  if (!hasHeading && visibleTestimonials.length === 0) {
+    return null;
+  }
 
   return (
     <section id="testimonials" aria-label="Testimonials" className="bg-white py-10 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <TextReveal
-            as="p"
-            className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
-            direction="down"
-            mode="chars"
-            stagger={0.018}
-            text={displayEyebrow}
-          />
-          <TextReveal
-            as="h2"
-            className="mt-4 text-3xl font-semibold tracking-tight text-navy md:text-5xl"
-            direction="up"
-            mode="words"
-            text={displayTitle}
-          />
-          {displayDescription ? (
-            <TextReveal
-              as="p"
-              className="mt-5 text-lg leading-8 text-slate-600"
-              direction="up"
-              mode="lines"
-              text={displayDescription}
-            />
-          ) : null}
-        </div>
+        {hasHeading ? (
+          <div className="mx-auto max-w-3xl text-center">
+            {displayEyebrow ? (
+              <TextReveal
+                as="p"
+                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                direction="down"
+                mode="chars"
+                stagger={0.018}
+                text={displayEyebrow}
+              />
+            ) : null}
+            {displayTitle ? (
+              <TextReveal
+                as="h2"
+                className="mt-4 text-3xl font-semibold tracking-tight text-navy md:text-5xl"
+                direction="up"
+                mode="words"
+                text={displayTitle}
+              />
+            ) : null}
+            {displayDescription ? (
+              <TextReveal
+                as="p"
+                className="mt-5 text-lg leading-8 text-slate-600"
+                direction="up"
+                mode="lines"
+                text={displayDescription}
+              />
+            ) : null}
+          </div>
+        ) : null}
 
         {visibleTestimonials.length > 0 ? (
           <StaggerContainer className="mt-10 grid gap-5 lg:mt-12 lg:grid-cols-3">
@@ -90,18 +101,6 @@ export function Testimonials({ eyebrow, title, description, testimonials = [] }:
               const testimonialImage = getAvatarImage(item);
               const avatarUrl = getAvatarImageUrl(item);
               const isLogoAvatar = isSvgImage(testimonialImage);
-
-              if (process.env.NODE_ENV !== "production") {
-                console.log("[Testimonials] avatar image source", {
-                  name: item.name,
-                  avatar: item.avatar,
-                  image: item.image,
-                  logo: item.logo,
-                  photo: item.photo,
-                  clientLogo: item.clientLogo,
-                  avatarUrl,
-                });
-              }
 
               return (
                 <StaggerItem
@@ -147,7 +146,7 @@ export function Testimonials({ eyebrow, title, description, testimonials = [] }:
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 px-8 py-10 text-center">
             <p className="text-sm font-medium text-slate-500">
-              Testimonials are ready to be managed from Sanity Studio.
+              Testimonials are not available yet.
             </p>
           </div>
         )}

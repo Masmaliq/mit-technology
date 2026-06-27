@@ -9,16 +9,62 @@ const summaryTone: Record<string, string> = {
   amber: "border-amber-100 bg-amber-50 text-amber-700",
 };
 
+const valueTone = {
+  ready: "text-emerald-700",
+  review: "text-amber-700",
+  neutral: "text-slate-900",
+};
+
+function getValueTone(value: string) {
+  if (["Siap", "Aktif", "Terunggah", "Framework Ready"].includes(value)) {
+    return valueTone.ready;
+  }
+
+  if (["Review", "Belum tersedia"].includes(value)) {
+    return valueTone.review;
+  }
+
+  return valueTone.neutral;
+}
+
 function DetailList({ items }: { items: string[][] }) {
   return (
     <div className="space-y-3">
       {items.map(([label, value]) => (
         <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
           <span className="text-sm text-slate-500">{label}</span>
-          <span className="text-sm font-bold text-slate-900">{value}</span>
+          <span className={`max-w-[58%] break-words text-right text-sm font-bold ${getValueTone(value)}`}>{value}</span>
         </div>
       ))}
     </div>
+  );
+}
+
+function StatusCard({
+  title,
+  description,
+  items,
+  accent = "white",
+}: {
+  title: string;
+  description: string;
+  items: string[][];
+  accent?: "white" | "blue" | "violet";
+}) {
+  const accentClass = {
+    white: "border-slate-200/80 bg-white",
+    blue: "border-blue-100 bg-blue-50/55",
+    violet: "border-violet-100 bg-violet-50/55",
+  }[accent];
+
+  return (
+    <article className={`rounded-[2rem] border p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7 ${accentClass}`}>
+      <h2 className="text-xl font-bold text-slate-950">{title}</h2>
+      <p className="mt-1 text-sm leading-6 text-slate-500">{description}</p>
+      <div className="mt-6">
+        <DetailList items={items} />
+      </div>
+    </article>
   );
 }
 
@@ -39,15 +85,15 @@ function fileLabel(file?: SanityFileValue) {
 }
 
 function uploadedStatus(active: boolean) {
-  return active ? "Uploaded" : "Missing";
+  return active ? "Terunggah" : "Belum tersedia";
 }
 
 function readyStatus(active: boolean) {
-  return active ? "Ready" : "Review";
+  return active ? "Siap" : "Review";
 }
 
 function optionalStatus(active: boolean) {
-  return active ? "Ready" : "Optional";
+  return active ? "Siap" : "Opsional";
 }
 
 function formatBackgroundType(type?: Homepage["backgroundType"]) {
@@ -78,12 +124,6 @@ function buildHeroAdminData(homepage?: Homepage) {
       hasMobileFallback ||
       (homepage?.heroSliderImages?.length ?? 0) > 0
   );
-  const hasBackgroundAsset = Boolean(
-    hasBackgroundImage ||
-      hasBackgroundVideo ||
-      hasCinematicVideo ||
-      (homepage?.heroSliderImages?.length ?? 0) > 0
-  );
   const hasHeroMedia = Boolean(
     hasImage(homepage?.heroMainImage) ||
       hasImage(homepage?.heroImage) ||
@@ -96,10 +136,47 @@ function buildHeroAdminData(homepage?: Homepage) {
       hasFile(homepage?.heroMotionGif) ||
       hasFile(homepage?.heroMotionVideoMp4)
   );
+  const primaryCtaTarget = homepage?.heroPrimaryCtaUrl || homepage?.heroPrimaryCtaHref;
+  const secondaryCtaTarget = homepage?.heroSecondaryCtaUrl || homepage?.heroSecondaryCtaHref;
   const hasHomepageData = Boolean(hasHeroCopy || hasHeroCta || hasPrimaryVisual || hasHeroMedia || hasMotion);
 
   if (!hasHomepageData) {
-    return heroControlPanel;
+    return {
+      ...heroControlPanel,
+      contentStatus: [
+        ["Eyebrow", "Opsional"],
+        ["Headline", "Opsional"],
+        ["Description", "Opsional"],
+        ["Mode Konten", "Cinematic-first"],
+      ],
+      backgroundStatus: [
+        ["Background Type", "Belum tersedia"],
+        ["Background Image", "Review"],
+        ["Background Video", "Review"],
+        ["Cinematic Video", "Review"],
+        ["Poster / Fallback", "Opsional"],
+        ["Mobile Fallback", "Opsional"],
+      ],
+      mediaStatus: [
+        ["Hero Media Type", "Opsional"],
+        ["Hero Object", "Opsional"],
+        ["Hero GIF", "Opsional"],
+        ["Hero Video MP4", "Opsional"],
+        ["Hero Poster", "Opsional"],
+      ],
+      ctaStatus: [
+        ["Primary CTA", "Opsional"],
+        ["Primary URL", "Opsional"],
+        ["Secondary CTA", "Opsional"],
+        ["Secondary URL", "Opsional"],
+      ],
+      motionLayerStatus: [
+        ["Motion Stars", "Opsional"],
+        ["Motion Airplane", "Opsional"],
+        ["Stupa / Parallax", "Opsional"],
+        ["Cinematic Layer", "Opsional"],
+      ],
+    };
   }
 
   const backgroundFile =
@@ -117,32 +194,56 @@ function buildHeroAdminData(homepage?: Homepage) {
     ...heroControlPanel,
     summary: [
       { label: "Hero Overall", value: readyStatus(hasPrimaryVisual), tone: hasPrimaryVisual ? "emerald" : "amber" },
-      { label: "Hero Copy", value: hasHeroCopy ? "Ready" : "Hidden", tone: hasHeroCopy ? "emerald" : "blue" },
+      { label: "Hero Copy", value: hasHeroCopy ? "Siap" : "Opsional", tone: hasHeroCopy ? "emerald" : "blue" },
       { label: "Background Video", value: readyStatus(hasBackgroundVideo), tone: hasBackgroundVideo ? "blue" : "amber" },
       { label: "Cinematic Video", value: readyStatus(hasCinematicVideo), tone: hasCinematicVideo ? "violet" : "amber" },
     ],
     contentPreview: {
-      title: homepage?.heroTitle || "Cinematic-only hero",
-      description: homepage?.heroDescription || "Hero title and description are optional for this video-first layout.",
-      primaryCta: homepage?.heroPrimaryCtaLabel || "Optional",
-      secondaryCta: homepage?.heroSecondaryCtaLabel || "Optional",
+      title: homepage?.heroTitle || "Hero cinematic tanpa headline",
+      description: homepage?.heroDescription || "Copy hero bersifat opsional karena halaman memakai konsep video-first.",
+      primaryCta: homepage?.heroPrimaryCtaLabel || "Opsional",
+      secondaryCta: homepage?.heroSecondaryCtaLabel || "Opsional",
       targetPage: "Homepage",
     },
-    visualAssets: [
+    contentStatus: [
+      ["Eyebrow", homepage?.heroEyebrow || homepage?.heroSubtitle ? "Siap" : "Opsional"],
+      ["Headline", homepage?.heroTitle ? "Siap" : "Opsional"],
+      ["Description", homepage?.heroDescription ? "Siap" : "Opsional"],
+      ["Mode Konten", hasHeroCopy ? "Copy-first" : "Cinematic-first"],
+    ],
+    backgroundStatus: [
       ["Background Type", formatBackgroundType(homepage?.backgroundType) || heroControlPanel.visualAssets[0][1]],
-      ["Background Image", hasBackgroundImage ? "Ready" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
+      ["Background Image", hasBackgroundImage ? "Siap" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
       ["Background Video", backgroundFile || "Review"],
       ["Cinematic Video", cinematicFile || "Review"],
-      ["Poster / Fallback", hasPoster ? "Ready" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
-      ["Mobile Fallback", hasMobileFallback ? "Ready" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
-      ["Hero Object", hasHeroMedia ? "Uploaded" : "Optional"],
+      ["Poster / Fallback", hasPoster ? "Siap" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
+      ["Mobile Fallback", hasMobileFallback ? "Siap" : optionalStatus(hasBackgroundVideo || hasCinematicVideo)],
+    ],
+    mediaStatus: [
+      ["Hero Media Type", homepage?.heroMediaType || "Opsional"],
+      ["Hero Object", hasHeroMedia ? "Terunggah" : "Opsional"],
+      ["Hero GIF", hasFile(homepage?.heroGif) ? "Terunggah" : "Opsional"],
+      ["Hero Video MP4", hasFile(homepage?.heroVideoMp4) ? "Terunggah" : "Opsional"],
+      ["Hero Poster", hasImage(homepage?.heroPosterImage) ? "Siap" : "Opsional"],
+    ],
+    ctaStatus: [
+      ["Primary CTA", homepage?.heroPrimaryCtaLabel || "Opsional"],
+      ["Primary URL", primaryCtaTarget || "Opsional"],
+      ["Secondary CTA", homepage?.heroSecondaryCtaLabel || "Opsional"],
+      ["Secondary URL", secondaryCtaTarget || "Opsional"],
     ],
     motionSettings: [
       ["Hero Motion Type", homepage?.heroMotionType || "none"],
-      ["Motion Asset", motionAsset || "None"],
+      ["Motion Asset", motionAsset || "Tidak aktif"],
       ["Motion Poster", uploadedStatus(hasImage(homepage?.heroMotionPosterImage))],
       ["Motion Opacity", `${homepage?.heroMotionOpacity ?? heroControlPanel.motionSettings[3][1]}`],
-      ["Cinematic Flow", homepage?.enableCinematicFlow ? "Enabled" : "Disabled"],
+      ["Cinematic Flow", homepage?.enableCinematicFlow ? "Aktif" : "Nonaktif"],
+    ],
+    motionLayerStatus: [
+      ["Motion Stars", homepage?.enableCinematicFlow || hasMotion ? "Framework Ready" : "Opsional"],
+      ["Motion Airplane", homepage?.enableCinematicFlow || hasMotion ? "Framework Ready" : "Opsional"],
+      ["Stupa / Parallax", hasHeroMedia || hasMotion ? "Framework Ready" : "Opsional"],
+      ["Cinematic Layer", homepage?.enableCinematicFlow ? "Aktif" : "Opsional"],
     ],
   };
 }
@@ -193,11 +294,11 @@ export default function HeroControlPanel({ homepage }: { homepage?: Homepage }) 
         <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-xl font-bold text-slate-950">Hero Content Preview</h2>
-              <p className="mt-1 text-sm text-slate-500">Snapshot konten utama hero yang tampil di halaman.</p>
+              <h2 className="text-xl font-bold text-slate-950">Hero Preview</h2>
+              <p className="mt-1 text-sm text-slate-500">Preview ringkas dari konten dan CTA yang terbaca dari Homepage Settings.</p>
             </div>
             <span className="w-fit rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">
-              Target Page: {heroAdminData.contentPreview.targetPage}
+              Target: {heroAdminData.contentPreview.targetPage}
             </span>
           </div>
 
@@ -219,27 +320,43 @@ export default function HeroControlPanel({ homepage }: { homepage?: Homepage }) 
           </div>
         </article>
 
-        <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-          <h2 className="text-xl font-bold text-slate-950">Visual Asset Status</h2>
-          <p className="mt-1 text-sm text-slate-500">Status media utama dan fallback visual hero.</p>
-          <div className="mt-6">
-            <DetailList items={heroAdminData.visualAssets} />
-          </div>
-        </article>
+        <StatusCard
+          accent="blue"
+          description="Kesiapan background image, video, poster, dan mobile fallback."
+          items={heroAdminData.backgroundStatus ?? heroAdminData.visualAssets}
+          title="Hero Background"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <StatusCard
+          description="Status headline, description, dan mode konten hero."
+          items={heroAdminData.contentStatus ?? heroControlPanel.summary.map((item) => [item.label, item.value])}
+          title="Hero Content"
+        />
+        <StatusCard
+          description="Status media objek hero, poster, GIF, dan video pendukung."
+          items={heroAdminData.mediaStatus ?? heroControlPanel.visualAssets}
+          title="Hero Media"
+        />
+        <StatusCard
+          accent="violet"
+          description="Status CTA utama dan sekunder yang menjadi jalur konversi hero."
+          items={heroAdminData.ctaStatus ?? [["Primary CTA", heroControlPanel.contentPreview.primaryCta], ["Secondary CTA", heroControlPanel.contentPreview.secondaryCta]]}
+          title="Hero CTA"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-          <h2 className="text-xl font-bold text-slate-950">Motion Settings</h2>
-          <p className="mt-1 text-sm text-slate-500">Status efek visual hero yang aktif di framework.</p>
-          <div className="mt-6">
-            <DetailList items={heroAdminData.motionSettings} />
-          </div>
-        </article>
+        <StatusCard
+          description="Status motion layer yang membangun rasa cinematic pada area hero."
+          items={heroAdminData.motionLayerStatus ?? heroControlPanel.motionSettings}
+          title="Hero Motion"
+        />
 
         <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-          <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
-          <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow hero.</p>
+          <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
+          <p className="mt-1 text-sm text-slate-500">Akses cepat untuk mengelola konten, visual, dan preview hero.</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {heroAdminData.quickActions.map((action, index) => (
               <AdminActionLink

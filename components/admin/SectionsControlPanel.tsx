@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import AdminActionLink from "@/components/admin/AdminActionLink";
 import { sectionsControlPanel } from "@/lib/admin-dashboard-data";
 import type {
@@ -37,6 +39,12 @@ type SectionStatus = {
   placement: string;
   editable: string;
   readiness: string;
+  action: string;
+  mediaStatus: string;
+  order: string;
+  page: string;
+  previewHref: string;
+  source: string;
 };
 
 function hasObjectValue(value?: Record<string, unknown>) {
@@ -65,60 +73,207 @@ function sectionReadiness(ready: boolean) {
   return ready ? "Ready" : "Review";
 }
 
+function sectionCard({
+  action,
+  mediaStatus = "Content",
+  order,
+  page = "Homepage",
+  placement,
+  previewHref = "/",
+  ready,
+  source,
+  title,
+}: {
+  action: string;
+  mediaStatus?: string;
+  order: string;
+  page?: string;
+  placement: string;
+  previewHref?: string;
+  ready: boolean;
+  source: string;
+  title: string;
+}): SectionStatus {
+  return {
+    action,
+    editable: source,
+    mediaStatus,
+    order,
+    page,
+    placement,
+    previewHref,
+    readiness: sectionReadiness(ready),
+    source,
+    status: sectionStatus(ready),
+    title,
+  };
+}
+
 function buildSections(data?: SectionsAdminData): SectionStatus[] {
   if (!hasSectionsData(data)) {
-    return sectionsControlPanel.sections;
+    return sectionsControlPanel.sections.map((section) => ({
+      ...section,
+      action: section.action || "Review Readiness",
+      mediaStatus: section.mediaStatus || "Blueprint",
+      order: section.order || "00",
+      page: section.page || "Homepage",
+      previewHref: section.previewHref || "/admin/sections",
+      source: section.source || section.editable || "Blueprint",
+    }));
   }
 
   const homepage = data?.homepage;
   const hasHero = Boolean(homepage?.heroTitle || homepage?.heroDescription || homepage?.heroBackgroundImage || homepage?.heroBackgroundVideoMp4);
   const hasClientLogos = Boolean(data?.clientLogos?.length || homepage?.clientLogosTitle || homepage?.clientLogosDescription);
   const hasSolutions = Boolean(data?.solutions?.length || homepage?.solutionsPreviewTitle || homepage?.solutionsPreviewDescription);
+  const hasProcess = Boolean(data?.processes?.length || homepage?.processTitle || homepage?.processDescription);
   const hasPackages = Boolean(data?.packages?.length);
   const hasCaseStudies = Boolean(data?.caseStudies?.length || homepage?.caseStudiesPreviewTitle || homepage?.caseStudiesPreviewDescription);
+  const hasImpactMetrics = Boolean(homepage?.impactMetricsItems?.length || homepage?.impactMetricsTitle || homepage?.impactMetricsDescription);
   const hasTestimonials = Boolean(data?.testimonials?.length || homepage?.testimonialsTitle || homepage?.testimonialsDescription);
   const hasCta = Boolean(homepage?.ctaTitle || homepage?.ctaDescription || homepage?.ctaButtonLabel);
   const hasFooter = Boolean(data?.footer?.description || data?.footer?.email || data?.footer?.whatsapp || data?.siteSettings?.companyName || data?.siteSettings?.siteTitle);
+  const hasBackgroundScene = Boolean(homepage?.enableCinematicFlow || homepage?.cinematicVideoMp4 || homepage?.heroBackgroundVideoMp4 || homepage?.heroBackgroundImage);
+  const hasMotion = Boolean(homepage?.heroMotionType && homepage.heroMotionType !== "none");
 
   return [
-    { title: "Hero", status: sectionStatus(hasHero), placement: "Top", editable: "Homepage CMS", readiness: sectionReadiness(hasHero) },
-    {
+    sectionCard({
+      action: "Edit Hero",
+      mediaStatus: hasBackgroundScene ? "Visual Ready" : "Visual Review",
+      order: "01",
+      placement: "Top",
+      ready: hasHero || hasBackgroundScene,
+      source: "Homepage Settings",
+      title: "Hero",
+    }),
+    sectionCard({
+      action: "Open Sanity",
+      mediaStatus: `${data?.clientLogos?.length ?? 0} Logos`,
+      order: "02",
+      placement: "After Hero",
+      ready: hasClientLogos,
+      source: data?.clientLogos?.length ? "Client Logos Collection" : "Homepage Settings",
       title: "Client Logos",
-      status: sectionStatus(hasClientLogos),
-      placement: `${data?.clientLogos?.length ?? 0} Logos`,
-      editable: "Collection",
-      readiness: sectionReadiness(hasClientLogos),
-    },
-    {
+    }),
+    sectionCard({
+      action: "Edit Solutions",
+      mediaStatus: homepage?.solutionsPreviewImage ? "Image Ready" : "Content",
+      order: "03",
+      placement: "Homepage Preview",
+      ready: hasSolutions,
+      source: data?.solutions?.length ? "Solutions Collection" : "Homepage Settings",
       title: "Solutions",
-      status: sectionStatus(hasSolutions),
-      placement: `${data?.solutions?.length ?? 0} Items`,
-      editable: "Collection",
-      readiness: sectionReadiness(hasSolutions),
-    },
-    {
+    }),
+    sectionCard({
+      action: "Open Sanity",
+      mediaStatus: `${data?.processes?.length ?? 0} Steps`,
+      order: "04",
+      placement: "Growth Framework",
+      ready: hasProcess,
+      source: data?.processes?.length ? "Process Collection" : "Homepage Settings",
+      title: "Process",
+    }),
+    sectionCard({
+      action: "Edit Packages",
+      mediaStatus: `${data?.packages?.length ?? 0} Packages`,
+      order: "05",
+      placement: "Pricing Preview",
+      ready: hasPackages,
+      source: "Package Collection",
       title: "Packages",
-      status: sectionStatus(hasPackages),
-      placement: `${data?.packages?.length ?? 0} Packages`,
-      editable: "Collection",
-      readiness: sectionReadiness(hasPackages),
-    },
-    {
+    }),
+    sectionCard({
+      action: "Review Cases",
+      mediaStatus: homepage?.featuredBannerBackgroundImage ? "Banner Ready" : `${data?.caseStudies?.length ?? 0} Cases`,
+      order: "06",
+      placement: "Proof Banner",
+      ready: hasCaseStudies,
+      source: data?.caseStudies?.length ? "Case Study Collection" : "Homepage Settings",
       title: "Case Studies",
-      status: sectionStatus(hasCaseStudies),
-      placement: `${data?.caseStudies?.length ?? 0} Cases`,
-      editable: "Collection",
-      readiness: sectionReadiness(hasCaseStudies),
-    },
-    {
+    }),
+    sectionCard({
+      action: "Open Sanity",
+      mediaStatus: `${homepage?.impactMetricsItems?.length ?? 0} Metrics`,
+      order: "07",
+      placement: "Metrics Band",
+      ready: hasImpactMetrics,
+      source: "Homepage Settings",
+      title: "Impact Metrics",
+    }),
+    sectionCard({
+      action: "Preview Testimonials",
+      mediaStatus: `${data?.testimonials?.length ?? 0} Quotes`,
+      order: "08",
+      placement: "Social Proof",
+      ready: hasTestimonials,
+      source: data?.testimonials?.length ? "Testimonials Collection" : "Homepage Settings",
       title: "Testimonials",
-      status: sectionStatus(hasTestimonials),
-      placement: `${data?.testimonials?.length ?? 0} Quotes`,
-      editable: "Collection",
-      readiness: sectionReadiness(hasTestimonials),
-    },
-    { title: "CTA", status: sectionStatus(hasCta), placement: "Before Footer", editable: "Homepage CMS", readiness: sectionReadiness(hasCta) },
-    { title: "Footer", status: sectionStatus(hasFooter), placement: "Global Closing", editable: "Global CMS", readiness: sectionReadiness(hasFooter) },
+    }),
+    sectionCard({
+      action: "Edit CTA",
+      mediaStatus: "Conversion",
+      order: "09",
+      placement: "Before Footer",
+      ready: hasCta,
+      source: "Homepage Settings",
+      title: "CTA",
+    }),
+    sectionCard({
+      action: "Edit Footer",
+      mediaStatus: data?.footer?.enableFooterBackground ? "Background Ready" : "Content",
+      order: "10",
+      page: "Global",
+      placement: "Global Closing",
+      previewHref: "/admin/footer",
+      ready: hasFooter,
+      source: "Footer Settings",
+      title: "Footer",
+    }),
+    sectionCard({
+      action: "Edit Scene",
+      mediaStatus: hasBackgroundScene ? "Video / Image" : "Review",
+      order: "BG",
+      placement: "Hero / Cinematic",
+      previewHref: "/admin/background-scene",
+      ready: hasBackgroundScene,
+      source: "Visual Settings",
+      title: "Background Scene",
+    }),
+    sectionCard({
+      action: "Edit Motion",
+      mediaStatus: hasMotion ? "Motion Ready" : "Optional",
+      order: "FX",
+      placement: "Visual Layer",
+      previewHref: "/admin/motion-effects",
+      ready: hasMotion,
+      source: "Motion Settings",
+      title: "Motion Effects",
+    }),
+  ];
+}
+
+function buildSectionsOverview(data?: SectionsAdminData) {
+  if (!hasSectionsData(data)) {
+    return [
+      ["Sumber Data", "Blueprint fallback"],
+      ["Section Registry", "Review"],
+      ["Reusable Blocks", "Blueprint Ready"],
+      ["Visual Status", "Review"],
+      ["Content Source", "Blueprint"],
+    ];
+  }
+
+  const sections = buildSections(data);
+  const activeCount = sections.filter((section) => section.status === "Active").length;
+  const reviewCount = sections.filter((section) => section.readiness === "Review").length;
+  const reusableCount = sections.filter((section) => section.source.includes("Collection") || section.source.includes("Settings")).length;
+
+  return [
+    ["Sumber Data", "Sanity + Admin Registry"],
+    ["Section Registry", `${sections.length} Section`],
+    ["Active Sections", `${activeCount} Aktif`],
+    ["Reusable Blocks", `${reusableCount} Reusable`],
+    ["Need Attention", reviewCount ? `${reviewCount} Review` : "Ready"],
   ];
 }
 
@@ -152,7 +307,9 @@ function buildHomepageStructure(data?: SectionsAdminData) {
     ["Hero", findReadiness("Hero")],
     ["Trust / Logos", findReadiness("Client Logos")],
     ["Solutions Preview", findReadiness("Solutions")],
+    ["Process", findReadiness("Process")],
     ["Case Studies Banner", findReadiness("Case Studies")],
+    ["Impact Metrics", findReadiness("Impact Metrics")],
     ["Testimonials", findReadiness("Testimonials")],
     ["Final CTA", findReadiness("CTA")],
   ];
@@ -167,9 +324,11 @@ function buildOrderStatus(data?: SectionsAdminData) {
     ["Hero", "01"],
     ["Client Logos", "02"],
     ["Solutions", "03"],
-    ["Case Studies", "04"],
-    ["Framework", data?.processes?.length ? "05" : "Review"],
-    ["Packages", "08"],
+    ["Process", data?.processes?.length ? "04" : "Review"],
+    ["Packages", "05"],
+    ["Case Studies", "06"],
+    ["Impact Metrics", data?.homepage?.impactMetricsItems?.length ? "07" : "Review"],
+    ["Testimonials", "08"],
   ];
 }
 
@@ -183,7 +342,7 @@ function DetailList({ items }: { items: string[][] }) {
         return (
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
             <span className="text-sm text-slate-500">{label}</span>
-            <span className={`text-sm font-bold ${warning ? "text-amber-700" : ready ? "text-emerald-700" : "text-slate-900"}`}>
+            <span className={`max-w-[58%] break-words text-right text-sm font-bold ${warning ? "text-amber-700" : ready ? "text-emerald-700" : "text-slate-900"}`}>
               {value}
             </span>
           </div>
@@ -196,8 +355,10 @@ function DetailList({ items }: { items: string[][] }) {
 export default function SectionsControlPanel({ sectionsData }: { sectionsData?: SectionsAdminData }) {
   const summaryCards = buildSummary(sectionsData);
   const sectionCards = buildSections(sectionsData);
+  const overview = buildSectionsOverview(sectionsData);
   const orderStatus = buildOrderStatus(sectionsData);
   const homepageStructure = buildHomepageStructure(sectionsData);
+  const hasData = hasSectionsData(sectionsData);
 
   return (
     <section className="space-y-6">
@@ -238,6 +399,38 @@ export default function SectionsControlPanel({ sectionsData }: { sectionsData?: 
         ))}
       </div>
 
+      {!hasData ? (
+        <article className="rounded-[2rem] border border-amber-100 bg-amber-50/70 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <span className="inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-bold text-amber-700">
+                Empty State
+              </span>
+              <h2 className="mt-4 text-xl font-bold text-slate-950">Section registry belum membaca data Sanity.</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                Panel menampilkan blueprint section sebagai preview aman. Hubungkan konten di Sanity agar status section membaca data real.
+              </p>
+            </div>
+            <AdminActionLink
+              action="Open Sanity"
+              className="w-fit rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700"
+            >
+              Open Sanity
+            </AdminActionLink>
+          </div>
+        </article>
+      ) : null}
+
+      <article className="rounded-[2rem] border border-emerald-100 bg-emerald-50/50 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
+        <h2 className="text-xl font-bold text-slate-950">Sections Overview</h2>
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          Ringkasan susunan section, sumber konten, blok reusable, dan status visual.
+        </p>
+        <div className="mt-6">
+          <DetailList items={overview} />
+        </div>
+      </article>
+
       <div className="grid gap-4 lg:grid-cols-2">
         {sectionCards.map((section) => (
           <article
@@ -252,8 +445,9 @@ export default function SectionsControlPanel({ sectionsData }: { sectionsData?: 
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <div className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{section.placement}</div>
+                <div className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{section.page} · {section.order}</div>
                 <h2 className="mt-3 text-xl font-bold tracking-tight text-slate-950">{section.title}</h2>
+                <p className="mt-2 text-sm font-semibold text-blue-700">{section.placement}</p>
               </div>
               <span
                 className={`w-fit rounded-full px-3 py-1.5 text-xs font-bold ${
@@ -266,14 +460,32 @@ export default function SectionsControlPanel({ sectionsData }: { sectionsData?: 
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 px-4 py-3">
-                <div className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Editable</div>
-                <div className="mt-1 text-sm font-bold text-slate-900">{section.editable}</div>
+                <div className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Content Source</div>
+                <div className="mt-1 text-sm font-bold text-slate-900">{section.source}</div>
+              </div>
+              <div className="rounded-2xl bg-slate-50 px-4 py-3">
+                <div className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Media / Visual</div>
+                <div className="mt-1 text-sm font-bold text-slate-900">{section.mediaStatus}</div>
               </div>
               <div className="rounded-2xl bg-slate-50 px-4 py-3">
                 <div className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Readiness</div>
                 <div className={`mt-1 text-sm font-bold ${section.readiness === "Review" ? "text-amber-700" : "text-emerald-700"}`}>
                   {section.readiness}
                 </div>
+              </div>
+              <div className="grid gap-2">
+                <AdminActionLink
+                  action={section.action}
+                  className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-left text-sm font-bold text-blue-700 transition hover:bg-blue-100"
+                >
+                  {section.action}
+                </AdminActionLink>
+                <Link
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                  href={section.previewHref}
+                >
+                  Preview Section
+                </Link>
               </div>
             </div>
           </article>
@@ -299,8 +511,8 @@ export default function SectionsControlPanel({ sectionsData }: { sectionsData?: 
       </div>
 
       <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-        <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
-        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk section visibility, order, dan readiness.</p>
+        <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
+        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk struktur section, visibility, order, dan readiness.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {sectionsControlPanel.quickActions.map((action, index) => (
             <AdminActionLink

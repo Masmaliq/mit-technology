@@ -24,9 +24,26 @@ function hasAvatar(testimonial: TestimonialItem) {
   );
 }
 
+function getInitial(value?: string) {
+  return (value || "T").trim().charAt(0).toUpperCase();
+}
+
+function truncateQuote(value: string, limit = 180) {
+  if (value.length <= limit) {
+    return value;
+  }
+
+  return `${value.slice(0, limit).trim()}...`;
+}
+
 function normalizeTestimonials(testimonials?: TestimonialItem[]) {
   if (!testimonials?.length) {
-    return testimonialsControlPanel.featuredTestimonials;
+    return testimonialsControlPanel.featuredTestimonials.map((item) => ({
+      ...item,
+      avatarStatus: "Preview",
+      identityStatus: "Blueprint",
+      source: "Blueprint",
+    }));
   }
 
   return [...testimonials]
@@ -39,6 +56,9 @@ function normalizeTestimonials(testimonials?: TestimonialItem[]) {
       quote: testimonial.quote || "Quote belum tersedia dari Sanity.",
       rating: testimonial.rating ? testimonial.rating.toFixed(1) : "N/A",
       tag: testimonial.featured ? "Featured" : hasAvatar(testimonial) ? "Published" : "Review",
+      avatarStatus: hasAvatar(testimonial) ? "Avatar Ready" : "Needs Avatar",
+      identityStatus: testimonial.name && (testimonial.position || testimonial.company) ? "Identity Ready" : "Identity Review",
+      source: "Sanity",
       featured: Boolean(testimonial.featured),
     }));
 }
@@ -54,8 +74,32 @@ function buildSummary(testimonials?: TestimonialItem[]) {
   return [
     { label: "Total Testimonials", value: `${testimonials.length}`, tone: "blue" },
     { label: "Published", value: `${testimonials.length}`, tone: "emerald" },
-    { label: "Need Review", value: `${needReviewCount}`, tone: "amber" },
+    { label: "Need Review", value: `${needReviewCount}`, tone: needReviewCount ? "amber" : "emerald" },
     { label: "Featured", value: `${featuredCount}`, tone: "violet" },
+  ];
+}
+
+function buildOverview(testimonials?: TestimonialItem[]) {
+  if (!testimonials?.length) {
+    return [
+      ["Sumber Data", "Blueprint fallback"],
+      ["Testimonial Collection", "Review"],
+      ["Client Identity", "Blueprint Ready"],
+      ["Avatar / Photo", "Preview"],
+      ["Quote Quality", "Blueprint Ready"],
+    ];
+  }
+
+  const missingAvatar = testimonials.filter((item) => !hasAvatar(item)).length;
+  const missingQuote = testimonials.filter((item) => !item.quote).length;
+  const missingIdentity = testimonials.filter((item) => !item.name || (!item.position && !item.company)).length;
+
+  return [
+    ["Sumber Data", "Sanity Collection"],
+    ["Testimonial Collection", `${testimonials.length} Testimoni`],
+    ["Client Identity", missingIdentity ? `${missingIdentity} Review` : "Ready"],
+    ["Avatar / Photo", missingAvatar ? `${missingAvatar} Review` : "Ready"],
+    ["Quote Quality", missingQuote ? `${missingQuote} Review` : "Ready"],
   ];
 }
 
@@ -100,7 +144,7 @@ function DetailList({ items }: { items: string[][] }) {
         return (
           <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3" key={label}>
             <span className="text-sm text-slate-500">{label}</span>
-            <span className={`text-sm font-bold ${warning ? "text-amber-700" : "text-slate-900"}`}>
+            <span className={`max-w-[58%] break-words text-right text-sm font-bold ${warning ? "text-amber-700" : "text-slate-900"}`}>
               {value}
             </span>
           </div>
@@ -113,8 +157,10 @@ function DetailList({ items }: { items: string[][] }) {
 export default function TestimonialsControlPanel({ testimonials }: { testimonials?: TestimonialItem[] }) {
   const summaryCards = buildSummary(testimonials);
   const featuredTestimonials = normalizeTestimonials(testimonials);
+  const overview = buildOverview(testimonials);
   const readiness = buildReadiness(testimonials);
   const workflow = buildWorkflow(testimonials);
+  const hasData = Boolean(testimonials?.length);
 
   return (
     <section className="space-y-6">
@@ -155,6 +201,38 @@ export default function TestimonialsControlPanel({ testimonials }: { testimonial
         ))}
       </div>
 
+      {!hasData ? (
+        <article className="rounded-[2rem] border border-amber-100 bg-amber-50/70 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <span className="inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-bold text-amber-700">
+                Empty State
+              </span>
+              <h2 className="mt-4 text-xl font-bold text-slate-950">Testimonial collection belum berisi data aktif.</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                Panel menampilkan blueprint social proof sebagai preview aman. Tambahkan testimonial di Sanity agar card membaca data real.
+              </p>
+            </div>
+            <AdminActionLink
+              action="Add Testimonial"
+              className="w-fit rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700"
+            >
+              Add Testimonial
+            </AdminActionLink>
+          </div>
+        </article>
+      ) : null}
+
+      <article className="rounded-[2rem] border border-blue-100 bg-blue-50/55 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.05)] sm:p-7">
+        <h2 className="text-xl font-bold text-slate-950">Testimonials Overview</h2>
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          Ringkasan identitas klien, avatar, quote, dan social proof yang siap tampil di website.
+        </p>
+        <div className="mt-6">
+          <DetailList items={overview} />
+        </div>
+      </article>
+
       <div className="grid gap-4 xl:grid-cols-3">
         {featuredTestimonials.map((item) => (
           <article
@@ -168,9 +246,18 @@ export default function TestimonialsControlPanel({ testimonials }: { testimonial
             key={item.client}
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <div className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{item.role}</div>
-                <h2 className="mt-3 text-xl font-bold tracking-tight text-slate-950">{item.client}</h2>
+              <div className="flex min-w-0 gap-4">
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-sm font-black ${
+                  item.avatarStatus === "Avatar Ready"
+                    ? "border-blue-100 bg-blue-50 text-blue-700"
+                    : "border-slate-200 bg-slate-50 text-slate-500"
+                }`}>
+                  {getInitial(item.client)}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">{item.role}</div>
+                  <h2 className="mt-3 text-xl font-bold tracking-tight text-slate-950">{item.client}</h2>
+                </div>
               </div>
               <span
                 className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
@@ -185,14 +272,23 @@ export default function TestimonialsControlPanel({ testimonials }: { testimonial
               </span>
             </div>
 
-            <p className="mt-5 text-sm leading-6 text-slate-600">“{item.quote}”</p>
+            <p className="mt-5 text-sm leading-6 text-slate-600">“{truncateQuote(item.quote)}”</p>
 
             <div className="mt-6 flex flex-wrap items-center gap-2">
               <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
                 Rating {item.rating}
               </span>
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
+                {item.avatarStatus}
+              </span>
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
+                {item.identityStatus}
+              </span>
               <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">
                 {item.tag}
+              </span>
+              <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">
+                {item.source}
               </span>
             </div>
           </article>
@@ -226,8 +322,8 @@ export default function TestimonialsControlPanel({ testimonials }: { testimonial
       </div>
 
       <article className="rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] sm:p-7">
-        <h2 className="text-xl font-bold text-slate-950">Quick Actions</h2>
-        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk workflow testimonial dan approval.</p>
+        <h2 className="text-xl font-bold text-slate-950">Aksi Cepat</h2>
+        <p className="mt-1 text-sm text-slate-500">Akses cepat untuk testimonial, avatar, approval, dan preview social proof.</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {testimonialsControlPanel.quickActions.map((action, index) => (
             <AdminActionLink

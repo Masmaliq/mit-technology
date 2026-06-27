@@ -117,15 +117,15 @@ export const adminModulePages = {
   settings: {
     title: "Pengaturan",
     description: "Konfigurasi sistem admin, preferensi global, dan kesiapan integrasi berikutnya.",
-    badge: "System Settings",
-    action: "Buka Pengaturan",
+    badge: "Pengaturan Sistem",
+    action: "Edit Pengaturan Situs",
   },
 } as const;
 
 export const heroControlPanel = {
   header: {
     title: "Hero",
-    description: "Kontrol hero content, visual media, CTA, dan status cinematic section setiap halaman.",
+    description: "Kelola headline utama, visual pembuka, CTA, dan motion layer yang tampil di bagian pertama website.",
     badge: "Hero Control",
     action: "Edit Hero",
   },
@@ -158,7 +158,7 @@ export const heroControlPanel = {
     ["Scroll Range", "Hero Section"],
   ],
   quickActions: [
-    "Edit Content",
+    "Edit Hero Content",
     "Edit Background",
     "Edit Hero Media",
     "Edit Motion",
@@ -170,7 +170,7 @@ export const heroControlPanel = {
 export const packagesControlPanel = {
   header: {
     title: "Packages",
-    description: "Kelola paket internal, pricing display, fitur, dan CTA paket website MIT Framework.",
+    description: "Kelola paket layanan, harga, benefit, dan positioning penawaran yang tampil di website.",
     badge: "Pricing Module",
     action: "Tambah Package",
   },
@@ -193,7 +193,7 @@ export const packagesControlPanel = {
 export const caseStudiesControlPanel = {
   header: {
     title: "Case Studies",
-    description: "Kelola studi kasus, project proof, client result, dan preview project unggulan.",
+    description: "Kelola studi kasus, visual proyek, hasil kerja, dan bukti dampak yang tampil sebagai portofolio utama website.",
     badge: "Proof Module",
     action: "Tambah Case Study",
   },
@@ -258,14 +258,14 @@ export const caseStudiesControlPanel = {
 export const productParallaxControlPanel = {
   header: {
     title: "Product Parallax",
-    description: "Kelola aset produk, scene background, scroll range, motion behavior, dan fallback visual mobile.",
+    description: "Pantau blueprint layer produk, visual bergerak, dan efek parallax sebelum dihubungkan ke frontend.",
     badge: "Visual System",
     action: "Edit Parallax",
   },
   summary: [
-    { label: "Product Parallax", value: "ON", tone: "emerald" },
-    { label: "Product Asset", value: "Uploaded", tone: "blue" },
-    { label: "Background Scene", value: "lab-chemical.mp4", tone: "violet" },
+    { label: "Product Parallax", value: "Future-ready", tone: "blue" },
+    { label: "Product Asset", value: "Static Blueprint", tone: "blue" },
+    { label: "Background Scene", value: "Static Preview", tone: "violet" },
     { label: "Mobile Fallback", value: "Missing", tone: "amber" },
   ],
   productAsset: [
@@ -273,28 +273,28 @@ export const productParallaxControlPanel = {
     ["Position", "Center Right"],
     ["Scale", "Large"],
     ["Anchor", "Product Section"],
-    ["Status", "Uploaded"],
+    ["Status", "Static Blueprint"],
   ],
   backgroundScene: [
     ["Background Type", "Video"],
     ["File", "lab-chemical.mp4"],
     ["Poster Image", "Uploaded"],
     ["Overlay", "Soft Blue"],
-    ["Status", "Active"],
+    ["Status", "Static Preview"],
   ],
   motionBehavior: [
-    ["Motion Style", "Product Anchor"],
+    ["Motion Style", "Static Blueprint"],
     ["Motion Intensity", "Medium"],
     ["Scroll Range", "Hero → Packages"],
     ["Start Section", "Hero"],
     ["End Section", "Packages"],
-    ["Mobile Mode", "Lightweight Motion"],
+    ["Mobile Mode", "Future-ready"],
   ],
   readiness: [
-    ["Product Asset", "Ready"],
-    ["Background Scene", "Ready"],
-    ["Poster Image", "Ready"],
-    ["Desktop Motion", "Ready"],
+    ["Product Asset", "Static"],
+    ["Background Scene", "Static"],
+    ["Poster Image", "Static"],
+    ["Desktop Motion", "Future-ready"],
     ["Mobile Fallback", "Missing"],
     ["Performance Check", "Pending"],
   ],
@@ -312,21 +312,41 @@ export const productParallaxControlPanel = {
 export const motionEffectsControlPanel = {
   header: {
     title: "Motion Effects",
-    description: "Kelola preset motion, reveal behavior, scroll interaction, dan fallback animasi mobile MIT Framework.",
+    description:
+      "Pantau transisi, efek scroll, parallax, dan gerakan visual yang aktif di frontend.",
     badge: "Motion System",
     action: "Edit Motion",
   },
   summary: [
-    { label: "Motion Preset", value: "Premium", tone: "blue" },
-    { label: "Reveal Animation", value: "Active", tone: "emerald" },
-    { label: "Scroll Behavior", value: "Calibrated", tone: "violet" },
-    { label: "Mobile Motion", value: "Lightweight", tone: "blue" },
+    { label: "Motion Preset", value: "Code-level", tone: "blue" },
+    { label: "Reveal Animation", value: "Code-level", tone: "emerald" },
+    { label: "Scroll Behavior", value: "Code-level", tone: "violet" },
+    { label: "Mobile Motion", value: "Code-level", tone: "blue" },
   ],
   presets: [
     ["Fade Up", "Active"],
     ["Soft Parallax", "Active"],
     ["Stagger Reveal", "Active"],
     ["Section Transition", "Active"],
+  ],
+  overview: [
+    ["Global Motion", "Code-level"],
+    ["Motion Source", "Frontend Components"],
+    ["Usage Area", "Hero + Sections + Cards"],
+    ["Performance Mode", "Reduced-motion aware"],
+  ],
+  effects: [
+    { name: "Fade In", area: "Global", status: "Active", intensity: "Soft", source: "Motion Preset", note: "Aman untuk section intro." },
+    { name: "Slide From Left", area: "Section", status: "Active", intensity: "Subtle", source: "Motion Preset", note: "Dipakai untuk variasi text reveal." },
+    { name: "Slide From Right", area: "Section", status: "Active", intensity: "Subtle", source: "Motion Preset", note: "Dipakai pada layout dua kolom." },
+    { name: "Slide From Bottom", area: "Card", status: "Active", intensity: "Medium", source: "Motion Preset", note: "Untuk cards dan preview content." },
+    { name: "Scale / Soft Zoom", area: "Card", status: "Active", intensity: "Soft", source: "Motion Preset", note: "Hover dan visual emphasis ringan." },
+    { name: "Parallax Layer", area: "Hero / Product", status: "Active", intensity: "Medium", source: "Visual Module", note: "Perlu tetap ringan di mobile." },
+    { name: "Glow Effect", area: "CTA / Visual", status: "Active", intensity: "Soft", source: "Visual Style", note: "Dekoratif, bukan motion berat." },
+    { name: "Stars Effect", area: "Hero", status: "Active", intensity: "Soft", source: "Hero Module", note: "Layer ambience hero." },
+    { name: "Airplane Motion", area: "Hero", status: "Active", intensity: "Soft", source: "Hero Module", note: "Motion kecil untuk cinematic detail." },
+    { name: "Stupa / Hero Object", area: "Hero", status: "Active", intensity: "Medium", source: "Hero Module", note: "Object motion utama hero." },
+    { name: "Background Scene Motion", area: "Scene", status: "Review", intensity: "Light", source: "Background Scene", note: "Ikuti reduced motion preference." },
   ],
   animationBehavior: [
     ["Reveal on Scroll", "Enabled"],
@@ -347,6 +367,13 @@ export const motionEffectsControlPanel = {
     ["Reduced Motion", "Supported"],
     ["Disabled Heavy Effect", "Enabled"],
     ["Status Readiness", "Ready"],
+  ],
+  usageStatus: [
+    ["Hero Motion", "Active"],
+    ["Section Motion", "Active"],
+    ["Card Motion", "Active"],
+    ["Background Scene Motion", "Review"],
+    ["Reduced Motion Note", "Supported"],
   ],
   readiness: [
     ["Desktop Motion", "Ready"],
@@ -369,14 +396,14 @@ export const backgroundSceneControlPanel = {
   header: {
     title: "Background Scene",
     description:
-      "Kelola scene image/video, poster, overlay, cinematic background, dan fallback visual untuk halaman premium.",
+      "Pantau background visual, layer atmosfer, video, dan scene pembuka yang dibaca dari Homepage Settings.",
     badge: "Scene Control",
     action: "Edit Scene",
   },
   summary: [
-    { label: "Scene Type", value: "Video", tone: "blue" },
-    { label: "Active Scene", value: "lab-chemical.mp4", tone: "violet" },
-    { label: "Poster Image", value: "Uploaded", tone: "emerald" },
+    { label: "Scene Type", value: "Homepage CMS", tone: "blue" },
+    { label: "Active Scene", value: "CMS / Static", tone: "violet" },
+    { label: "Poster Image", value: "CMS / Static", tone: "emerald" },
     { label: "Mobile Fallback", value: "Missing", tone: "amber" },
   ],
   sceneAsset: [
@@ -384,21 +411,50 @@ export const backgroundSceneControlPanel = {
     ["File Name", "lab-chemical.mp4"],
     ["Format", "MP4"],
     ["Poster", "lab-poster.jpg"],
-    ["Status", "Active"],
+    ["Status", "CMS / Static"],
+  ],
+  overview: [
+    ["Scene Name", "MIT Cinematic Atmosphere"],
+    ["Primary Area", "Hero / Visual Section"],
+    ["Scene Source", "Homepage CMS + Static"],
+    ["Active Mode", "Video + Poster Fallback"],
+  ],
+  sceneLayers: [
+    { name: "Night Sky", area: "Hero / Global", status: "Active", asset: "Dark blue atmosphere", source: "Placeholder", note: "Fondasi visual untuk cinematic opening." },
+    { name: "Stars Layer", area: "Hero", status: "Active", asset: "Particle ambience", source: "Static", note: "Detail halus agar hero tidak terasa kosong." },
+    { name: "Nebula / Glow", area: "Hero / CTA", status: "Active", asset: "Soft blue glow", source: "Visual Style", note: "Memberi depth tanpa menutup konten." },
+    { name: "Borobudur Silhouette", area: "Hero", status: "Review", asset: "Stupa layer", source: "Hero Media", note: "Dipakai jika asset tersedia dari CMS/public." },
+    { name: "Background Video", area: "Hero / Section", status: "Active", asset: "MP4 video", source: "Scene Asset", note: "Video utama untuk cinematic background." },
+    { name: "Poster Fallback", area: "Mobile / Reduced Motion", status: "Review", asset: "Fallback image", source: "Scene Asset", note: "Masih perlu final mobile fallback." },
+    { name: "Gradient Overlay", area: "Global Scene", status: "Active", asset: "Soft blue gradient", source: "Overlay", note: "Menjaga teks tetap terbaca." },
   ],
   visualOverlay: [
     ["Overlay Style", "Soft Blue Gradient"],
     ["Opacity", "32%"],
     ["Blend Mode", "Screen"],
     ["Text Safety", "High"],
-    ["Status", "Enabled"],
+    ["Status", "CMS / Static"],
   ],
   sceneUsage: [
     ["Used On", "Hero, Product Parallax, Packages"],
     ["Start Section", "Hero"],
     ["End Section", "Case Studies"],
-    ["Desktop Mode", "Cinematic"],
+    ["Desktop Mode", "Frontend-dependent"],
     ["Mobile Mode", "Poster Fallback"],
+  ],
+  heroUsage: [
+    ["Hero Scene", "Homepage CMS"],
+    ["Night Atmosphere", "Ready"],
+    ["Stars Layer", "Ready"],
+    ["Stupa Layer", "Review"],
+    ["Motion Relation", "Hero Motion"],
+  ],
+  sectionUsage: [
+    ["Product Parallax", "Future-ready"],
+    ["Packages Section", "Optional"],
+    ["Case Studies Bridge", "Review"],
+    ["CTA Atmosphere", "Optional"],
+    ["Source", "Static Blueprint"],
   ],
   performanceReadiness: [
     ["Video Compression", "Ready"],
@@ -422,7 +478,7 @@ export const backgroundSceneControlPanel = {
 export const seoHealthControlPanel = {
   header: {
     title: "SEO & Health",
-    description: "Pantau SEO score, metadata, image readiness, CTA, performa, dan status kesiapan publish website.",
+    description: "Pantau metadata, social preview, struktur halaman, dan kesiapan SEO dasar website dari satu panel.",
     badge: "Health Check",
     action: "Run Audit",
   },
@@ -439,6 +495,48 @@ export const seoHealthControlPanel = {
     ["Sitemap", "Ready"],
     ["Robots", "Ready"],
     ["Canonical URL", "Ready"],
+  ],
+  overview: [
+    ["Default SEO Title", "Connected"],
+    ["Default SEO Description", "Needs Review"],
+    ["Open Graph Image", "Uploaded"],
+    ["Source", "Static Checklist"],
+  ],
+  pageSeoStatus: [
+    { page: "Homepage", route: "/", status: "Ready", title: "Connected", description: "Connected", image: "Uploaded", source: "Homepage Settings" },
+    { page: "About", route: "/about", status: "Ready", title: "Connected", description: "Connected", image: "Review", source: "About Settings" },
+    { page: "Solutions", route: "/solutions", status: "Ready", title: "Connected", description: "Connected", image: "Uploaded", source: "Solutions Page Settings" },
+    { page: "Packages", route: "/packages", status: "Ready", title: "Connected", description: "Connected", image: "Uploaded", source: "Packages Page Settings" },
+    { page: "Case Studies", route: "/case-studies", status: "Needs Review", title: "Connected", description: "Needs Review", image: "Uploaded", source: "Case Studies Settings" },
+    { page: "Portfolio", route: "/portfolio", status: "Needs Review", title: "Review", description: "Review", image: "Missing Data", source: "Placeholder" },
+  ],
+  metadataChecklist: [
+    ["Missing Title", "0"],
+    ["Missing Description", "2"],
+    ["Missing Image Alt", "Review"],
+    ["Duplicate Metadata", "0"],
+    ["Long Description", "Review"],
+  ],
+  socialPreviewStatus: [
+    ["Open Graph Image", "Uploaded"],
+    ["OG Title", "Connected"],
+    ["OG Description", "Needs Review"],
+    ["Twitter Card", "Review"],
+    ["Social Crop Safety", "Review"],
+  ],
+  sitemapRobotsStatus: [
+    ["Sitemap", "Ready"],
+    ["Robots", "Ready"],
+    ["Canonical URL", "Ready"],
+    ["Indexable Pages", "Review"],
+    ["Dynamic Slugs", "Connected"],
+  ],
+  imageAltStatus: [
+    ["Hero Media Alt", "Review"],
+    ["Case Study Images", "Ready"],
+    ["Client Logos", "Review"],
+    ["Package Visuals", "Optional"],
+    ["Fallback Alt", "Connected"],
   ],
   contentReadiness: [
     ["Published Pages", "5"],
@@ -482,7 +580,7 @@ export const seoHealthControlPanel = {
 export const testimonialsControlPanel = {
   header: {
     title: "Testimonials",
-    description: "Kelola testimoni klien, social proof, approval status, avatar/logo, dan quote yang tampil di website.",
+    description: "Kelola testimoni klien, kutipan utama, identitas perusahaan, dan bukti kepercayaan yang tampil di website.",
     badge: "Trust Module",
     action: "Tambah Testimonial",
   },
@@ -621,7 +719,7 @@ export const footerControlPanel = {
   header: {
     title: "Footer",
     description:
-      "Atur brand closing section, informasi kontak, navigation links, social links, legal text, dan background visual footer.",
+      "Pantau brand closing section, informasi kontak, navigation links, social links, legal text, dan background visual footer.",
     badge: "Global Footer",
     action: "Edit Footer",
   },
@@ -701,7 +799,7 @@ export const pagesControlPanel = {
   header: {
     title: "Halaman",
     description:
-      "Kelola status halaman utama, visibility, kesiapan konten, SEO coverage, dan jalur edit cepat untuk setiap page.",
+      "Kelola struktur halaman, status konten, SEO dasar, dan akses edit untuk setiap halaman website.",
     badge: "Page Control",
     action: "Tambah Page",
   },
@@ -712,13 +810,13 @@ export const pagesControlPanel = {
     { label: "Need Review", value: "1", tone: "amber" },
   ],
   pages: [
-    { title: "Home", status: "Published", type: "Landing Page", visibility: "Public", action: "Edit Homepage" },
-    { title: "About", status: "Published", type: "Company Page", visibility: "Public", action: "Edit About" },
-    { title: "Solutions", status: "Published", type: "Service Page", visibility: "Public", action: "Edit Solutions" },
-    { title: "Packages", status: "Published", type: "Pricing Page", visibility: "Public", action: "Edit Packages" },
-    { title: "Case Studies", status: "Review", type: "Proof Page", visibility: "Public", action: "Review Cases" },
-    { title: "Portfolio", status: "Draft", type: "Project Archive", visibility: "Hidden", action: "Review Portfolio" },
-    { title: "Contact CTA", status: "Published", type: "Conversion Page", visibility: "Public", action: "Edit CTA" },
+    { title: "Home", status: "Published", type: "Landing Page", visibility: "Public", action: "Edit Homepage", route: "/", source: "Homepage Settings", seoStatus: "Ready", previewHref: "/" },
+    { title: "About", status: "Published", type: "Company Page", visibility: "Public", action: "Edit About", route: "/about", source: "About Page Settings", seoStatus: "Ready", previewHref: "/about" },
+    { title: "Solutions", status: "Published", type: "Service Page", visibility: "Public", action: "Edit Solutions", route: "/solutions", source: "Solutions Collection", seoStatus: "Ready", previewHref: "/solutions" },
+    { title: "Packages", status: "Published", type: "Pricing Page", visibility: "Public", action: "Edit Packages", route: "/packages", source: "Packages Collection", seoStatus: "Ready", previewHref: "/packages" },
+    { title: "Case Studies", status: "Review", type: "Proof Page", visibility: "Public", action: "Review Cases", route: "/case-studies", source: "Case Study Collection", seoStatus: "Review", previewHref: "/case-studies" },
+    { title: "Portfolio", status: "Draft", type: "Project Archive", visibility: "Hidden", action: "Review Portfolio", route: "/portfolio", source: "Portfolio Collection", seoStatus: "Review", previewHref: "/portfolio" },
+    { title: "Contact", status: "Published", type: "Conversion Page", visibility: "Public", action: "Edit CTA", route: "/contact", source: "Contact Settings", seoStatus: "Ready", previewHref: "/contact" },
   ],
   readiness: [
     ["Hero Content", "Ready"],
@@ -750,7 +848,7 @@ export const sectionsControlPanel = {
   header: {
     title: "Sections",
     description:
-      "Pantau struktur section homepage, urutan tampil, status edit, readiness module, dan visibility setiap blok konten.",
+      "Kelola susunan section, sumber konten, status visual, dan blok reusable yang membentuk halaman website.",
     badge: "Section Control",
     action: "Tambah Section",
   },
@@ -761,14 +859,16 @@ export const sectionsControlPanel = {
     { label: "Need Attention", value: "2", tone: "amber" },
   ],
   sections: [
-    { title: "Hero", status: "Active", placement: "Top", editable: "CMS Ready", readiness: "Ready" },
-    { title: "Client Logos", status: "Active", placement: "After Hero", editable: "Collection", readiness: "Ready" },
-    { title: "Solutions", status: "Active", placement: "Homepage Preview", editable: "CMS Ready", readiness: "Ready" },
-    { title: "Packages", status: "Active", placement: "Pricing Preview", editable: "Collection", readiness: "Review" },
-    { title: "Case Studies", status: "Active", placement: "Proof Banner", editable: "CMS Ready", readiness: "Ready" },
-    { title: "Testimonials", status: "Active", placement: "Social Proof", editable: "Collection", readiness: "Review" },
-    { title: "CTA", status: "Active", placement: "Before Footer", editable: "CMS Ready", readiness: "Ready" },
-    { title: "Footer", status: "Hidden", placement: "Global Closing", editable: "Global CMS", readiness: "Ready" },
+    { title: "Hero", status: "Active", placement: "Top", editable: "CMS Ready", readiness: "Ready", action: "Edit Hero", mediaStatus: "Visual Ready", order: "01", page: "Homepage", previewHref: "/", source: "Homepage Settings" },
+    { title: "Client Logos", status: "Active", placement: "After Hero", editable: "Collection", readiness: "Ready", action: "Open Sanity", mediaStatus: "Logo Collection", order: "02", page: "Homepage", previewHref: "/", source: "Client Logos Collection" },
+    { title: "Solutions", status: "Active", placement: "Homepage Preview", editable: "CMS Ready", readiness: "Ready", action: "Edit Solutions", mediaStatus: "Content", order: "03", page: "Homepage", previewHref: "/", source: "Solutions Collection" },
+    { title: "Process", status: "Active", placement: "Growth Framework", editable: "Collection", readiness: "Ready", action: "Open Sanity", mediaStatus: "Process Steps", order: "04", page: "Homepage", previewHref: "/", source: "Process Collection" },
+    { title: "Packages", status: "Active", placement: "Pricing Preview", editable: "Collection", readiness: "Review", action: "Edit Packages", mediaStatus: "Package Cards", order: "05", page: "Homepage", previewHref: "/", source: "Package Collection" },
+    { title: "Case Studies", status: "Active", placement: "Proof Banner", editable: "CMS Ready", readiness: "Ready", action: "Review Cases", mediaStatus: "Banner", order: "06", page: "Homepage", previewHref: "/", source: "Case Study Collection" },
+    { title: "Impact Metrics", status: "Active", placement: "Metrics Band", editable: "Homepage CMS", readiness: "Review", action: "Open Sanity", mediaStatus: "Metrics", order: "07", page: "Homepage", previewHref: "/", source: "Homepage Settings" },
+    { title: "Testimonials", status: "Active", placement: "Social Proof", editable: "Collection", readiness: "Review", action: "Preview Testimonials", mediaStatus: "Quote Cards", order: "08", page: "Homepage", previewHref: "/", source: "Testimonials Collection" },
+    { title: "CTA", status: "Active", placement: "Before Footer", editable: "CMS Ready", readiness: "Ready", action: "Edit CTA", mediaStatus: "Conversion", order: "09", page: "Homepage", previewHref: "/", source: "Homepage Settings" },
+    { title: "Footer", status: "Hidden", placement: "Global Closing", editable: "Global CMS", readiness: "Ready", action: "Edit Footer", mediaStatus: "Content", order: "10", page: "Global", previewHref: "/admin/footer", source: "Footer Settings" },
   ],
   orderStatus: [
     ["Hero", "01"],

@@ -10,7 +10,7 @@ type TestimonialAvatarProps = {
 };
 
 function getInitial(name?: string) {
-  return name?.trim().charAt(0).toUpperCase() || "M";
+  return name?.trim().charAt(0).toUpperCase() || "?";
 }
 
 export function TestimonialAvatar({ imageUrl, name, isLogo = false }: TestimonialAvatarProps) {

@@ -48,7 +48,7 @@ export async function Footer() {
   const description =
     footer.description ||
     settings.description ||
-    "Membangun infrastruktur digital, aplikasi, dan sistem cerdas untuk organisasi yang siap berkembang.";
+    "";
   const address =
     footer.address || settings.address || "";
   const email = footer.email || settings.email || "";
@@ -141,14 +141,6 @@ export async function Footer() {
 
       <div className="relative z-10 mx-auto flex min-h-[26rem] max-w-7xl flex-col justify-between px-5 py-12 sm:px-6 lg:min-h-[32rem] lg:px-8 lg:py-16">
         <div className="max-w-5xl">
-          <Link
-            href="/"
-            className="inline-flex text-[clamp(2.2rem,5.6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-white"
-            aria-label={`${companyName} homepage`}
-          >
-            {companyName}
-          </Link>
-
           {description ? (
             <TextReveal
               as="p"

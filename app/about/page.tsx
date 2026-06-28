@@ -48,6 +48,7 @@ export default async function AboutPage() {
       <SiteHeader />
       <main className="bg-white">
         <InnerPageHero
+          centered
           page={heroPage}
           fallback={{
             eyebrow: about.heroEyebrow || "",
@@ -82,7 +83,7 @@ export default async function AboutPage() {
               <div className="max-w-4xl space-y-3">
                 {mission.map((item, index) => (
                   <p
-                    className="text-[15px] font-normal leading-[1.6] text-navy md:text-base"
+                    className="!text-[15px] !font-normal !leading-[1.6] text-navy md:!text-base"
                     key={`${item}-${index}`}
                   >
                     {item}
@@ -94,7 +95,7 @@ export default async function AboutPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
                 {about.visionEyebrow || "VISION"}
               </p>
-              <p className="max-w-4xl text-[15px] font-normal leading-[1.6] text-navy md:text-base">
+              <p className="max-w-4xl !text-[15px] !font-normal !leading-[1.6] text-navy md:!text-base">
                 {about.vision || ""}
               </p>
             </div>

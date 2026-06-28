@@ -102,18 +102,18 @@ export function InnerPageHero({ page, fallback, compact = false, editorial = fal
       <FadeUp className={`relative mx-auto w-full ${
         editorial || centered ? "flex max-w-[56.25rem] flex-col items-center justify-center text-center" : "max-w-7xl"
       }`}>
-        <p className={`${editorial ? "text-xs tracking-[0.25em]" : "text-sm tracking-[0.24em]"} font-semibold uppercase text-blue-200`}>
+        <p className={`${editorial ? "text-xs tracking-[0.25em]" : "text-sm tracking-[0.24em]"} ${editorial || centered ? "mx-auto text-center" : ""} font-semibold uppercase text-blue-200`}>
           {eyebrow}
         </p>
         <h1 className={`font-semibold tracking-tight ${
           editorial
-            ? "mt-5 max-w-[42rem] text-[2.25rem] font-bold leading-[1.06] md:text-[2.5rem] lg:text-[2.625rem]"
+            ? "mx-auto mt-5 max-w-[42rem] text-center text-[2.25rem] font-bold leading-[1.06] md:text-[2.5rem] lg:text-[2.625rem]"
             : `${centered ? "max-w-[56.25rem]" : "max-w-5xl"} ${compact ? "mt-4 text-4xl md:text-6xl" : "mt-5 text-5xl md:text-7xl"}`
         }`}>
           {title}
         </h1>
         {description ? (
-          <p className={`${compact || editorial ? "mt-5" : "mt-6"} ${editorial ? "max-w-[45rem] text-[17px] leading-[1.8] text-slate-200/85 md:text-lg" : `${centered ? "max-w-[45rem]" : "max-w-3xl"} text-lg leading-8 text-slate-200`}`}>
+          <p className={`${compact || editorial ? "mt-5" : "mt-6"} ${editorial ? "mx-auto max-w-[45rem] text-center text-[17px] leading-[1.8] text-slate-200/85 md:text-lg" : `${centered ? "mx-auto max-w-[45rem] text-center" : "max-w-3xl"} text-lg leading-8 text-slate-200`}`}>
             {description}
           </p>
         ) : null}

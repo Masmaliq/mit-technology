@@ -83,8 +83,9 @@ export default async function AboutPage() {
               <div className="max-w-4xl space-y-3">
                 {mission.map((item, index) => (
                   <p
-                    className="!text-[15px] !font-normal !leading-[1.6] text-navy md:!text-base"
+                    className="!text-[15px] !font-normal !leading-[1.6] text-navy"
                     key={`${item}-${index}`}
+                    style={{ fontSize: "15px", fontWeight: 400, lineHeight: "24px" }}
                   >
                     {item}
                   </p>
@@ -95,7 +96,10 @@ export default async function AboutPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
                 {about.visionEyebrow || "VISION"}
               </p>
-              <p className="max-w-4xl !text-[15px] !font-normal !leading-[1.6] text-navy md:!text-base">
+              <p
+                className="max-w-4xl !text-[15px] !font-normal !leading-[1.6] text-navy"
+                style={{ fontSize: "15px", fontWeight: 400, lineHeight: "24px" }}
+              >
                 {about.vision || ""}
               </p>
             </div>

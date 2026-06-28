@@ -98,24 +98,24 @@ export function InnerPageHero({ page, fallback, compact = false, editorial = fal
         aria-hidden="true"
         className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.2),transparent_30%)]"
       />
-      <FadeUp className={`relative mx-auto w-full ${editorial ? "max-w-[45rem]" : "max-w-7xl"}`}>
-        <p className={`${editorial ? "text-xs tracking-[0.25em]" : "text-sm tracking-[0.24em]"} font-semibold uppercase text-blue-200`}>
+      <FadeUp className={`relative mx-auto flex w-full flex-col items-center justify-center text-center ${editorial ? "max-w-[56.25rem]" : "max-w-7xl"}`}>
+        <p className={`mx-auto text-center ${editorial ? "text-xs tracking-[0.25em]" : "text-sm tracking-[0.24em]"} font-semibold uppercase text-blue-200`}>
           {eyebrow}
         </p>
         <h1 className={`font-semibold tracking-tight ${
           editorial
-            ? "mt-5 max-w-[45rem] text-[2.125rem] leading-[1.01] md:text-[2.625rem] lg:text-[3.25rem]"
-            : `max-w-5xl ${compact ? "mt-4 text-4xl md:text-6xl" : "mt-5 text-5xl md:text-7xl"}`
+            ? "mx-auto mt-5 max-w-[42rem] text-center text-[2.25rem] font-bold leading-[1.06] md:text-[2.5rem] lg:text-[2.625rem]"
+            : `mx-auto max-w-5xl text-center ${compact ? "mt-4 text-4xl md:text-6xl" : "mt-5 text-5xl md:text-7xl"}`
         }`}>
           {title}
         </h1>
         {description ? (
-          <p className={`${compact || editorial ? "mt-5" : "mt-6"} ${editorial ? "max-w-[45rem] text-[17px] leading-[1.8] text-slate-200/85 md:text-lg" : "max-w-3xl text-lg leading-8 text-slate-200"}`}>
+          <p className={`${compact || editorial ? "mt-5" : "mt-6"} ${editorial ? "mx-auto max-w-[45rem] text-center text-[17px] leading-[1.8] text-slate-200/85 md:text-lg" : "mx-auto max-w-3xl text-center text-lg leading-8 text-slate-200"}`}>
             {description}
           </p>
         ) : null}
         {hasButton || hasSecondaryButton ? (
-          <div className={`${compact ? "mt-7" : "mt-9"} flex flex-wrap gap-3`}>
+          <div className={`${compact ? "mt-7" : "mt-9"} flex flex-wrap justify-center gap-3`}>
             {hasButton ? (
               <Link
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-semibold text-navy transition duration-300 hover:-translate-y-0.5 hover:bg-blue-50"

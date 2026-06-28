@@ -75,19 +75,30 @@ export default async function AboutPage() {
 
         <section className="bg-white px-6 py-16 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-5xl">
-            <div className="grid gap-6 border-y border-slate-200 py-10 md:grid-cols-[0.24fr_1fr] md:gap-12">
+            <div className="border-y border-slate-200 py-10 text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-                {about.missionEyebrow || "Mission"}
+                {about.missionEyebrow || "MISSION"}
               </p>
-              <p className="max-w-4xl text-[1.625rem] font-medium leading-[1.28] tracking-tight text-navy md:text-[1.875rem] lg:text-[2rem]">
-                {mission[0] || ""}
-              </p>
+              <div className="mx-auto mt-5 max-w-4xl space-y-3">
+                {mission.map((item, index) => (
+                  <p
+                    className="text-[15px] font-normal leading-[1.6] text-navy"
+                    key={`${item}-${index}`}
+                    style={{ fontSize: "15px", fontWeight: 400, lineHeight: "24px" }}
+                  >
+                    {item}
+                  </p>
+                ))}
+              </div>
             </div>
-            <div className="grid gap-6 border-b border-slate-200 py-10 md:grid-cols-[0.24fr_1fr] md:gap-12">
+            <div className="border-b border-slate-200 py-10 text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-                {about.visionEyebrow || "Vision"}
+                {about.visionEyebrow || "VISION"}
               </p>
-              <p className="max-w-4xl text-[1.625rem] font-medium leading-[1.28] tracking-tight text-navy md:text-[1.875rem] lg:text-[2rem]">
+              <p
+                className="mx-auto mt-5 max-w-4xl text-[15px] font-normal leading-[1.6] text-navy"
+                style={{ fontSize: "15px", fontWeight: 400, lineHeight: "24px" }}
+              >
                 {about.vision || ""}
               </p>
             </div>

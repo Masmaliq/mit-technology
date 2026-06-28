@@ -18,6 +18,7 @@ type InnerPageHeroProps = {
   fallback: InnerPageHeroFallback;
   compact?: boolean;
   editorial?: boolean;
+  centered?: boolean;
 };
 
 function clean(value?: string) {
@@ -40,7 +41,7 @@ function imageUrl(image?: SanityImageValue, width = 1800, height = 1100) {
   }
 }
 
-export function InnerPageHero({ page, fallback, compact = false, editorial = false }: InnerPageHeroProps) {
+export function InnerPageHero({ page, fallback, compact = false, editorial = false, centered = false }: InnerPageHeroProps) {
   const eyebrow = clean(page?.heroEyebrow) || fallback.eyebrow;
   const title = clean(page?.heroTitle) || fallback.title;
   const description = clean(page?.heroDescription) || fallback.description;
@@ -60,7 +61,7 @@ export function InnerPageHero({ page, fallback, compact = false, editorial = fal
   return (
     <section
       className={`relative isolate overflow-hidden bg-slate-950 px-6 text-white lg:px-8 ${
-        editorial ? "flex min-h-[45vh] items-center py-16 lg:min-h-[52vh] lg:py-20" : compact ? "py-16 lg:py-20" : "py-24 lg:py-28"
+        editorial ? "flex min-h-[40vh] items-center py-12 lg:min-h-[46vh] lg:py-16" : compact ? "py-16 lg:py-20" : "py-24 lg:py-28"
       }`}
     >
       {videoUrl ? (
@@ -98,24 +99,26 @@ export function InnerPageHero({ page, fallback, compact = false, editorial = fal
         aria-hidden="true"
         className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.2),transparent_30%)]"
       />
-      <FadeUp className={`relative mx-auto w-full ${editorial ? "max-w-[45rem]" : "max-w-7xl"}`}>
+      <FadeUp className={`relative mx-auto w-full ${
+        editorial || centered ? "flex max-w-[56.25rem] flex-col items-center justify-center text-center" : "max-w-7xl"
+      }`}>
         <p className={`${editorial ? "text-xs tracking-[0.25em]" : "text-sm tracking-[0.24em]"} font-semibold uppercase text-blue-200`}>
           {eyebrow}
         </p>
         <h1 className={`font-semibold tracking-tight ${
           editorial
-            ? "mt-5 max-w-[45rem] text-[2.125rem] leading-[1.01] md:text-[2.625rem] lg:text-[3.25rem]"
-            : `max-w-5xl ${compact ? "mt-4 text-4xl md:text-6xl" : "mt-5 text-5xl md:text-7xl"}`
+            ? "mt-5 max-w-[42rem] text-[2.25rem] font-bold leading-[1.06] md:text-[2.5rem] lg:text-[2.625rem]"
+            : `${centered ? "max-w-[56.25rem]" : "max-w-5xl"} ${compact ? "mt-4 text-4xl md:text-6xl" : "mt-5 text-5xl md:text-7xl"}`
         }`}>
           {title}
         </h1>
         {description ? (
-          <p className={`${compact || editorial ? "mt-5" : "mt-6"} ${editorial ? "max-w-[45rem] text-[17px] leading-[1.8] text-slate-200/85 md:text-lg" : "max-w-3xl text-lg leading-8 text-slate-200"}`}>
+          <p className={`${compact || editorial ? "mt-5" : "mt-6"} ${editorial ? "max-w-[45rem] text-[17px] leading-[1.8] text-slate-200/85 md:text-lg" : `${centered ? "max-w-[45rem]" : "max-w-3xl"} text-lg leading-8 text-slate-200`}`}>
             {description}
           </p>
         ) : null}
         {hasButton || hasSecondaryButton ? (
-          <div className={`${compact ? "mt-7" : "mt-9"} flex flex-wrap gap-3`}>
+          <div className={`${compact ? "mt-7" : "mt-9"} flex flex-wrap gap-3 ${centered || editorial ? "justify-center" : ""}`}>
             {hasButton ? (
               <Link
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-semibold text-navy transition duration-300 hover:-translate-y-0.5 hover:bg-blue-50"

@@ -50,44 +50,51 @@ export default async function AboutPage() {
         <InnerPageHero
           page={heroPage}
           fallback={{
-            eyebrow: about.heroEyebrow || "About",
-            title: about.heroTitle || "About content is not available yet.",
+            eyebrow: about.heroEyebrow || "",
+            title: about.heroTitle || "",
             description: about.heroDescription,
           }}
           editorial
         />
 
-        <section className="bg-white px-6 py-16 lg:px-8 lg:py-24">
+        <section className="bg-white px-6 py-10 lg:px-8 lg:py-14">
           <div className="mx-auto max-w-[48rem] text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-              {about.storyEyebrow || "Story"}
+              {about.storyEyebrow || ""}
             </p>
-            <h2 className="mt-4 text-[2rem] font-semibold leading-[1.08] tracking-tight text-navy md:text-[2.5rem]">
-              {about.storyTitle || about.heroTitle || "Story"}
+            <h2 className="mt-4 text-[1.875rem] font-bold leading-[1.12] tracking-tight text-navy md:text-[2.125rem]">
+              {about.storyTitle || ""}
             </h2>
             {about.storyDescription ? (
-              <p className="mt-7 text-left text-[17px] leading-[1.9] text-slate-600 md:text-center">
+              <p className="mx-auto mt-6 max-w-[47.5rem] text-left text-[16px] leading-[1.75] text-slate-600 md:text-center">
                 {about.storyDescription}
               </p>
             ) : null}
           </div>
         </section>
 
-        <section className="bg-white px-6 py-16 lg:px-8 lg:py-24">
+        <section className="bg-white px-6 py-10 lg:px-8 lg:py-14">
           <div className="mx-auto max-w-5xl">
-            <div className="grid gap-6 border-y border-slate-200 py-10 md:grid-cols-[0.24fr_1fr] md:gap-12">
+            <div className="grid gap-4 border-y border-slate-200 py-8 md:grid-cols-[0.24fr_1fr] md:gap-10">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-                {about.missionEyebrow || "Mission"}
+                {about.missionEyebrow || "MISSION"}
               </p>
-              <p className="max-w-4xl text-[1.625rem] font-medium leading-[1.28] tracking-tight text-navy md:text-[1.875rem] lg:text-[2rem]">
-                {mission[0] || ""}
-              </p>
+              <div className="max-w-4xl space-y-3">
+                {mission.map((item, index) => (
+                  <p
+                    className="text-[15px] font-normal leading-[1.6] text-navy md:text-base"
+                    key={`${item}-${index}`}
+                  >
+                    {item}
+                  </p>
+                ))}
+              </div>
             </div>
-            <div className="grid gap-6 border-b border-slate-200 py-10 md:grid-cols-[0.24fr_1fr] md:gap-12">
+            <div className="grid gap-4 border-b border-slate-200 py-8 md:grid-cols-[0.24fr_1fr] md:gap-10">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-                {about.visionEyebrow || "Vision"}
+                {about.visionEyebrow || "VISION"}
               </p>
-              <p className="max-w-4xl text-[1.625rem] font-medium leading-[1.28] tracking-tight text-navy md:text-[1.875rem] lg:text-[2rem]">
+              <p className="max-w-4xl text-[15px] font-normal leading-[1.6] text-navy md:text-base">
                 {about.vision || ""}
               </p>
             </div>

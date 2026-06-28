@@ -3,49 +3,110 @@ import { seoFields } from "./objects/seoFields";
 
 export const aboutType = defineType({
   name: "about",
-  title: "About",
+  title: "Tentang Kami",
   type: "document",
   fields: [
     defineField({
-      name: "heroEyebrow",
-      title: "Hero Eyebrow",
+      name: "pageNumber",
+      title: "Nomor Halaman",
       type: "string",
+      description: "Contoh: 02.",
+    }),
+    defineField({
+      name: "pageDisplayName",
+      title: "Nama Halaman",
+      type: "string",
+      description: "Nama yang mudah dipahami klien. Contoh: Tentang Kami.",
+    }),
+    defineField({
+      name: "menuLabel",
+      title: "Label Menu",
+      type: "string",
+      description: "Teks yang tampil di menu navbar. Contoh: Tentang Kami.",
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug / URL",
+      type: "slug",
+      options: { source: "pageDisplayName" },
+      description: "URL halaman. Untuk halaman ini biasanya /about.",
+    }),
+    defineField({
+      name: "adminDescription",
+      title: "Short Description / Catatan Admin",
+      type: "text",
+      rows: 2,
+      description: "Catatan singkat agar editor tahu fungsi halaman ini.",
+    }),
+    defineField({
+      name: "showInClientPages",
+      title: "Show in Pages Dashboard",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "showInNavbar",
+      title: "Show in Navbar",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "showInFooter",
+      title: "Show in Footer",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "sortOrder",
+      title: "Sort Order",
+      type: "number",
+      initialValue: 20,
+    }),
+    defineField({
+      name: "heroEyebrow",
+      title: "Eyebrow / Label Kecil",
+      type: "string",
+      description: "Teks kecil di atas judul halaman. Contoh: Tentang Kami.",
     }),
     defineField({
       name: "heroTitle",
-      title: "Hero Title",
+      title: "Page Title / Hero Title",
       type: "string",
+      description: "Judul utama halaman Tentang Kami.",
     }),
     defineField({
       name: "heroDescription",
-      title: "Hero Description",
+      title: "Hero Description / Deskripsi Pembuka",
       type: "text",
+      description: "Deskripsi singkat di area pembuka halaman.",
     }),
     defineField({
       name: "storyEyebrow",
-      title: "Story Eyebrow",
+      title: "Story Eyebrow / Label Cerita",
       type: "string",
     }),
     defineField({
       name: "storyTitle",
-      title: "Story Title",
+      title: "Story Title / Judul Cerita",
       type: "string",
     }),
     defineField({
       name: "storyDescription",
-      title: "Story Description",
+      title: "Story Content / Isi Cerita",
       type: "text",
+      description: "Narasi singkat tentang perusahaan.",
     }),
     defineField({
       name: "vision",
-      title: "Vision",
+      title: "Vision Content / Isi Visi",
       type: "text",
     }),
     defineField({
       name: "mission",
-      title: "Mission",
+      title: "Mission Content / Isi Misi",
       type: "array",
       of: [{ type: "string" }],
+      description: "Isi misi utama. Halaman frontend memakai item pertama sebagai teks misi.",
     }),
     defineField({
       name: "coreValuesEyebrow",
@@ -65,12 +126,12 @@ export const aboutType = defineType({
     }),
     defineField({
       name: "missionEyebrow",
-      title: "Mission Eyebrow",
+      title: "Mission Title / Judul Misi",
       type: "string",
     }),
     defineField({
       name: "visionEyebrow",
-      title: "Vision Eyebrow",
+      title: "Vision Title / Judul Visi",
       type: "string",
     }),
     defineField({
@@ -99,9 +160,10 @@ export const aboutType = defineType({
     }),
     defineField({
       name: "image",
-      title: "Image",
+      title: "Hero / Story Image",
       type: "image",
       options: { hotspot: true },
+      description: "Gambar utama halaman Tentang Kami.",
     }),
     defineField({
       name: "ctaEyebrow",
@@ -132,14 +194,15 @@ export const aboutType = defineType({
   ],
   preview: {
     select: {
+      displayTitle: "pageDisplayName",
       title: "heroTitle",
       subtitle: "storyTitle",
       media: "image",
     },
-    prepare({ title, subtitle, media }) {
+    prepare({ displayTitle, title, subtitle, media }) {
       return {
-        title: title || "About",
-        subtitle: subtitle || "MIT about page content",
+        title: displayTitle || title || "Tentang Kami",
+        subtitle: subtitle || "Konten halaman Tentang Kami",
         media,
       };
     },

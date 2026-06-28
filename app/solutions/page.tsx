@@ -8,7 +8,7 @@ import { createCmsMetadata } from "@/lib/sanity/metadata";
 
 const solutionsPageFallback = {
   heroEyebrow: "",
-  heroTitle: "Solutions",
+  heroTitle: "",
   heroDescription: "",
   sectionEyebrow: "",
   sectionTitle: "",
@@ -57,6 +57,7 @@ export default async function SolutionsPage() {
       <SiteHeader />
       <main className="bg-white">
         <InnerPageHero
+          centered
           page={{
             heroEyebrow,
             heroTitle,
@@ -78,7 +79,7 @@ export default async function SolutionsPage() {
           }}
         />
         <Solutions
-          emptyStateText="Konten solusi belum tersedia."
+          introAlign="center"
           introDescription={sectionDescription}
           introEyebrow={sectionEyebrow}
           introTitle={sectionTitle}

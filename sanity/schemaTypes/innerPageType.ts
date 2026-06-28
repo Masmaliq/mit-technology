@@ -67,8 +67,29 @@ export const innerPageType = defineType({
   ],
   fields: [
     defineField({
+      name: "pageNumber",
+      title: "Nomor Halaman",
+      type: "string",
+      fieldset: "identity",
+      description: "Contoh: 04 atau 05.",
+    }),
+    defineField({
+      name: "pageDisplayName",
+      title: "Nama Halaman",
+      type: "string",
+      fieldset: "identity",
+      description: "Nama yang mudah dipahami klien. Contoh: Distribusi atau Kemitraan.",
+    }),
+    defineField({
+      name: "menuLabel",
+      title: "Label Menu",
+      type: "string",
+      fieldset: "identity",
+      description: "Teks yang tampil di menu navbar.",
+    }),
+    defineField({
       name: "pageName",
-      title: "Page Name",
+      title: "Page Name / Nama Internal",
       type: "string",
       fieldset: "identity",
       validation: (Rule) => Rule.required(),
@@ -80,6 +101,40 @@ export const innerPageType = defineType({
       fieldset: "identity",
       options: { source: "pageName" },
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "adminDescription",
+      title: "Short Description / Catatan Admin",
+      type: "text",
+      rows: 2,
+      fieldset: "identity",
+    }),
+    defineField({
+      name: "showInClientPages",
+      title: "Show in Pages Dashboard",
+      type: "boolean",
+      initialValue: true,
+      fieldset: "identity",
+    }),
+    defineField({
+      name: "showInNavbar",
+      title: "Show in Navbar",
+      type: "boolean",
+      initialValue: true,
+      fieldset: "identity",
+    }),
+    defineField({
+      name: "showInFooter",
+      title: "Show in Footer",
+      type: "boolean",
+      initialValue: true,
+      fieldset: "identity",
+    }),
+    defineField({
+      name: "sortOrder",
+      title: "Sort Order",
+      type: "number",
+      fieldset: "identity",
     }),
     defineField({
       name: "heroContent",
@@ -432,13 +487,14 @@ export const innerPageType = defineType({
   ],
   preview: {
     select: {
+      displayTitle: "pageDisplayName",
       title: "pageName",
       subtitle: "slug.current",
       media: "heroBackgroundImage",
     },
-    prepare({ title, subtitle, media }) {
+    prepare({ displayTitle, title, subtitle, media }) {
       return {
-        title: title || "Site Page",
+        title: displayTitle || title || "Site Page",
         subtitle: subtitle ? `/${subtitle}` : "Inner page content",
         media,
       };

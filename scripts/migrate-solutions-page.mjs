@@ -8,7 +8,6 @@ function isBlank(value) {
 
 const defaults = {
   heroEyebrow: "MIT SOLUTIONS",
-  heroTitle: "Technology Solutions Built For Modern Organizations",
   heroDescription:
     "Kami membantu organisasi membangun website, aplikasi, platform digital, dan sistem internal yang mendukung pertumbuhan bisnis.",
   sectionEyebrow: "SOLUTIONS",
@@ -67,7 +66,7 @@ if (!page) {
 
 const patch = {};
 
-for (const key of ["heroEyebrow", "heroTitle", "heroDescription", "ctaEyebrow", "ctaTitle", "ctaDescription", "ctaButtonLabel", "ctaButtonUrl"]) {
+for (const key of ["heroEyebrow", "heroDescription", "ctaEyebrow", "ctaTitle", "ctaDescription", "ctaButtonLabel", "ctaButtonUrl"]) {
   if (isBlank(page[key])) {
     patch[key] = defaults[key];
   }

@@ -2,42 +2,69 @@ import type { StructureResolver } from "sanity/structure";
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("MIT CMS")
+    .title("Pangan Kawan CMS")
     .items([
       S.listItem()
-        .title("🌐 GLOBAL")
+        .title("📄 Halaman Website")
         .child(
           S.list()
-            .title("GLOBAL")
+            .title("Halaman Website")
             .items([
               S.listItem()
-                .title("🌐 Site Settings")
-                .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
-              S.listItem().title("🧭 Navbar").child(S.document().schemaType("navbar").documentId("navbar")),
-              S.listItem().title("📌 Footer").child(S.document().schemaType("footer").documentId("footer")),
-            ])
-        ),
-      S.listItem()
-        .title("🏠 HOMEPAGE")
-        .child(
-          S.list()
-            .title("HOMEPAGE")
-            .items([
-              S.listItem()
-                .title("🏠 Homepage Settings")
+                .title("01 — Beranda")
                 .child(S.document().schemaType("homepage").documentId("homepage")),
+              S.listItem()
+                .title("02 — Tentang Kami")
+                .child(S.document().schemaType("about").documentId("about")),
+              S.listItem()
+                .title("03 — Produk")
+                .child(S.document().schemaType("solutionsPage").documentId("solutionsPage")),
+              S.listItem()
+                .title("04 — Distribusi")
+                .child(S.document().schemaType("innerPage").documentId("distribution-network")),
+              S.listItem()
+                .title("05 — Kemitraan")
+                .child(S.document().schemaType("innerPage").documentId("partnership")),
+              S.listItem()
+                .title("06 — Kontak")
+                .child(S.document().schemaType("contact").documentId("contact")),
             ])
         ),
       S.listItem()
-        .title("📄 PAGES")
+        .title("🌐 Pengaturan Website")
         .child(
           S.list()
-            .title("PAGES")
+            .title("Pengaturan Website")
             .items([
-              S.listItem().title("👤 About").child(S.document().schemaType("about").documentId("about")),
               S.listItem()
-                .title("⚡ Solutions")
-                .child(S.document().schemaType("solutionsPage").documentId("solutionsPage")),
+                .title("Site Settings")
+                .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
+              S.listItem().title("Navbar").child(S.document().schemaType("navbar").documentId("navbar")),
+              S.listItem().title("Footer").child(S.document().schemaType("footer").documentId("footer")),
+              S.listItem().title("Contact").child(S.document().schemaType("contact").documentId("contact")),
+              S.listItem()
+                .title("SEO")
+                .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
+            ])
+        ),
+      S.listItem()
+        .title("📦 Konten")
+        .child(
+          S.list()
+            .title("Konten")
+            .items([
+              S.documentTypeListItem("solution").title("📦 Product Items / Solution Items"),
+              S.documentTypeListItem("clientLogo").title("🤝 Client Logos"),
+              S.documentTypeListItem("testimonial").title("⭐ Testimonials"),
+              S.documentTypeListItem("process").title("🔄 Process / Workflow"),
+            ])
+        ),
+      S.listItem()
+        .title("🧩 Advanced / Framework")
+        .child(
+          S.list()
+            .title("Advanced / Framework")
+            .items([
               S.listItem()
                 .title("📦 Packages")
                 .child(
@@ -71,20 +98,6 @@ export const structure: StructureResolver = (S) =>
                       S.documentTypeListItem("caseStudy").title("Case Study Items"),
                     ])
                 ),
-              S.listItem()
-                .title("📞 Contact")
-                .child(S.document().schemaType("contact").documentId("contact")),
-            ])
-        ),
-      S.listItem()
-        .title("📚 CONTENT")
-        .child(
-          S.list()
-            .title("CONTENT")
-            .items([
-              S.documentTypeListItem("clientLogo").title("🤝 Client Logos"),
-              S.documentTypeListItem("process").title("🔄 Process"),
-              S.documentTypeListItem("testimonial").title("⭐ Testimonials"),
             ])
         ),
     ]);

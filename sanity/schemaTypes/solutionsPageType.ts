@@ -5,22 +5,22 @@ const hiddenLegacy = { hidden: true, readOnly: true };
 
 export const solutionsPageType = defineType({
   name: "solutionsPage",
-  title: "Solutions",
+  title: "Produk",
   type: "document",
   fieldsets: [
     {
       name: "hero",
-      title: "Hero Section",
+      title: "Hero Produk",
       options: { collapsible: true, collapsed: false },
     },
     {
       name: "intro",
-      title: "What We Do Best Section",
+      title: "Product Intro / Pengantar Produk",
       options: { collapsible: true, collapsed: false },
     },
     {
       name: "cards",
-      title: "Solution Cards / Blocks",
+      title: "Product Items / Daftar Produk",
       options: { collapsible: true, collapsed: false },
     },
     {
@@ -41,26 +41,82 @@ export const solutionsPageType = defineType({
   ],
   fields: [
     defineField({
+      name: "pageNumber",
+      title: "Nomor Halaman",
+      type: "string",
+      description: "Contoh: 03.",
+    }),
+    defineField({
+      name: "pageDisplayName",
+      title: "Nama Halaman",
+      type: "string",
+      description: "Nama halaman yang tampil untuk editor. Contoh: Produk.",
+    }),
+    defineField({
+      name: "menuLabel",
+      title: "Label Menu",
+      type: "string",
+      description: "Teks yang tampil di menu navbar. Contoh: Produk.",
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug / URL",
+      type: "slug",
+      options: { source: "pageDisplayName" },
+      description: "Route frontend sementara tetap /solutions, tetapi nama tampil bisa Produk.",
+    }),
+    defineField({
+      name: "adminDescription",
+      title: "Short Description / Catatan Admin",
+      type: "text",
+      rows: 2,
+      description: "Catatan singkat tentang fungsi halaman Produk.",
+    }),
+    defineField({
+      name: "showInClientPages",
+      title: "Show in Pages Dashboard",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "showInNavbar",
+      title: "Show in Navbar",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "showInFooter",
+      title: "Show in Footer",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "sortOrder",
+      title: "Sort Order",
+      type: "number",
+      initialValue: 30,
+    }),
+    defineField({
       name: "heroContent",
-      title: "Hero Content",
+      title: "Hero Content / Konten Pembuka Produk",
       type: "pageHeroContent",
       fieldset: "hero",
     }),
     defineField({
       name: "heroMedia",
-      title: "Hero Media",
+      title: "Hero Image / Video",
       type: "pageHeroMedia",
       fieldset: "hero",
     }),
     defineField({
       name: "sectionBuilder",
-      title: "Section Builder",
+      title: "Product Intro Builder",
       type: "pageSectionBuilder",
       fieldset: "intro",
     }),
     defineField({
       name: "seoBuilder",
-      title: "SEO Builder",
+      title: "SEO Produk",
       type: "pageSeoBuilder",
       fieldset: "seo",
     }),
@@ -72,13 +128,13 @@ export const solutionsPageType = defineType({
     }),
     defineField({
       name: "heroTitle",
-      title: "Hero Title",
+      title: "Hero Title / Judul Produk",
       type: "string",
       fieldset: "hero",
     }),
     defineField({
       name: "heroDescription",
-      title: "Hero Description",
+      title: "Hero Description / Deskripsi Produk",
       type: "text",
       rows: 3,
       fieldset: "hero",
@@ -91,28 +147,28 @@ export const solutionsPageType = defineType({
     }),
     defineField({
       name: "sectionTitle",
-      title: "Section Title",
+      title: "Product Intro Title",
       type: "string",
       fieldset: "intro",
     }),
     defineField({
       name: "sectionDescription",
-      title: "Section Description",
+      title: "Product Intro Description",
       type: "text",
       rows: 3,
       fieldset: "intro",
     }),
     defineField({
       name: "solutionCards",
-      title: "Solution Cards",
+      title: "Product Items",
       type: "array",
       fieldset: "cards",
       of: [
         {
           type: "object",
           fields: [
-            defineField({ name: "title", title: "Title", type: "string" }),
-            defineField({ name: "description", title: "Description", type: "text", rows: 3 }),
+            defineField({ name: "title", title: "Product Name", type: "string" }),
+            defineField({ name: "description", title: "Product Description", type: "text", rows: 3 }),
             defineField({
               name: "icon",
               title: "Icon",
@@ -128,14 +184,14 @@ export const solutionsPageType = defineType({
             }),
             defineField({
               name: "image",
-              title: "Image",
+              title: "Product Image",
               type: "image",
               options: { hotspot: true },
               fields: [defineField({ name: "alt", title: "Alt Text", type: "string" })],
             }),
             defineField({ name: "link", title: "Link", type: "string" }),
-            defineField({ name: "linkLabel", title: "Link Label", type: "string" }),
-            defineField({ name: "linkUrl", title: "Link URL", type: "string" }),
+            defineField({ name: "linkLabel", title: "Button Label", type: "string" }),
+            defineField({ name: "linkUrl", title: "Button URL", type: "string" }),
             defineField({ name: "order", title: "Order", type: "number" }),
             defineField({
               name: "items",
@@ -190,13 +246,14 @@ export const solutionsPageType = defineType({
   ],
   preview: {
     select: {
+      displayTitle: "pageDisplayName",
       title: "heroTitle",
       subtitle: "sectionTitle",
     },
-    prepare({ title, subtitle }) {
+    prepare({ displayTitle, title, subtitle }) {
       return {
-        title: title || "Solutions Page",
-        subtitle: subtitle || "Editable copy for the /solutions page",
+        title: displayTitle || title || "Produk",
+        subtitle: subtitle || "Konten halaman Produk (/solutions)",
       };
     },
   },

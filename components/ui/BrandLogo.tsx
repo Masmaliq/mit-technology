@@ -19,7 +19,7 @@ export function BrandLogo({
   textOnly = false,
 }: BrandLogoProps) {
   const [imageFailed, setImageFailed] = useState(false);
-  const iconSize = compact ? "h-8 w-8 md:h-10 md:w-10" : "h-10 w-10 md:h-12 md:w-12";
+  const imageSize = compact ? "h-9 w-9 md:h-11 md:w-11" : "h-10 w-10 md:h-12 md:w-12";
   const brandTextSize = compact ? "text-base md:text-xl" : "text-lg md:text-xl";
   const descriptorTextSize = compact ? "text-[0.58rem] md:text-[0.72rem]" : "text-[0.66rem] md:text-[0.72rem]";
   const safeBrandName = brandName.trim();
@@ -39,14 +39,14 @@ export function BrandLogo({
   return (
     <span className="inline-flex min-w-0 items-center gap-3 whitespace-nowrap">
       {shouldRenderImage ? (
-        <span className={`relative block shrink-0 overflow-hidden ${iconSize}`}>
+        <span className={`relative block shrink-0 overflow-hidden ${imageSize}`}>
           <Image
             src={safeImageUrl}
             alt={alt || safeBrandName}
             fill
             priority={compact}
-            sizes={compact ? "(min-width: 768px) 40px, 32px" : "(min-width: 768px) 48px, 40px"}
-            className="object-contain"
+            sizes={compact ? "(min-width: 768px) 44px, 36px" : "(min-width: 768px) 48px, 40px"}
+            className="object-contain object-center"
             onError={() => setImageFailed(true)}
           />
         </span>

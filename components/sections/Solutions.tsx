@@ -22,6 +22,7 @@ type SolutionsProps = {
   introEyebrow?: string;
   introTitle?: string;
   introDescription?: string;
+  introAlign?: "left" | "center";
   serviceCards?: Array<{
     title?: string;
     description?: string;
@@ -33,19 +34,12 @@ type SolutionsProps = {
     order?: number;
     items?: string[];
   }>;
-  emptyStateText?: string;
 };
 
 type PreviewRow = {
   title?: string;
   href?: string;
   icon?: string;
-};
-
-const solutionsIntroFallback = {
-  eyebrow: "",
-  title: "",
-  description: "",
 };
 
 const iconMap = {
@@ -80,7 +74,6 @@ function getIcon(icon?: string) {
 
 function SolutionsPreview({
   previewImage,
-  solutions,
   eyebrow,
   title,
   description,
@@ -89,7 +82,6 @@ function SolutionsPreview({
   rows,
 }: {
   previewImage?: SanityImageValue;
-  solutions?: SolutionItem[];
   eyebrow?: string;
   title?: string;
   description?: string;
@@ -97,27 +89,28 @@ function SolutionsPreview({
   visualTitle?: string;
   rows?: PreviewRow[];
 }) {
-  const fallbackImage = solutions?.find((item) => item.thumbnail?.url || item.thumbnail?.asset)?.thumbnail;
-  const image = previewImage || fallbackImage;
+  const image = previewImage;
   const previewImageUrl = getPreviewImageUrl(image);
   const cmsRows = rows?.filter((item) => item.title) ?? [];
-  const solutionRows =
-    cmsRows.length > 0
-      ? cmsRows
-      : solutions
-          ?.filter((item) => item.title)
-          .slice(0, 3)
-          .map((item) => ({
-            title: item.title,
-            href: item.slug ? `/solutions/${item.slug}` : "/solutions",
-            icon: item.icon,
-          })) ?? [];
-  const displayRows = solutionRows;
-  const displayEyebrow = eyebrow?.trim() || solutionsIntroFallback.eyebrow;
-  const displayTitle = title?.trim() || solutionsIntroFallback.title;
+  const displayRows = cmsRows;
+  const displayEyebrow = eyebrow?.trim() || "";
+  const displayTitle = title?.trim() || "";
   const displayDescription = description?.trim() || "";
   const displayVisualEyebrow = visualEyebrow?.trim() || "";
   const displayVisualTitle = visualTitle?.trim() || "";
+  const hasPreviewContent = Boolean(
+    previewImageUrl ||
+      displayEyebrow ||
+      displayTitle ||
+      displayDescription ||
+      displayVisualEyebrow ||
+      displayVisualTitle ||
+      displayRows.length > 0,
+  );
+
+  if (!hasPreviewContent) {
+    return null;
+  }
 
   return (
     <section id="solutions" aria-label="Solutions" className="bg-white py-12 lg:py-16">
@@ -125,7 +118,7 @@ function SolutionsPreview({
         <div className="relative min-h-[22rem] overflow-hidden rounded-[2rem] border border-slate-200/70 bg-slate-100 shadow-[0_24px_90px_rgba(15,23,42,0.08)]">
           {previewImageUrl ? (
             <Image
-              alt={image?.alt || displayTitle || "Solutions preview image"}
+              alt={image?.alt || displayTitle || ""}
               className="object-cover"
               fill
               sizes="(min-width: 1024px) 46vw, 100vw"
@@ -182,21 +175,35 @@ function SolutionsPreview({
             <div className="mt-8 divide-y divide-slate-200 border-y border-slate-200">
               {displayRows.map((item) => {
               const Icon = getIcon(item.icon);
-
-              return (
-                <Link
-                  className="group -mx-3 flex items-center gap-5 rounded-2xl px-3 py-5 transition duration-300 hover:bg-slate-50"
-                  href={item.href || "/solutions"}
-                  key={item.title}
-                >
+              const rowContent = (
+                <>
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition duration-300 group-hover:bg-primary group-hover:text-white">
                     <Icon className="h-5 w-5" />
                   </span>
                   <span className="flex-1 text-lg font-semibold tracking-tight text-navy">
                     {item.title}
                   </span>
-                  <ArrowRight className="h-5 w-5 text-slate-400 transition duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+                  {item.href ? (
+                    <ArrowRight className="h-5 w-5 text-slate-400 transition duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+                  ) : null}
+                </>
+              );
+
+              return item.href ? (
+                <Link
+                  className="group -mx-3 flex items-center gap-5 rounded-2xl px-3 py-5 transition duration-300 hover:bg-slate-50"
+                  href={item.href}
+                  key={item.title}
+                >
+                  {rowContent}
                 </Link>
+              ) : (
+                <div
+                  className="group -mx-3 flex items-center gap-5 rounded-2xl px-3 py-5 transition duration-300 hover:bg-slate-50"
+                  key={item.title}
+                >
+                  {rowContent}
+                </div>
               );
               })}
             </div>
@@ -220,13 +227,15 @@ export function Solutions({
   introEyebrow,
   introTitle,
   introDescription,
+  introAlign = "left",
   serviceCards,
-  emptyStateText,
 }: SolutionsProps) {
-  const eyebrow = introEyebrow?.trim() || solutionsIntroFallback.eyebrow;
-  const title = introTitle?.trim() || solutionsIntroFallback.title;
-  const description = introDescription?.trim() || solutionsIntroFallback.description;
+  const eyebrow = introEyebrow?.trim() || "";
+  const title = introTitle?.trim() || "";
+  const description = introDescription?.trim() || "";
   const cards = serviceCards?.filter((card) => card.title) ?? [];
+  const hasSectionContent = Boolean(eyebrow || title || description || cards.length > 0);
+  const isIntroCentered = introAlign === "center";
 
   if (variant === "preview") {
     return (
@@ -235,7 +244,6 @@ export function Solutions({
         eyebrow={introEyebrow || previewEyebrow}
         previewImage={previewImage}
         rows={previewRows}
-        solutions={solutions}
         title={introTitle || previewTitle}
         visualEyebrow={previewVisualEyebrow}
         visualTitle={previewVisualTitle}
@@ -243,11 +251,15 @@ export function Solutions({
     );
   }
 
+  if (!hasSectionContent) {
+    return null;
+  }
+
   return (
     <section id="solutions" aria-label="Solutions" className="bg-slate-50 py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
+        <div className={`flex flex-col gap-6 ${isIntroCentered ? "items-center text-center" : "lg:flex-row lg:items-end lg:justify-between"}`}>
+          <div className={isIntroCentered ? "mx-auto max-w-[45rem]" : "max-w-3xl"}>
             {eyebrow ? (
               <TextReveal
                 as="p"
@@ -261,7 +273,7 @@ export function Solutions({
             {title ? (
               <TextReveal
                 as="h2"
-                className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
+                className={`mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl ${isIntroCentered ? "mx-auto" : ""}`}
                 direction="left"
                 mode="words"
                 text={title}
@@ -270,7 +282,7 @@ export function Solutions({
             {description ? (
               <TextReveal
                 as="p"
-                className="mt-5 text-lg leading-8 text-slate-600"
+                className={`mt-5 text-lg leading-8 text-slate-600 ${isIntroCentered ? "mx-auto max-w-[45rem]" : ""}`}
                 direction="up"
                 mode="lines"
                 text={description}
@@ -279,69 +291,77 @@ export function Solutions({
           </div>
         </div>
 
-        <StaggerContainer className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {cards.length > 0 ? cards.map((card) => {
+        {cards.length > 0 && (
+          <StaggerContainer className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {cards.map((card) => {
             const Icon = getIcon(card.icon);
-            const cardHref = card.linkUrl || card.link || "/solutions";
+            const cardHref = card.linkUrl || card.link || "";
             const cardItems = card.items?.filter(Boolean) ?? [];
             const cardImageUrl = getPreviewImageUrl(card.image);
+            const cardClassName =
+              "group flex min-h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.055)] transition duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/25 hover:shadow-[0_28px_86px_rgba(37,99,235,0.11)]";
+            const cardContent = (
+              <>
+                <div className="flex items-start justify-between gap-6">
+                  {cardImageUrl ? (
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-100">
+                      <Image
+                        alt={card.image?.alt || card.title || ""}
+                        className="object-cover"
+                        fill
+                        sizes="56px"
+                        src={cardImageUrl}
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl bg-primary/10 p-3 text-primary transition duration-300 group-hover:bg-primary group-hover:text-white">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                  )}
+                  {cardHref ? (
+                    <ArrowRight className="h-5 w-5 text-slate-400 transition duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+                  ) : null}
+                </div>
+                <h3 className="mt-7 text-2xl font-semibold tracking-tight text-navy">
+                  {card.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p>
+                <div className="mt-6 space-y-2.5">
+                  {cardItems.map((feature) => (
+                    <div
+                      className="flex items-center gap-3 text-sm font-medium text-slate-600"
+                      key={`${card.title}-${feature}`}
+                    >
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Check className="h-3.5 w-3.5" />
+                      </span>
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+                {card.linkLabel ? (
+                  <span className="mt-auto pt-6 text-sm font-semibold text-primary">
+                    {card.linkLabel}
+                  </span>
+                ) : null}
+              </>
+            );
 
             return (
               <StaggerItem className="h-full" key={card.title}>
-                <Link
-                  href={cardHref}
-                  className="group flex min-h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.055)] transition duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/25 hover:shadow-[0_28px_86px_rgba(37,99,235,0.11)]"
-                >
-                  <div className="flex items-start justify-between gap-6">
-                    {cardImageUrl ? (
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-100">
-                        <Image
-                          alt={card.image?.alt || card.title || ""}
-                          className="object-cover"
-                          fill
-                          sizes="56px"
-                          src={cardImageUrl}
-                          unoptimized
-                        />
-                      </div>
-                    ) : (
-                      <div className="rounded-2xl bg-primary/10 p-3 text-primary transition duration-300 group-hover:bg-primary group-hover:text-white">
-                        <Icon className="h-6 w-6" />
-                      </div>
-                    )}
-                    <ArrowRight className="h-5 w-5 text-slate-400 transition duration-300 group-hover:translate-x-1 group-hover:text-primary" />
-                  </div>
-                  <h3 className="mt-7 text-2xl font-semibold tracking-tight text-navy">
-                    {card.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p>
-                  <div className="mt-6 space-y-2.5">
-                    {cardItems.map((feature) => (
-                      <div
-                        className="flex items-center gap-3 text-sm font-medium text-slate-600"
-                        key={`${card.title}-${feature}`}
-                      >
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                          <Check className="h-3.5 w-3.5" />
-                        </span>
-                        {feature}
-                      </div>
-                    ))}
-                  </div>
-                  {card.linkLabel ? (
-                    <span className="mt-auto pt-6 text-sm font-semibold text-primary">
-                      {card.linkLabel}
-                    </span>
-                  ) : null}
-                </Link>
+                {cardHref ? (
+                  <Link href={cardHref} className={cardClassName}>
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <div className={cardClassName}>{cardContent}</div>
+                )}
               </StaggerItem>
             );
-          }) : (
-            <div className="rounded-[1.5rem] border border-dashed border-slate-300 bg-white p-8 text-center text-slate-600 md:col-span-2 xl:col-span-4">
-              {emptyStateText || "Konten solusi belum tersedia."}
-            </div>
-          )}
-        </StaggerContainer>
+          })}
+          </StaggerContainer>
+        )}
       </div>
     </section>
   );

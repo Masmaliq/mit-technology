@@ -14,6 +14,11 @@ export const homepageType = defineType({
   type: "document",
   fieldsets: [
     {
+      name: "pageSettings",
+      title: "Page Settings",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
       name: "heroContent",
       title: "Hero Content",
       options: { collapsible: true, collapsed: false },
@@ -58,6 +63,70 @@ export const homepageType = defineType({
   ],
 
   fields: [
+    defineField({
+      name: "pageNumber",
+      title: "Nomor Halaman",
+      type: "string",
+      fieldset: "pageSettings",
+      description: "Contoh: 01.",
+    }),
+    defineField({
+      name: "pageDisplayName",
+      title: "Nama Halaman",
+      type: "string",
+      fieldset: "pageSettings",
+      description: "Nama yang mudah dipahami klien. Contoh: Beranda.",
+    }),
+    defineField({
+      name: "menuLabel",
+      title: "Label Menu",
+      type: "string",
+      fieldset: "pageSettings",
+      description: "Teks yang tampil di menu navbar. Contoh: Home atau Beranda.",
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug / URL",
+      type: "slug",
+      fieldset: "pageSettings",
+      options: { source: "pageDisplayName" },
+      description: "URL halaman. Untuk Beranda biasanya /.",
+    }),
+    defineField({
+      name: "adminDescription",
+      title: "Short Description / Catatan Admin",
+      type: "text",
+      rows: 2,
+      fieldset: "pageSettings",
+    }),
+    defineField({
+      name: "showInClientPages",
+      title: "Show in Pages Dashboard",
+      type: "boolean",
+      initialValue: true,
+      fieldset: "pageSettings",
+    }),
+    defineField({
+      name: "showInNavbar",
+      title: "Show in Navbar",
+      type: "boolean",
+      initialValue: true,
+      fieldset: "pageSettings",
+    }),
+    defineField({
+      name: "showInFooter",
+      title: "Show in Footer",
+      type: "boolean",
+      initialValue: true,
+      fieldset: "pageSettings",
+    }),
+    defineField({
+      name: "sortOrder",
+      title: "Sort Order",
+      type: "number",
+      initialValue: 10,
+      fieldset: "pageSettings",
+    }),
     defineField({
       name: "heroEyebrow",
       title: "Hero Eyebrow",

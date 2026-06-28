@@ -118,7 +118,7 @@ export function SiteHeaderClient({
               {safeBrandName || "MIT Technology"}
             </span>
           ) : (
-            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/18 bg-white/[0.09] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur md:h-12 md:w-12">
+            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/18 bg-white/[0.09] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur md:h-14 md:w-14">
               <BrandLogo
                 imageUrl={logoUrl}
                 alt={logoAlt || safeBrandName}

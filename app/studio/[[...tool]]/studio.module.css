@@ -1,0 +1,164 @@
+.studioShell {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(200, 85, 26, 0.08), transparent 28%),
+    #f1f7fb;
+  color: #1a2733;
+  --mit-studio-bg: #f1f7fb;
+  --mit-studio-surface: #ffffff;
+  --mit-studio-surface-soft: #f8fbfd;
+  --mit-studio-border: #dce7f0;
+  --mit-studio-accent: #c8551a;
+  --mit-studio-accent-soft: #ffe7d6;
+  --mit-studio-text: #1a2733;
+  --mit-studio-muted: #5c7184;
+  --mit-studio-muted-soft: #94a6b5;
+}
+
+.studioShell :global([data-ui="Root"]) {
+  background-color: var(--mit-studio-bg);
+  color: var(--mit-studio-text);
+}
+
+.studioShell :global([data-ui="Card"]) {
+  background-color: var(--mit-studio-surface);
+  border-color: var(--mit-studio-border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.studioShell :global([data-ui="Layer"]) {
+  background-color: rgba(255, 255, 255, 0.98);
+}
+
+.studioShell :global([data-ui="Button"]),
+.studioShell :global([data-ui="MenuButton"]) {
+  border-radius: 10px;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+.studioShell :global([data-ui="Button"]:hover),
+.studioShell :global([data-ui="MenuButton"]:hover) {
+  transform: translateY(-1px);
+}
+
+.studioShell :global(a),
+.studioShell :global(button) {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    color 200ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.studioShell :global(a[aria-current="page"]),
+.studioShell :global([aria-selected="true"]) {
+  background: var(--mit-studio-accent-soft) !important;
+  border-radius: 8px;
+  box-shadow: inset 3px 0 0 var(--mit-studio-accent);
+  color: var(--mit-studio-accent) !important;
+  font-weight: 600;
+}
+
+.studioShell :global(input),
+.studioShell :global(textarea),
+.studioShell :global(select) {
+  background-color: #ffffff !important;
+  border-color: var(--mit-studio-border) !important;
+  border-radius: 10px !important;
+  color: var(--mit-studio-text) !important;
+}
+
+.studioShell :global(input:focus),
+.studioShell :global(textarea:focus),
+.studioShell :global(select:focus) {
+  border-color: rgba(200, 85, 26, 0.72) !important;
+  box-shadow: 0 0 0 4px rgba(200, 85, 26, 0.1) !important;
+}
+
+.studioShell :global(label),
+.studioShell :global([data-ui="Label"]) {
+  color: var(--mit-studio-text);
+  font-weight: 650;
+}
+
+.studioShell :global([data-ui="Text"]) {
+  color: var(--mit-studio-text);
+}
+
+.studioShell :global([data-ui="Text"][data-muted="true"]),
+.studioShell :global([data-ui="Muted"]) {
+  color: var(--mit-studio-muted);
+}
+
+.studioShell :global([data-testid*="pane"]),
+.studioShell :global([data-testid*="document-pane"]),
+.studioShell :global([data-ui="Container"]) {
+  border-color: var(--mit-studio-border);
+}
+
+.studioShell :global([data-testid*="pane-header"]),
+.studioShell :global([data-testid*="document-panel-header"]) {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--mit-studio-border);
+}
+
+.studioShell :global([data-testid*="document-panel-scroller"]),
+.studioShell :global([data-testid*="document-panel"]) {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(200, 85, 26, 0.045), transparent 26%),
+    var(--mit-studio-bg);
+}
+
+.studioShell :global([data-testid*="document-panel"] form) {
+  max-width: 980px;
+}
+
+.studioShell :global([data-testid*="document-panel"] fieldset),
+.studioShell :global([data-testid*="document-panel"] [data-ui="Stack"]) {
+  gap: 14px;
+}
+
+.studioShell :global([data-testid*="review-changes-button"]),
+.studioShell :global([data-testid*="action-publish"]) {
+  box-shadow: 0 10px 24px rgba(200, 85, 26, 0.16);
+}
+
+@media (min-width: 900px) {
+  .studioShell :global(nav[aria-label]),
+  .studioShell :global([data-testid="studio-navbar"]),
+  .studioShell :global([data-ui="Navbar"]) {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-right: 1px solid var(--mit-studio-border);
+    box-shadow: 14px 0 40px rgba(26, 39, 51, 0.04);
+  }
+
+  .studioShell :global(nav[aria-label] a),
+  .studioShell :global([data-testid="studio-navbar"] a),
+  .studioShell :global([data-ui="Navbar"] a) {
+    border-radius: 8px;
+  }
+
+  .studioShell :global(nav[aria-label] a:hover),
+  .studioShell :global([data-testid="studio-navbar"] a:hover),
+  .studioShell :global([data-ui="Navbar"] a:hover) {
+    background: #fff1d6;
+    color: var(--mit-studio-accent);
+  }
+}
+
+@media (max-width: 899px) {
+  .studioShell :global(nav[aria-label]),
+  .studioShell :global([data-testid="studio-navbar"]),
+  .studioShell :global([data-ui="Navbar"]) {
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(18px);
+    border-color: var(--mit-studio-border);
+  }
+}

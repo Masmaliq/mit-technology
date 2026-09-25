@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
 
 type ContactFormProps = {
   formTitle?: string;
@@ -51,6 +58,12 @@ export function ContactForm({
       company: String(formData.get("company") || ""),
       message: String(formData.get("message") || ""),
     };
+
+    if (!supabase) {
+      setLoading(false);
+      setErrorMessage("Contact form is temporarily unavailable.");
+      return;
+    }
 
     const { error } = await supabase.from("contact_leads").insert([payload]);
 

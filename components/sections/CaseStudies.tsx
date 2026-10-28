@@ -142,12 +142,12 @@ export function CaseStudies({
             </svg>
           ) : null}
 
-          <div className="relative z-10 max-w-3xl lg:ml-32">
+          <div className="relative z-10 max-w-[720px] lg:ml-32">
             <div>
               {displayEyebrow ? (
                 <TextReveal
                   as="p"
-                  className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300"
+                  className="text-xs font-semibold uppercase tracking-[0.14em] text-sky-300"
                   direction="down"
                   mode="chars"
                   stagger={0.018}
@@ -157,7 +157,7 @@ export function CaseStudies({
               {displayTitle ? (
                 <TextReveal
                   as="h2"
-                  className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl"
+                  className="mt-4 max-w-[720px] text-[36px] font-bold leading-[1.12] tracking-[-0.025em] text-white sm:text-[clamp(38px,4vw,54px)]"
                   direction="right"
                   mode="words"
                   text={displayTitle}
@@ -166,7 +166,7 @@ export function CaseStudies({
               {displayDescription ? (
                 <TextReveal
                   as="p"
-                  className="mt-5 max-w-2xl text-base leading-7 text-slate-300 md:text-lg md:leading-8"
+                  className="mt-6 max-w-[560px] text-lg font-normal leading-[1.7] text-slate-300 md:text-[19px]"
                   direction="up"
                   mode="lines"
                   text={displayDescription}
@@ -177,7 +177,7 @@ export function CaseStudies({
             {displayCtaLabel && displayCtaHref ? (
               <Link
                 href={displayCtaHref}
-                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#031230] shadow-[0_18px_60px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-sky-50"
+                className="mt-9 inline-flex items-center justify-center gap-2 rounded-full bg-white px-4.5 py-2.5 text-[13px] font-semibold text-[#031230] shadow-[0_14px_44px_rgba(0,0,0,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-sky-50"
               >
                 {displayCtaLabel}
                 <ArrowRight className="h-4 w-4" />

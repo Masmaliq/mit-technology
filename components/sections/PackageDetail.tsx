@@ -12,7 +12,7 @@ export function PackageDetail({ category }: PackageDetailProps) {
       <section className="bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.14),transparent_34%),linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-6 py-20 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-            MIT Technology Packages
+            Emitech Packages
           </p>
           <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight text-navy md:text-7xl">
             {category.title}

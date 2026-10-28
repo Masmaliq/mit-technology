@@ -14,9 +14,9 @@ export default function DashboardShell({ children }: Props) {
           <div className="h-full border-r border-slate-200 bg-white flex flex-col">
             <div className="px-4 py-5 border-b border-slate-200">
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white">MIT</div>
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white">E</div>
                 <div>
-                  <div className="text-sm font-semibold text-slate-900">MIT <span className="text-blue-600">Home</span></div>
+                  <div className="text-sm font-semibold text-slate-900">Emitech <span className="text-blue-600">Home</span></div>
                   <div className="text-xs text-slate-500">Framework Control Center</div>
                 </div>
               </div>

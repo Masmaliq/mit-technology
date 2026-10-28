@@ -7,6 +7,7 @@ import type { SanityImageValue } from "@/lib/sanity/queries";
 import { getCaseStudyUrlSlug } from "@/lib/routing/slug";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Footer } from "@/components/sections/Footer";
+import { AmorensCaseStudy } from "@/components/work/AmorensCaseStudy";
 import { CaseStudyGallery } from "@/components/sections/CaseStudyGallery";
 import { VisualCmsLayer } from "@/components/visual/VisualCmsLayer";
 import { hasHeroVisualImage } from "@/lib/visual";
@@ -78,6 +79,11 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   if (!caseStudy?.title) {
     notFound();
+  }
+
+  const hasCanonicalV2Content = Boolean(caseStudy.overviewHeading || caseStudy.challengeHeading || caseStudy.approachHeading || caseStudy.experienceHeading || caseStudy.resultHeading);
+  if (hasCanonicalV2Content) {
+    return <><SiteHeader light /><AmorensCaseStudy caseStudy={caseStudy} /><Footer /></>;
   }
 
   const title = caseStudy.title;

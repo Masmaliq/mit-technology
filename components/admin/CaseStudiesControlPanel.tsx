@@ -199,7 +199,7 @@ export default function CaseStudiesControlPanel({ caseStudies }: { caseStudies?:
               </span>
               <h2 className="mt-4 text-xl font-bold text-slate-950">Case study collection belum berisi data aktif.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-                Panel menampilkan blueprint proof MIT sebagai preview aman. Tambahkan case study di Sanity agar card membaca data project real.
+                Panel menampilkan blueprint proof Emitech sebagai preview aman. Tambahkan case study di Sanity agar card membaca data project real.
               </p>
             </div>
             <AdminActionLink

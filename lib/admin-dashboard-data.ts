@@ -138,7 +138,7 @@ export const heroControlPanel = {
   contentPreview: {
     title: "Membangun Fondasi Digital untuk Pertumbuhan Bisnis",
     description:
-      "MIT Technology membantu perusahaan merancang, membangun, dan mengembangkan ekosistem digital yang mendukung pertumbuhan jangka panjang.",
+      "Emitech membantu perusahaan merancang, membangun, dan mengembangkan ekosistem digital yang mendukung pertumbuhan jangka panjang.",
     primaryCta: "Start Project",
     secondaryCta: "Explore Solutions",
     targetPage: "Homepage",
@@ -205,7 +205,7 @@ export const caseStudiesControlPanel = {
   ],
   featuredCases: [
     {
-      title: "MIT Technology",
+      title: "Emitech",
       category: "Digital Framework",
       status: "Featured",
       result: "Framework website reusable untuk company profile premium.",
@@ -596,7 +596,7 @@ export const testimonialsControlPanel = {
       role: "Manufacturing Client",
       status: "Published",
       quote:
-        "MIT membantu kami menyiapkan fondasi website yang lebih rapi, modern, dan siap dikembangkan untuk kebutuhan bisnis.",
+        "Emitech membantu kami menyiapkan fondasi website yang lebih rapi, modern, dan siap dikembangkan untuk kebutuhan bisnis.",
       rating: "5.0",
       tag: "Featured",
     },
@@ -667,7 +667,7 @@ export const settingsControlPanel = {
     { label: "Status Sistem", value: "Stabil", tone: "emerald" },
   ],
   generalSettings: [
-    ["Nama Situs", "MIT Control"],
+    ["Nama Situs", "Emitech Control"],
     ["Nama Framework", "MIT Framework"],
     ["Bahasa Default", "Indonesia"],
     ["Timezone", "Asia/Jakarta"],
@@ -730,7 +730,7 @@ export const footerControlPanel = {
     { label: "Social Links", value: "3", tone: "amber" },
   ],
   brandClosingPreview: [
-    ["Brand Name", "MIT Technology"],
+    ["Brand Name", "Emitech"],
     ["Tagline", "Membangun fondasi digital untuk pertumbuhan bisnis."],
     [
       "Description",
@@ -763,7 +763,7 @@ export const footerControlPanel = {
     ["LinkedIn", "Pending"],
   ],
   legalSystem: [
-    ["Copyright", "© 2026 MIT Technology"],
+    ["Copyright", "© 2026 Emitech"],
     ["Privacy Policy", "Pending"],
     ["Terms", "Pending"],
     ["Sitemap", "Ready"],

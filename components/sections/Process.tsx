@@ -27,7 +27,7 @@ export function Process({ processes = [], eyebrow, title, description }: Process
             {displayEyebrow ? (
               <TextReveal
                 as="p"
-                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                className="text-xs font-semibold uppercase tracking-[0.14em] text-primary"
                 direction="down"
                 mode="chars"
                 stagger={0.018}
@@ -37,7 +37,7 @@ export function Process({ processes = [], eyebrow, title, description }: Process
             {displayTitle ? (
               <TextReveal
                 as="h2"
-                className="mt-4 text-4xl font-semibold tracking-tight text-navy md:text-5xl"
+                className="mx-auto mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.12] tracking-[-0.025em] text-navy md:text-[clamp(34px,3.4vw,48px)]"
                 direction="up"
                 mode="words"
                 text={displayTitle}
@@ -46,7 +46,7 @@ export function Process({ processes = [], eyebrow, title, description }: Process
             {displayDescription ? (
               <TextReveal
                 as="p"
-                className="mt-5 text-lg leading-8 text-slate-600"
+                className="mx-auto mt-5 max-w-[620px] text-base font-normal leading-[1.7] text-slate-600 md:text-lg"
                 direction="up"
                 mode="lines"
                 text={displayDescription}
@@ -61,18 +61,18 @@ export function Process({ processes = [], eyebrow, title, description }: Process
               <StaggerItem className="h-full" key={item.slug ?? item.title}>
                 <article className="group flex flex-col bg-white p-4 transition duration-300 hover:bg-slate-50 lg:min-h-[300px] lg:justify-between lg:p-7">
                   <div className="flex items-start justify-between gap-4 lg:block">
-                    <span className="block text-3xl font-semibold leading-none tracking-tight text-slate-200 transition duration-300 group-hover:text-primary/20 lg:text-6xl">
+                    <span className="block text-[72px] font-bold leading-none tracking-tight text-slate-950/[0.08] transition duration-300 group-hover:text-primary/10 lg:text-[84px]">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     {item.icon ? (
-                      <p className="mt-1 text-right text-[0.66rem] font-semibold uppercase tracking-[0.2em] text-primary lg:mt-8 lg:text-left lg:text-xs lg:tracking-[0.24em]">
+                      <p className="mt-1 text-right text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-primary lg:mt-8 lg:text-left lg:text-xs">
                         {item.icon}
                       </p>
                     ) : null}
                   </div>
                   <div className="mt-3 lg:mt-0">
-                    <h3 className="text-lg font-semibold tracking-tight text-navy lg:text-2xl">{item.title}</h3>
-                    <p className="mt-1.5 text-sm leading-[1.45] text-slate-600 lg:mt-4 lg:text-base lg:leading-7">{item.shortDescription}</p>
+                    <h3 className="text-xl font-semibold leading-[1.25] tracking-tight text-navy lg:text-[23px]">{item.title}</h3>
+                    <p className="mt-1.5 text-sm font-normal leading-[1.7] text-slate-600 lg:mt-4 lg:text-base">{item.shortDescription}</p>
                   </div>
                 </article>
               </StaggerItem>

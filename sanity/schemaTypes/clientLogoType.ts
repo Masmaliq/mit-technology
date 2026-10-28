@@ -19,6 +19,7 @@ export const clientLogoType = defineType({
         accept: "image/svg+xml,image/png,image/jpeg,image/jpg",
         hotspot: true,
       },
+      fields: [defineField({ name: "alt", title: "Logo Alt Text", type: "string" })],
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -32,11 +33,18 @@ export const clientLogoType = defineType({
       type: "url",
     }),
     defineField({
+      name: "relatedProject",
+      title: "Related Project",
+      type: "reference",
+      to: [{ type: "project" }],
+    }),
+    defineField({
       name: "featured",
       title: "Featured",
       type: "boolean",
       initialValue: true,
     }),
+    defineField({ name: "active", title: "Active", type: "boolean", initialValue: true }),
     defineField({
       name: "order",
       title: "Order",

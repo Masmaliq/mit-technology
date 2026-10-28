@@ -37,6 +37,12 @@ export const processType = defineType({
       initialValue: 0,
     }),
     defineField({
+      name: "active",
+      title: "Active",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
       name: "featured",
       title: "Featured",
       type: "boolean",

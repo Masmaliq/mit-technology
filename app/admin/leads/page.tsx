@@ -115,7 +115,7 @@ export default async function AdminLeadsPage() {
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-              MIT Admin
+              Emitech Admin
             </p>
 
             <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">

@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { HomepageEditor } from "../components/HomepageEditor";
 
 const imageAltField = defineField({
   name: "alt",
@@ -12,6 +13,7 @@ export const homepageType = defineType({
   name: "homepage",
   title: "Homepage Settings",
   type: "document",
+  components: { input: HomepageEditor },
   fieldsets: [
     {
       name: "heroContent",
@@ -41,8 +43,43 @@ export const homepageType = defineType({
       options: { collapsible: true, collapsed: true },
     },
     {
+      name: "technologyMarquee",
+      title: "Technology Marquee",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "servicesArchitecture",
+      title: "Services",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "workArchitecture",
+      title: "Selected Work",
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: "pricingArchitecture",
+      title: "Pricing",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "processArchitecture",
+      title: "Process",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "insightsArchitecture",
+      title: "Insights",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "finalCtaArchitecture",
+      title: "Final CTA",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
       name: "homepageSections",
-      title: "Homepage Sections",
+      title: "Legacy Homepage Fields",
       options: { collapsible: true, collapsed: true },
     },
     {
@@ -107,6 +144,7 @@ export const homepageType = defineType({
       title: "Hero Main Image",
       type: "image",
       fieldset: "heroMedia",
+      hidden: ({ parent }) => parent?.heroMediaType === "video",
       options: { hotspot: true },
       fields: [imageAltField],
     }),
@@ -120,7 +158,6 @@ export const homepageType = defineType({
         layout: "radio",
         list: [
           { title: "Image", value: "image" },
-          { title: "GIF", value: "gif" },
           { title: "Video", value: "video" },
         ],
       },
@@ -137,6 +174,7 @@ export const homepageType = defineType({
       title: "Hero Video MP4",
       type: "file",
       fieldset: "heroMedia",
+      hidden: ({ parent }) => parent?.heroMediaType !== "video",
       options: { accept: "video/mp4" },
     }),
     defineField({
@@ -397,6 +435,77 @@ export const homepageType = defineType({
         ],
       },
     }),
+
+    defineField({
+      name: "technologyLabels",
+      title: "Technology Labels",
+      description: "Ordered labels shown in the Homepage technology marquee.",
+      type: "array",
+      fieldset: "technologyMarquee",
+      of: [{ type: "string" }],
+    }),
+    defineField({ name: "servicesSection", title: "Services Introduction", type: "pageSectionIntro", fieldset: "servicesArchitecture" }),
+    defineField({
+      name: "selectedServices",
+      title: "Selected Services",
+      description: "Ordered references to canonical Services.",
+      type: "array",
+      fieldset: "servicesArchitecture",
+      validation: (rule) => rule.max(3),
+      of: [{ type: "reference", to: [{ type: "solution" }], options: { disableNew: true } }],
+    }),
+    defineField({ name: "selectedWorkSection", title: "Selected Work Introduction", type: "pageSectionIntro", fieldset: "workArchitecture" }),
+    defineField({ name: "selectedWorkCta", title: "View All Work Action", type: "sharedCta", fieldset: "workArchitecture" }),
+    defineField({ name: "featuredWorkEyebrow", title: "Featured Case Eyebrow", type: "string", fieldset: "workArchitecture" }),
+    defineField({ name: "featuredWorkCtaLabel", title: "Featured Case CTA Label", type: "string", fieldset: "workArchitecture" }),
+    defineField({
+      name: "selectedProjects",
+      title: "Selected Projects",
+      description: "Ordered references to canonical projects from Content → Work.",
+      type: "array",
+      fieldset: "workArchitecture",
+      of: [{ type: "homepageProjectSelection" }],
+    }),
+    defineField({ name: "pricingSection", title: "Pricing Introduction", type: "pageSectionIntro", fieldset: "pricingArchitecture" }),
+    defineField({ name: "pricingCta", title: "Pricing Page Action", type: "sharedCta", fieldset: "pricingArchitecture" }),
+    defineField({ name: "premiumPricingSection", title: "Premium Pricing Introduction", type: "pageSectionIntro", fieldset: "pricingArchitecture" }),
+    defineField({ name: "premiumPricingCtaLabel", title: "Premium Pricing CTA Label", type: "string", fieldset: "pricingArchitecture" }),
+    defineField({ name: "premiumPricingFeaturedCtaLabel", title: "Featured Premium CTA Label", type: "string", fieldset: "pricingArchitecture" }),
+    defineField({ name: "premiumPricingStartingFromLabel", title: "Starting Price Label", type: "string", fieldset: "pricingArchitecture" }),
+    defineField({ name: "premiumPricingBespokeLabel", title: "Bespoke Price Label", type: "string", fieldset: "pricingArchitecture" }),
+    defineField({
+      name: "selectedPricing",
+      title: "Selected Pricing",
+      description: "Canonical prices stay in CONTENT → Pricing.",
+      type: "array",
+      fieldset: "pricingArchitecture",
+      of: [{ type: "reference", to: [{ type: "package" }] }],
+    }),
+    defineField({ name: "pricingBenefits", title: "Shared Benefits", type: "array", fieldset: "pricingArchitecture", of: [{ type: "string" }] }),
+    defineField({ name: "pricingNote", title: "Section Note", type: "text", rows: 2, fieldset: "pricingArchitecture" }),
+    defineField({ name: "wordpressEyebrow", title: "WordPress Eyebrow", type: "string", fieldset: "pricingArchitecture" }),
+    defineField({ name: "wordpressPriceLabel", title: "WordPress Price Label", type: "string", fieldset: "pricingArchitecture" }),
+    defineField({ name: "wordpressCta", title: "WordPress CTA", type: "sharedCta", fieldset: "pricingArchitecture" }),
+    defineField({ name: "processSection", title: "Process Introduction", type: "pageSectionIntro", fieldset: "processArchitecture" }),
+    defineField({
+      name: "selectedProcess",
+      title: "Selected Process Steps",
+      type: "array",
+      fieldset: "processArchitecture",
+      of: [{
+        type: "object",
+        fields: [
+          defineField({ name: "process", title: "Process Step", type: "reference", to: [{ type: "process" }] }),
+          defineField({ name: "displayDescription", title: "Description Override", type: "text", rows: 2 }),
+        ],
+        preview: { select: { title: "process.title", subtitle: "displayDescription" } },
+      }],
+    }),
+    defineField({ name: "insightsSection", title: "Insights Introduction", type: "pageSectionIntro", fieldset: "insightsArchitecture" }),
+    defineField({ name: "selectedInsights", title: "Selected Insights", type: "array", fieldset: "insightsArchitecture", of: [{ type: "reference", to: [{ type: "insight" }] }] }),
+    defineField({ name: "insightsCtaLabel", title: "Insight CTA Label", type: "string", fieldset: "insightsArchitecture" }),
+    defineField({ name: "finalCta", title: "Final CTA", type: "pageCtaSection", fieldset: "finalCtaArchitecture" }),
+    defineField({ name: "seo", title: "SEO", type: "sharedSeo", fieldset: "seo" }),
 
     defineField({
       name: "solutionsPreviewImage",

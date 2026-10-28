@@ -172,7 +172,7 @@ export default function PackagesControlPanel({ packages }: { packages?: PackageI
               </span>
               <h2 className="mt-4 text-xl font-bold text-slate-950">Package collection belum berisi data aktif.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-                Panel menampilkan blueprint paket MIT sebagai preview aman. Tambahkan package di Sanity agar daftar ini membaca data real.
+                Panel menampilkan blueprint paket Emitech sebagai preview aman. Tambahkan package di Sanity agar daftar ini membaca data real.
               </p>
             </div>
             <AdminActionLink

@@ -38,7 +38,7 @@ export default async function AdminLoginPage({
         className="w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm"
       >
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-          MIT Admin
+          Emitech Admin
         </p>
 
         <h1 className="mt-3 text-4xl font-semibold tracking-tight">

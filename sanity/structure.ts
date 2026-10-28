@@ -12,144 +12,103 @@ import {
   MenuIcon,
   PackageIcon,
   StackIcon,
-  StarIcon,
 } from "@sanity/icons";
 import type { ListItemBuilder, StructureBuilder, StructureResolver } from "sanity/structure";
 
 const singleton = (
   S: StructureBuilder,
+  id: string,
   title: string,
   schemaType: string,
   documentId: string,
   icon?: ComponentType
 ): ListItemBuilder => {
   const item = S.listItem()
-    .id(documentId)
+    .id(id)
     .title(title)
-    .child(S.document().schemaType(schemaType).documentId(documentId));
-
+    .child(S.document().id(`${id}-document`).title(title).schemaType(schemaType).documentId(documentId));
   return icon ? item.icon(icon) : item;
 };
 
 const documentList = (
   S: StructureBuilder,
+  id: string,
   schemaType: string,
   title: string,
   icon?: ComponentType
 ): ListItemBuilder => {
-  const item = S.documentTypeListItem(schemaType).id(schemaType).title(title);
-
+  const item = S.documentTypeListItem(schemaType).id(id).title(title);
   return icon ? item.icon(icon) : item;
 };
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("MIT CMS")
+    .title("Emitech Studio")
     .items([
       S.listItem()
-        .id("homepage")
-        .title("Halaman Statis")
-        .icon(HomeIcon)
-        .child(
-          S.list()
-            .title("Halaman Statis")
-            .items([
-              singleton(S, "Homepage", "homepage", "homepage", HomeIcon),
-              singleton(S, "About", "about", "about", DocumentIcon),
-              singleton(S, "Contact", "contact", "contact", CommentIcon),
-            ])
-        ),
-      S.listItem()
         .id("pages")
-        .title("Halaman Koleksi")
-        .icon(FolderIcon)
+        .title("PAGES")
+        .icon(DocumentIcon)
         .child(
           S.list()
-            .title("Halaman Koleksi")
+            .title("Website Pages")
             .items([
-              S.listItem()
-                .id("solutions")
-                .title("Solutions")
-                .icon(StackIcon)
-                .child(
-                  S.list()
-                    .title("Solutions")
-                    .items([
-                      singleton(S, "Page Settings", "solutionsPage", "solutionsPage", CogIcon),
-                      documentList(S, "solution", "Solution Items", StackIcon),
-                    ])
-                ),
-              S.listItem()
-                .id("packages")
-                .title("Packages")
-                .icon(PackageIcon)
-                .child(
-                  S.list()
-                    .title("Packages")
-                    .items([
-                      singleton(
-                        S,
-                        "Page Settings",
-                        "packagesPageSettings",
-                        "packagesPageSettings",
-                        CogIcon
-                      ),
-                      documentList(S, "package", "Package Items", PackageIcon),
-                    ])
-                ),
-              S.listItem()
-                .id("portfolio")
-                .title("Portfolio")
-                .icon(FolderIcon)
-                .child(
-                  S.list()
-                    .title("Portfolio")
-                    .items([documentList(S, "portfolio", "Portfolio Items", FolderIcon)])
-                ),
-              S.listItem()
-                .id("case-studies")
-                .title("Case Studies")
-                .icon(CaseIcon)
-                .child(
-                  S.list()
-                    .title("Case Studies")
-                    .items([
-                      singleton(
-                        S,
-                        "Page Settings",
-                        "caseStudiesPageSettings",
-                        "caseStudiesPageSettings",
-                        CogIcon
-                      ),
-                      documentList(S, "caseStudy", "Case Study Items", CaseIcon),
-                    ])
-                ),
+              singleton(S, "homepage", "Homepage", "homepage", "homepage", HomeIcon),
+              singleton(S, "services", "Services", "solutionsPage", "solutionsPage", StackIcon),
+              singleton(S, "work", "Work", "caseStudiesPageSettings", "caseStudiesPageSettings", CaseIcon),
+              singleton(S, "pricing", "Pricing", "packagesPageSettings", "packagesPageSettings", PackageIcon),
+              singleton(S, "about", "About", "about", "about", DocumentIcon),
+              singleton(S, "contact", "Contact", "contact", "contact", CommentIcon),
             ])
         ),
       S.listItem()
         .id("content")
-        .title("Data Terpusat")
+        .title("CONTENT")
         .icon(FolderIcon)
         .child(
           S.list()
-            .title("Data Terpusat")
+            .title("Reusable Content")
             .items([
-              documentList(S, "clientLogo", "Client Logos", ImagesIcon),
-              documentList(S, "process", "Process", ComposeIcon),
-              documentList(S, "testimonial", "Testimonials", StarIcon),
+              documentList(S, "services", "solution", "Services", StackIcon),
+              documentList(S, "projects", "project", "Work", CaseIcon),
+              documentList(S, "packages", "package", "Pricing", PackageIcon),
             ])
         ),
       S.listItem()
         .id("global")
-        .title("Pengaturan Global")
+        .title("GLOBAL")
         .icon(EarthGlobeIcon)
         .child(
           S.list()
-            .title("Pengaturan Global")
+            .title("Website Settings")
             .items([
-              singleton(S, "Site Settings", "siteSettings", "siteSettings", CogIcon),
-              singleton(S, "Navbar", "navbar", "navbar", MenuIcon),
-              singleton(S, "Footer", "footer", "footer", StackIcon),
+              singleton(S, "navigation", "Navigation", "navbar", "navbar", MenuIcon),
+              singleton(S, "footer", "Footer", "footer", "footer", StackIcon),
+              singleton(S, "global-cta", "Global CTA", "globalCta", "globalCta", ComposeIcon),
+              singleton(S, "contact-information", "Contact Information", "contactInformation", "contactInformation", CommentIcon),
+              singleton(S, "social-media", "Social Media", "socialMedia", "socialMedia", EarthGlobeIcon),
+              singleton(S, "site-identity", "Site Identity", "siteIdentity", "siteIdentity", ImagesIcon),
+              singleton(S, "seo-defaults", "SEO Defaults", "seoDefaults", "seoDefaults", DocumentIcon),
+              singleton(S, "site-settings", "Site Settings", "siteSettings", "siteSettings", CogIcon),
+            ])
+        ),
+      S.divider(),
+      S.listItem()
+        .id("legacy")
+        .title("Legacy / Internal")
+        .icon(CogIcon)
+        .child(
+          S.list()
+            .title("Legacy / Internal")
+            .items([
+              documentList(S, "testimonials", "testimonial", "Testimonials"),
+              documentList(S, "impact-metrics", "impactMetric", "Impact Metrics"),
+              documentList(S, "portfolio", "portfolio", "Portfolio Items", ImagesIcon),
+              documentList(S, "case-studies", "caseStudy", "Case Study Items", CaseIcon),
+              documentList(S, "insights", "insight", "Insights", DocumentIcon),
+              documentList(S, "process", "process", "Process", ComposeIcon),
+              documentList(S, "clients", "clientLogo", "Clients", ImagesIcon),
+              documentList(S, "inner-pages", "innerPage", "Page Builder Documents"),
             ])
         ),
     ]);

@@ -1,0 +1,61 @@
+.page { background: #f5f4ef; color: #0b2630; }
+.hero { padding: 170px 4vw 7vw; }
+.heroCopy { max-width: 1040px; }
+.eyebrow { margin: 0 0 20px; color: #4f747f; font-size: 11px; font-weight: 650; letter-spacing: .2em; text-transform: uppercase; }
+.hero h1 { max-width: 1100px; margin: 0; font-size: clamp(58px, 10vw, 150px); font-weight: 720; line-height: .88; letter-spacing: -.06em; overflow-wrap: anywhere; }
+.intro { max-width: 700px; margin: 42px 0 0; color: #50646b; font-size: clamp(18px, 2vw, 25px); line-height: 1.55; }
+.heroVisual { position: relative; min-height: min(68vw, 900px); margin-top: 7vw; background: #e4e6e3; }
+.heroVisual img, .heroVisual video { width: 100%; height: 100%; object-fit: contain; }
+.metaGrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin: 0 4vw; border-top: 1px solid #cbd3d3; border-bottom: 1px solid #cbd3d3; background: #cbd3d3; }
+.metaGrid > div { min-height: 125px; padding: 24px; background: #f5f4ef; }
+.metaGrid span { color: #718087; font-size: 10px; font-weight: 650; letter-spacing: .16em; text-transform: uppercase; }
+.metaGrid p, .metaGrid a { display: block; margin: 12px 0 0; color: #0b2630; font-size: 15px; line-height: 1.5; }
+.article { padding: 10vw 0 4vw; }
+.articleSection { padding-bottom: 10vw; }
+.articleCopy { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+.articleCopy h2 { margin: 0 0 32px; font-size: clamp(38px, 5vw, 68px); font-weight: 650; line-height: 1.02; letter-spacing: -.045em; }
+.richText { color: #40565e; font-size: 18px; line-height: 1.8; }
+.richText p { margin: 0 0 1.25em; }
+.richText h3 { margin: 2em 0 .7em; color: #0b2630; font-size: 30px; line-height: 1.2; }
+.richText h4 { margin: 1.8em 0 .6em; color: #0b2630; font-size: 22px; }
+.listItem { position: relative; padding-left: 22px; }
+.listItem:before { position: absolute; top: .8em; left: 0; width: 5px; height: 5px; border-radius: 50%; background: #0788c9; content: ""; }
+.mediaWide, .mediaFull { margin: 64px auto 0; }
+.mediaWide { width: min(92vw, 1320px); }
+.mediaFull { width: 100%; }
+.mediaWide video, .mediaFull video { display: block; width: 100%; max-height: 90vh; background: #10242b; object-fit: contain; }
+.mediaWide figcaption, .mediaFull figcaption, .gallery figcaption { margin-top: 12px; color: #748489; font-size: 13px; line-height: 1.5; }
+.mediaFull figcaption { padding-inline: 4vw; }
+.mediaButton { position: relative; display: block; width: 100%; min-height: min(68vw, 880px); overflow: hidden; border: 0; padding: 0; background: #e2e5e2; cursor: zoom-in; }
+.articleImage { object-fit: contain; }
+.expandLabel { position: absolute; right: 18px; bottom: 18px; border-radius: 999px; padding: 9px 12px; background: rgba(7, 26, 37, .78); color: #fff; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.legacyDescription { max-width: 760px; margin: 0 auto; padding: 10vw 24px; color: #40565e; font-size: 19px; line-height: 1.8; white-space: pre-line; }
+.gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 3vw 4vw 12vw; }
+.gallery figure { margin: 0; }
+.gallery .mediaButton { min-height: 42vw; }
+.lightbox { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 60px; background: rgba(2, 12, 16, .96); color: #fff; }
+.viewerImage { position: relative; width: 100%; height: calc(100vh - 120px); }
+.viewerImage img { object-fit: contain; }
+.close, .viewerNav { position: absolute; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; background: rgba(2,12,16,.65); color: #fff; cursor: pointer; }
+.close { top: 22px; right: 22px; font-size: 28px; }
+.viewerNav { top: 50%; transform: translateY(-50%); }
+.previous { left: 22px; }
+.next { right: 22px; }
+.viewerCaption { position: absolute; right: 80px; bottom: 22px; left: 80px; margin: 0; color: #d2dcde; font-size: 13px; text-align: center; }
+@media (max-width: 820px) {
+  .hero { padding: 130px 20px 64px; }
+  .hero h1 { font-size: clamp(52px, 18vw, 86px); }
+  .heroVisual { min-height: 72vw; margin-top: 60px; }
+  .metaGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: 20px; }
+  .article { padding-top: 90px; }
+  .articleSection { padding-bottom: 90px; }
+  .richText { font-size: 16px; }
+  .gallery { grid-template-columns: 1fr; padding-inline: 20px; }
+  .gallery .mediaButton, .mediaButton { min-height: 72vw; }
+  .lightbox { padding: 52px 16px; }
+  .viewerImage { height: calc(100vh - 104px); }
+  .viewerNav { top: auto; bottom: 18px; transform: none; }
+  .previous { left: 16px; }
+  .next { right: 16px; }
+  .viewerCaption { right: 70px; bottom: 28px; left: 70px; }
+}

@@ -25,24 +25,128 @@ type SiteHeaderClientProps = {
   menuItems?: MenuItem[];
   ctaLabel?: string;
   ctaHref?: string;
+  ctaEnabled?: boolean;
   overlay?: boolean;
+  light?: boolean;
 };
 
 function isActivePath(pathname: string, href: string) {
+  const routeAliases: Record<string, string[]> = {
+    "/services": ["/services", "/solutions"],
+    "/pricing": ["/pricing", "/packages"],
+    "/work": ["/work", "/case-studies", "/portfolio"],
+  };
+  const activeRoutes = routeAliases[href] ?? [href];
+
   if (href === "/") {
     return pathname === "/";
   }
 
-  return pathname === href || pathname.startsWith(`${href}/`);
+  return activeRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
 }
 
-const finalNavItems = [
-  { label: "Solutions", href: "/solutions" },
-  { label: "Case Studies", href: "/case-studies" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Packages", href: "/packages" },
+const fallbackNavItems: ResolvedMenuItem[] = [
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
 ];
+
+const publicRouteMap: Record<string, ResolvedMenuItem> = {
+  "/work": { label: "Work", href: "/work" },
+  "/portfolio": { label: "Work", href: "/work" },
+  "/case-studies": { label: "Work", href: "/work" },
+  "/services": { label: "Services", href: "/services" },
+  "/solutions": { label: "Services", href: "/services" },
+  "/pricing": { label: "Pricing", href: "/pricing" },
+  "/packages": { label: "Pricing", href: "/pricing" },
+  "/about": { label: "About", href: "/about" },
+};
+
+function resolveNavItems(menuItems?: MenuItem[]): ResolvedMenuItem[] {
+  const resolved = menuItems
+    ?.flatMap((item) => {
+      const href = item.href?.trim();
+      const label = item.label?.trim();
+
+      if (!href || !label || href === "/") {
+        return [];
+      }
+
+      return [publicRouteMap[href] ?? { label, href }];
+    })
+    .filter(
+      (item, index, items) => items.findIndex((candidate) => candidate.href === item.href) === index
+    );
+
+  if (!resolved?.length) {
+    return fallbackNavItems;
+  }
+
+  const publicOrder = new Map(fallbackNavItems.map((item, index) => [item.href, index]));
+
+  return resolved.sort(
+    (a, b) => (publicOrder.get(a.href) ?? Number.MAX_SAFE_INTEGER) - (publicOrder.get(b.href) ?? Number.MAX_SAFE_INTEGER)
+  );
+}
+
+function NavIcon({ label }: { label: string }) {
+  const iconProps = {
+    "aria-hidden": true,
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    viewBox: "0 0 24 24",
+    width: 11,
+    height: 11,
+    style: { display: "inline", verticalAlign: "-1px" },
+  } as const;
+
+  if (label === "Services") {
+    return (
+      <svg {...iconProps}>
+        <rect height="7" rx="1" width="7" x="3" y="3" />
+        <rect height="7" rx="1" width="7" x="14" y="3" />
+        <rect height="7" rx="1" width="7" x="3" y="14" />
+        <rect height="7" rx="1" width="7" x="14" y="14" />
+      </svg>
+    );
+  }
+
+  if (label === "Work") {
+    return (
+      <svg {...iconProps}>
+        <path d="M3 17l6-6 4 4 8-8" />
+        <path d="M21 7v6h-6" />
+      </svg>
+    );
+  }
+
+  if (label === "Pricing") {
+    return (
+      <svg {...iconProps}>
+        <rect height="14" rx="1" width="18" x="3" y="7" />
+        <path d="M3 7l2-4h14l2 4" />
+        <path d="M10 12h4" />
+      </svg>
+    );
+  }
+
+  if (label === "About") {
+    return (
+      <svg {...iconProps}>
+        <circle cx="9" cy="8" r="3" />
+        <path d="M3 21v-2a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v2" />
+        <circle cx="18" cy="9" r="2" />
+        <path d="M16 21v-1a4 4 0 0 1 4-4h0a4 4 0 0 1 2 .5" />
+      </svg>
+    );
+  }
+
+  return null;
+}
 
 export function SiteHeaderClient({
   logoUrl,
@@ -52,40 +156,29 @@ export function SiteHeaderClient({
   menuItems,
   ctaLabel,
   ctaHref,
+  ctaEnabled = true,
   overlay = false,
+  light = false,
 }: SiteHeaderClientProps) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
-  const navItems: ResolvedMenuItem[] =
-    menuItems
-      ?.filter((item): item is ResolvedMenuItem => Boolean(item.label && item.href)) ?? finalNavItems;
-  const callToActionHref = ctaHref?.trim() || "/";
+  const navItems = resolveNavItems(menuItems);
+  const callToActionHref = ctaHref?.trim() || "/contact";
   const callToActionLabel = ctaLabel?.trim() || "Start Your Project";
   const safeBrandName = brandName.trim();
-  const useTextLogo = brandMode !== "image" || !logoUrl;
+  const useImageLogo = brandMode === "image" && Boolean(logoUrl);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isDesktopNav, setIsDesktopNav] = useState(false);
-  const transparentHeader = !isScrolled;
-  const darkOverlayHeader = true;
+  const useLightPresentation = light || isScrolled;
 
   useEffect(() => {
-    const desktopQuery = window.matchMedia("(min-width: 1024px)");
-
-    function handleResize() {
-      setIsDesktopNav(desktopQuery.matches);
-    }
-
     function handleScroll() {
-      setIsScrolled(window.scrollY > 12);
+      setIsScrolled(window.scrollY > 60);
     }
 
-    handleResize();
     handleScroll();
-    desktopQuery.addEventListener("change", handleResize);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      desktopQuery.removeEventListener("change", handleResize);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -93,38 +186,35 @@ export function SiteHeaderClient({
   return (
     <motion.header
       animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-      className="pointer-events-none fixed inset-x-0 top-3 z-50 px-3 transition-[transform] duration-300 ease-out sm:top-5 sm:px-5 lg:top-6 lg:px-0"
+      className={`pointer-events-none fixed inset-x-0 top-0 z-50 transition-all duration-[400ms] ease-out ${
+        useLightPresentation
+          ? "bg-[rgba(255,255,255,0.85)] py-4 shadow-[0_1px_0_rgba(10,19,48,0.06)] backdrop-blur-[16px]"
+          : "border-none bg-transparent py-[26px] outline-none"
+      }`}
       initial={prefersReducedMotion ? false : { opacity: 0, y: -16 }}
       transition={{ delay: 0.2, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
-        animate={{ height: isDesktopNav ? (isScrolled ? 78 : 90) : isScrolled ? 58 : 64 }}
         aria-label="Navigasi utama"
-        className={`pointer-events-auto mx-auto grid w-full max-w-[95vw] grid-cols-[auto_1fr_auto] items-center rounded-full border px-3 shadow-[0_22px_80px_rgba(2,8,23,0.18)] transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out sm:max-w-[94vw] sm:px-4 lg:max-w-[93vw] lg:grid-cols-[minmax(170px,1fr)_auto_minmax(170px,1fr)] lg:px-5 ${
-          transparentHeader
-            ? "border-white/16 bg-slate-950/[0.16] backdrop-blur-[14px]"
-            : "border-white/22 bg-[rgba(2,10,28,0.76)] shadow-[0_26px_90px_rgba(2,8,23,0.28)] backdrop-blur-[24px]"
-        }`}
+        className="pointer-events-auto mx-auto grid w-full grid-cols-[auto_1fr_auto] items-center border-none bg-transparent px-[5%] outline-none transition-all duration-[400ms] ease-out lg:grid-cols-[minmax(180px,1fr)_auto_minmax(180px,1fr)]"
         initial={false}
         transition={{ duration: prefersReducedMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
       >
         <Link
           href="/"
-          className="flex min-w-0 items-center text-white"
+          className={`flex min-w-0 items-center font-['Plus_Jakarta_Sans',sans-serif] text-[19px] font-bold transition-colors duration-[400ms] ${useLightPresentation ? "text-[#0A1330]" : "text-white"}`}
           aria-label={safeBrandName ? `${safeBrandName} homepage` : "Homepage"}
         >
-          {useTextLogo ? (
-            <span className="block max-w-[42vw] truncate whitespace-nowrap text-base font-semibold tracking-[0.02em] text-white sm:max-w-none md:text-lg">
-              {safeBrandName || "MIT Technology"}
-            </span>
+          {useImageLogo ? (
+            <BrandLogo
+              imageUrl={logoUrl}
+              alt={logoAlt || safeBrandName}
+              brandName={safeBrandName}
+              compact
+            />
           ) : (
-            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/18 bg-white/[0.09] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur md:h-12 md:w-12">
-              <BrandLogo
-                imageUrl={logoUrl}
-                alt={logoAlt || safeBrandName}
-                brandName={safeBrandName}
-                compact
-              />
+            <span className="block max-w-[42vw] truncate whitespace-nowrap sm:max-w-none">
+              {safeBrandName || "Emitech"}
             </span>
           )}
         </Link>
@@ -138,19 +228,20 @@ export function SiteHeaderClient({
               <Link
                 href={href}
                 key={href}
-                className={`group/nav relative px-0.5 py-3 text-[14px] font-medium transition duration-300 xl:text-[15px] ${
+                className={`group/nav relative inline-flex items-center gap-[7px] px-0.5 pb-1 text-[13.5px] font-medium opacity-85 transition duration-300 ${
                   active
-                    ? "text-white"
-                    : darkOverlayHeader
-                      ? "text-white/75 hover:text-white"
-                      : "text-slate-600 hover:text-navy"
+                    ? "text-[#4D7FFF] opacity-100"
+                    : useLightPresentation
+                      ? "text-[#0A1330] opacity-75 hover:opacity-100"
+                      : "text-[rgba(255,255,255,0.92)] hover:opacity-100"
                 }`}
               >
+                <NavIcon label={item.label} />
                 {item.label}
                 <span
-                  className={`absolute bottom-1 left-0 h-0.5 rounded-full transition-all duration-300 ${
+                  className={`absolute bottom-0 left-0 h-px bg-[#4D7FFF] transition-all duration-300 ${
                     active ? "w-full" : "w-0 group-hover/nav:w-full"
-                  } ${darkOverlayHeader ? "bg-[#60a5fa]" : "bg-primary"}`}
+                  }`}
                 />
               </Link>
             );
@@ -158,19 +249,25 @@ export function SiteHeaderClient({
         </div>
 
         <div className="flex items-center justify-end gap-3">
-          <Link
-            href={callToActionHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-full border border-white/16 bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_16px_48px_rgba(2,8,23,0.2)] transition duration-300 hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-[0_22px_64px_rgba(2,8,23,0.28)] md:inline-flex lg:px-6 lg:py-3"
+          {ctaEnabled ? <Link
+            href={callToActionHref || "/contact"}
+            className={`hidden items-center gap-2 rounded-full border bg-transparent px-[22px] py-2.5 text-[13px] font-semibold transition duration-300 hover:border-[#FF6A3D] hover:bg-[#FF6A3D] hover:text-white md:inline-flex ${
+              useLightPresentation
+                ? "border-[#0A1330] text-[#0A1330]"
+                : "border-[rgba(255,255,255,0.6)] text-white"
+            }`}
           >
             {callToActionLabel}
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </Link> : null}
 
           <details className="group relative lg:hidden">
             <summary
-              className="inline-flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition duration-200 hover:border-white/35 hover:bg-white/15 md:h-11 md:w-11 [&::-webkit-details-marker]:hidden"
+              className={`inline-flex h-[38px] w-[38px] cursor-pointer list-none items-center justify-center rounded-full border bg-transparent transition duration-300 [&::-webkit-details-marker]:hidden ${
+                useLightPresentation
+                  ? "border-[#0A1330] text-[#0A1330]"
+                  : "border-[rgba(255,255,255,0.5)] text-white"
+              }`}
             >
               <span className="sr-only">Buka navigasi</span>
               <Menu className="h-5 w-5" />
@@ -197,15 +294,13 @@ export function SiteHeaderClient({
                   );
                 })}
 
-                <Link
+                {ctaEnabled ? <Link
                   href={callToActionHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white px-4 py-3 text-sm font-semibold text-slate-950 shadow-[0_16px_44px_rgba(2,8,23,0.22)]"
                 >
                   {callToActionLabel}
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </Link> : null}
               </div>
             </div>
           </details>

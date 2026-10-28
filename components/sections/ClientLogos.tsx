@@ -1,5 +1,4 @@
 import type { ClientLogoItem } from "@/lib/sanity/queries";
-import { TextReveal } from "@/components/motion/Motion";
 import { urlFor } from "@/sanity/lib/image";
 
 type ClientLogosProps = {
@@ -34,7 +33,7 @@ function getLogoUrl(logo?: ClientLogoItem["logo"]) {
 function ClientLogoImage({ item, logoUrl }: { item: ClientLogoItem; logoUrl: string }) {
   if (!logoUrl) {
     return (
-      <span className="max-w-full text-center text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+      <span className="text-logo">
         {item.name}
       </span>
     );
@@ -43,91 +42,57 @@ function ClientLogoImage({ item, logoUrl }: { item: ClientLogoItem; logoUrl: str
   return (
     <img
       alt={item.logo?.alt ?? item.name ?? "Client logo"}
-      className="block max-h-[70px] max-w-[86%] object-contain object-center opacity-[0.55] grayscale transition duration-200 ease-out group-hover:opacity-100 group-hover:grayscale-0"
       src={logoUrl}
     />
   );
 }
 
-export function ClientLogos({ eyebrow, title, description, logos = [] }: ClientLogosProps) {
+export function ClientLogos({ eyebrow, title, logos = [] }: ClientLogosProps) {
   const visibleLogos = logos.filter((item) => item.name && item.featured !== false);
   const sectionEyebrow = eyebrow?.trim() || "";
   const sectionTitle = title?.trim() || "";
-  const sectionDescription = description?.trim() || "";
+  const stripLabel = sectionEyebrow || sectionTitle || "";
+  const repeatCount = visibleLogos.length > 0 && visibleLogos.length < 4 ? 4 : 2;
+  const marqueeLogos = visibleLogos.length > 0
+    ? Array.from({ length: repeatCount }, () => visibleLogos).flat()
+    : [];
+
+  if (!stripLabel && visibleLogos.length === 0) {
+    return null;
+  }
 
   return (
-    <section
-      aria-label="Client logos"
-      id="client-logos"
-      className="bg-[linear-gradient(180deg,#020817_0%,#020817_88%,#ffffff_100%)] py-12 pb-14 lg:py-16 lg:pb-20"
-    >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl text-center">
-          {sectionEyebrow ? (
-            <TextReveal
-              as="p"
-              className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/80"
-              direction="down"
-              mode="chars"
-              stagger={0.018}
-              text={sectionEyebrow}
-            />
-          ) : null}
-          {sectionTitle ? (
-            <TextReveal
-              as="h2"
-              className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-4xl lg:text-[2.75rem]"
-              direction="up"
-              mode="words"
-              text={sectionTitle}
-            />
-          ) : null}
-          {sectionDescription ? (
-            <TextReveal
-              as="p"
-              className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-400 md:text-base md:leading-7"
-              direction="up"
-              mode="lines"
-              text={sectionDescription}
-            />
-          ) : null}
+    <section aria-label="Client logos" className="strip" id="client-logos">
+      {stripLabel ? <div className="strip-label">{stripLabel}</div> : null}
+
+      {marqueeLogos.length > 0 ? (
+        <div className="strip-track">
+          {marqueeLogos.map((item, index) => {
+            const logoUrl = getLogoUrl(item.logo);
+            const logo = <ClientLogoImage item={item} logoUrl={logoUrl} />;
+
+            return item.websiteUrl ? (
+              <a
+                aria-label={item.name}
+                className="client-logo-card"
+                href={item.websiteUrl}
+                key={`${item.name}-${index}`}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {logo}
+              </a>
+            ) : (
+              <div
+                className="client-logo-card"
+                key={`${item.name}-${index}`}
+              >
+                {logo}
+              </div>
+            );
+          })}
         </div>
-
-        {visibleLogos.length > 0 ? (
-          <div className="mx-auto mt-10 grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {visibleLogos.map((item) => {
-              const logoUrl = getLogoUrl(item.logo);
-              const logo = <ClientLogoImage item={item} logoUrl={logoUrl} />;
-
-              return item.websiteUrl ? (
-                <a
-                  aria-label={item.name}
-                  className="client-logo-card group flex h-[106px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-white px-10 py-6"
-                  href={item.websiteUrl}
-                  key={item.name}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {logo}
-                </a>
-              ) : (
-                <div
-                  className="client-logo-card group flex h-[106px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-white px-10 py-6"
-                  key={item.name}
-                >
-                  {logo}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="mx-auto mt-10 max-w-2xl rounded-[1.5rem] border border-dashed border-white/20 bg-white/5 px-8 py-8 text-center">
-            <p className="text-sm font-medium text-slate-300">
-              Client logos are not available yet.
-            </p>
-          </div>
-        )}
-      </div>
+      ) : null}
     </section>
   );
 }

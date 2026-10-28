@@ -28,7 +28,7 @@ export function ImpactMetrics({ metrics = [], eyebrow, title, description }: Imp
             {displayEyebrow ? (
               <TextReveal
                 as="p"
-                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                className="text-xs font-semibold uppercase tracking-[0.14em] text-primary"
                 direction="down"
                 mode="chars"
                 stagger={0.018}
@@ -38,7 +38,7 @@ export function ImpactMetrics({ metrics = [], eyebrow, title, description }: Imp
             {displayTitle ? (
               <TextReveal
                 as="h2"
-                className="mt-3 text-3xl font-semibold tracking-tight text-navy md:mt-4 md:text-5xl"
+                className="mx-auto mt-3 max-w-[760px] text-[36px] font-bold leading-[1.12] tracking-[-0.025em] text-navy md:mt-4 md:text-[clamp(38px,4vw,54px)]"
                 direction="up"
                 mode="words"
                 text={displayTitle}
@@ -47,7 +47,7 @@ export function ImpactMetrics({ metrics = [], eyebrow, title, description }: Imp
             {displayDescription ? (
             <TextReveal
               as="p"
-              className="mt-4 text-base leading-7 text-slate-600 md:text-lg md:leading-8"
+              className="mx-auto mt-4 max-w-[700px] text-lg font-normal leading-[1.7] text-slate-600 md:text-[19px]"
               direction="up"
               mode="lines"
               text={displayDescription}
@@ -67,12 +67,12 @@ export function ImpactMetrics({ metrics = [], eyebrow, title, description }: Imp
                     </p>
                   ) : null}
                   <ScaleIn>
-                    <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 md:mt-5 md:text-6xl">
+                    <p className="mt-2 text-[40px] font-bold tracking-tight text-slate-950 md:mt-5 md:text-[clamp(44px,5vw,64px)]">
                       {item.value}
                     </p>
                   </ScaleIn>
-                  <h3 className="mt-1.5 text-sm font-semibold leading-5 text-slate-950 md:mt-5 md:text-lg">{cleanLabel(item.label)}</h3>
-                  <p className="mt-1.5 text-xs leading-5 text-slate-500 md:mt-3 md:text-base md:leading-7">{item.description}</p>
+                  <h3 className="mt-1.5 text-xl font-semibold leading-[1.25] text-slate-950 md:mt-5 md:text-[23px]">{cleanLabel(item.label)}</h3>
+                  <p className="mt-1.5 text-sm font-normal leading-[1.7] text-slate-500 md:mt-3 md:text-base">{item.description}</p>
                 </article>
               </StaggerItem>
             ))}

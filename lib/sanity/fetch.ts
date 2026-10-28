@@ -1,19 +1,25 @@
 import { client } from "@/sanity/lib/client";
-import { getCaseStudyUrlSlug, toUrlSlug } from "@/lib/routing/slug";
+import { getCaseStudyCompatibilityScore } from "@/lib/routing/slug";
 import {
   aboutQuery,
   caseStudiesPageSettingsQuery,
   caseStudiesQuery,
+  caseStudyIdentitiesQuery,
   caseStudyBySlugQuery,
   clientLogosQuery,
   contactQuery,
   footerQuery,
+  homepageFooterGlobalsQuery,
   homepageQuery,
+  insightsQuery,
+  insightBySlugQuery,
   impactMetricsQuery,
   innerPageBySlugQuery,
   navbarQuery,
   packagesPageSettingsQuery,
   packagesQuery,
+  projectsQuery,
+  projectBySlugQuery,
   portfolioQuery,
   processQuery,
   siteSettingsQuery,
@@ -28,6 +34,9 @@ import {
   type Contact,
   type Footer,
   type Homepage,
+  type HomepageFooterGlobals,
+  type HomepageInsight,
+  type HomepageProject,
   type ImpactMetricItem,
   type InnerPage,
   type Navbar,
@@ -102,6 +111,36 @@ export function getPackages() {
   return sanityFetch<PackageItem[]>(packagesQuery, ["packages"], []);
 }
 
+export function getProjects() {
+  return sanityFetch<HomepageProject[]>(projectsQuery, ["projects"], []);
+}
+
+export function getProjectBySlug(slug: string) {
+  return client
+    .fetch<HomepageProject | null>(
+      projectBySlugQuery,
+      { slug },
+      getFetchOptions(["projects", `project:${slug}`])
+    )
+    .catch((error) => {
+      console.error("Sanity project fetch failed", error);
+      return null;
+    });
+}
+
+export function getInsights() {
+  return sanityFetch<HomepageInsight[]>(insightsQuery, ["insights"], []);
+}
+
+export function getInsightBySlug(slug: string) {
+  return client
+    .fetch<HomepageInsight | null>(insightBySlugQuery, { slug }, getFetchOptions(["insights", `insight:${slug}`]))
+    .catch((error) => {
+      console.error("Sanity insight fetch failed", error);
+      return null;
+    });
+}
+
 export function getPackagesPageSettings() {
   return sanityFetch<PackagesPageSettings>(packagesPageSettingsQuery, ["packagesPageSettings"], {});
 }
@@ -146,17 +185,25 @@ export async function getCaseStudyBySlug(slug: string) {
       return data;
     }
 
-    const caseStudies = await getCaseStudies();
-    const normalizedSlug = toUrlSlug(slug);
+    const identities = await client.fetch<Array<Pick<CaseStudyItem, "_id" | "title" | "slug" | "client">>>(
+      caseStudyIdentitiesQuery,
+      {},
+      getFetchOptions(["caseStudies", `caseStudy:${slug}`])
+    );
+    const matches = identities
+      .map((caseStudy) => ({caseStudy, score: getCaseStudyCompatibilityScore(caseStudy, slug)}))
+      .filter((match): match is {caseStudy: Pick<CaseStudyItem, "_id" | "title" | "slug" | "client">; score: number} => match.score !== null)
+      .sort((left, right) => left.score - right.score);
 
-    return (
-      caseStudies.find((caseStudy) => {
-        return (
-          getCaseStudyUrlSlug(caseStudy) === normalizedSlug ||
-          toUrlSlug(caseStudy.slug) === normalizedSlug ||
-          toUrlSlug(caseStudy.title) === normalizedSlug
-        );
-      }) ?? null
+    if (!matches.length) return null;
+
+    const [bestMatch, secondMatch] = matches;
+    if (secondMatch?.score === bestMatch.score || !bestMatch.caseStudy.slug) return null;
+
+    return client.fetch<CaseStudyItem | null>(
+      caseStudyBySlugQuery,
+      {slug: bestMatch.caseStudy.slug},
+      getFetchOptions(["caseStudies", `caseStudy:${bestMatch.caseStudy.slug}`])
     );
   } catch (error) {
     console.error("Sanity fetch failed", error);
@@ -193,6 +240,10 @@ export function getNavbar() {
 
 export function getFooter() {
   return sanityFetch<Footer>(footerQuery, ["footer"], {});
+}
+
+export function getHomepageFooterGlobals() {
+  return sanityFetch<HomepageFooterGlobals>(homepageFooterGlobalsQuery, ["footer", "contactInformation", "socialMedia", "siteIdentity", "navbar"], {});
 }
 
 export function getSiteSettings() {

@@ -26,7 +26,7 @@ function hasFooterData(footer?: Footer, siteSettings?: SiteSettings) {
 }
 
 function getBrandName(siteSettings?: SiteSettings) {
-  return siteSettings?.companyName || siteSettings?.siteTitle || "MIT Technology";
+  return siteSettings?.companyName || siteSettings?.siteTitle || "Emitech";
 }
 
 function getFooterDescription(footer?: Footer, siteSettings?: SiteSettings) {
@@ -211,7 +211,7 @@ export default function FooterControlPanel({ footer, siteSettings }: { footer?: 
   const legalSystem = buildLegalSystem(footer, siteSettings);
   const visualSettings = buildVisualSettings(footer, siteSettings);
   const readinessChecklist = buildReadiness(footer, siteSettings);
-  const brandName = brandClosingPreview[0]?.[1] || "MIT Technology";
+  const brandName = brandClosingPreview[0]?.[1] || "Emitech";
   const tagline = brandClosingPreview[1]?.[1] || "Membangun fondasi digital untuk pertumbuhan bisnis.";
   const description = brandClosingPreview[2]?.[1] || "";
   const ctaLabel = brandClosingPreview[3]?.[1] || "Start Your Project";

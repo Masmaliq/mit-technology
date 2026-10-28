@@ -71,7 +71,7 @@ function PricingPreview({
             {displayEyebrow ? (
               <TextReveal
                 as="p"
-                className="text-xs font-semibold uppercase tracking-[0.32em] text-primary"
+                className="text-xs font-semibold uppercase tracking-[0.14em] text-primary"
                 direction="down"
                 mode="chars"
                 stagger={0.018}
@@ -81,7 +81,7 @@ function PricingPreview({
             {displayTitle ? (
               <TextReveal
                 as="h2"
-                className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 md:mt-4 md:text-5xl"
+                className="mt-3 max-w-[760px] text-[34px] font-semibold leading-[1.12] tracking-[-0.025em] text-slate-950 md:mt-4 md:text-[clamp(34px,3.4vw,48px)]"
                 direction="left"
                 mode="words"
                 text={displayTitle}
@@ -92,7 +92,7 @@ function PricingPreview({
             {displayDescription ? (
                 <TextReveal
                   as="p"
-                  className="text-base leading-7 text-slate-600 md:text-lg md:leading-8"
+                  className="max-w-[620px] text-base font-normal leading-[1.7] text-slate-600 md:text-lg"
                   direction="up"
                   mode="lines"
                   text={displayDescription}
@@ -128,7 +128,7 @@ function PricingPreview({
             >
               <article className="flex h-full flex-col">
                 <div className="flex items-start justify-between gap-4">
-                  <p className={`text-[0.68rem] font-semibold uppercase tracking-[0.22em] ${item.featured ? "text-primary" : "text-slate-500"}`}>
+                  <p className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${item.featured ? "text-primary" : "text-slate-500"}`}>
                     {item.featured ? displayFeaturedCardLabel : displayCardLabel}
                   </p>
                   {item.featured ? (
@@ -138,18 +138,18 @@ function PricingPreview({
                   ) : null}
                 </div>
 
-                <h3 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 md:mt-5">
+                <h3 className="mt-3 text-2xl font-semibold leading-[1.25] tracking-tight text-slate-950 md:mt-5 md:text-[26px]">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600 md:mt-3 md:min-h-[4.75rem]">
+                <p className="mt-2 text-sm font-normal leading-[1.7] text-slate-600 md:mt-3 md:min-h-[4.75rem] md:text-base">
                     {cleanDescription(item.description)}
                 </p>
 
                 <div className="mt-3 rounded-2xl border border-slate-200/80 bg-slate-50/70 px-4 py-3 md:mt-5 md:py-4">
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-slate-400">
                     {displayPriceLabel}
                   </p>
-                  <p className="mt-1.5 text-3xl font-semibold tracking-tight text-slate-950 md:mt-2">
+                  <p className="mt-1.5 text-2xl font-semibold tracking-tight text-slate-800 md:mt-2 md:text-[26px]">
                     {item.startingPrice}
                   </p>
                 </div>

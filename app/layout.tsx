@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { GlobalWhatsAppCta } from "@/components/layout/GlobalWhatsAppCta";
+import { FrontendMotion } from "@/components/motion/FrontendMotion";
 import { createCmsMetadata } from "@/lib/sanity/metadata";
 import "./globals.css";
 
@@ -13,7 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body>{children}</body>
+      <body>
+        <FrontendMotion />
+        {children}
+        <GlobalWhatsAppCta />
+      </body>
     </html>
   );
 }

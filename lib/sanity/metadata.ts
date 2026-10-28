@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSiteSettings } from "./fetch";
+import { getHomepageFooterGlobals, getSiteSettings } from "./fetch";
 import type { PageSeo, SeoFields, SiteSettings } from "./queries";
 
 type MetadataInput = SeoFields & {
@@ -37,7 +37,9 @@ function getCanonicalPath(path?: string) {
 }
 
 export async function createCmsMetadata(input: MetadataInput = {}): Promise<Metadata> {
-  const siteSettings = await getSiteSettings();
+  const [siteSettings, globals] = await Promise.all([getSiteSettings(), getHomepageFooterGlobals()]);
+  const defaults = globals.seoDefaults || {};
+  const identity = globals.identity || {};
   const pageSeo = getPageSeo(siteSettings, input.page);
   const siteUrl = getSiteUrl(siteSettings);
   const canonicalPath = getCanonicalPath(input.path);
@@ -45,16 +47,21 @@ export async function createCmsMetadata(input: MetadataInput = {}): Promise<Meta
     input.seoTitle ||
     pageSeo?.title ||
     input.title ||
+    defaults.defaultTitle ||
+    defaults.siteName ||
+    identity.siteName ||
     siteSettings.companyName ||
     siteSettings.siteTitle;
   const description =
     input.seoDescription ||
     pageSeo?.description ||
     input.description ||
+    defaults.defaultDescription ||
+    identity.shortDescription ||
     siteSettings.siteDescription ||
     siteSettings.description ||
     "";
-  const image = input.seoImage?.url || pageSeo?.ogImage?.url || siteSettings.ogImage?.url;
+  const image = input.seoImage?.url || pageSeo?.ogImage?.url || defaults.defaultOpenGraphImage?.url || siteSettings.ogImage?.url;
   const keywords = toKeywords(input.seoKeywords || pageSeo?.keywords || siteSettings.keywords);
 
   return {
@@ -68,8 +75,8 @@ export async function createCmsMetadata(input: MetadataInput = {}): Promise<Meta
         }
       : undefined,
     icons: {
-      icon: siteSettings.favicon?.url || "/favicon.png",
-      apple: siteSettings.favicon?.url || "/favicon-180.png",
+      icon: identity.favicon?.url || siteSettings.favicon?.url || "/favicon.png",
+      apple: identity.favicon?.url || siteSettings.favicon?.url || "/favicon-180.png",
     },
     openGraph: {
       title,
@@ -79,7 +86,7 @@ export async function createCmsMetadata(input: MetadataInput = {}): Promise<Meta
       type: "website",
     },
     twitter: {
-      card: image ? "summary_large_image" : "summary",
+      card: defaults.twitterCardType || (image ? "summary_large_image" : "summary"),
       title,
       description,
       images: image ? [image] : undefined,

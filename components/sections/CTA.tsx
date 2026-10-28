@@ -36,7 +36,7 @@ export function CTA({
         <div className="relative z-10 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
             {ctaEyebrow ? (
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-blue-100">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-blue-100">
                 <CalendarCheck className="h-4 w-4" />
                 <TextReveal as="span" direction="down" mode="chars" stagger={0.018} text={ctaEyebrow} />
               </div>
@@ -44,7 +44,7 @@ export function CTA({
             {ctaTitle ? (
               <TextReveal
                 as="h2"
-                className="max-w-3xl text-3xl font-semibold tracking-tight md:text-6xl"
+                className="max-w-[760px] text-[34px] font-semibold leading-[1.12] tracking-[-0.025em] md:text-[clamp(34px,3.4vw,48px)]"
                 direction="up"
                 mode="words"
                 text={ctaTitle}
@@ -53,7 +53,7 @@ export function CTA({
             {ctaDescription ? (
               <TextReveal
                 as="p"
-                className="mt-4 max-w-2xl text-base leading-7 text-slate-300 md:mt-5 md:text-lg md:leading-8"
+                className="mt-4 max-w-[620px] text-base font-normal leading-[1.7] text-slate-300 md:mt-5 md:text-lg"
                 direction="up"
                 mode="lines"
                 text={ctaDescription}

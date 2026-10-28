@@ -1,7 +1,8 @@
-import { Star } from "lucide-react";
-import { StaggerContainer, StaggerItem, TextReveal } from "@/components/motion/Motion";
-import type { SanityImageValue, TestimonialItem } from "@/lib/sanity/queries";
-import { TestimonialAvatar } from "@/components/sections/TestimonialAvatar";
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { TextReveal } from "@/components/motion/Motion";
+import type { TestimonialItem } from "@/lib/sanity/queries";
 
 type TestimonialsProps = {
   eyebrow?: string;
@@ -10,63 +11,50 @@ type TestimonialsProps = {
   testimonials?: TestimonialItem[];
 };
 
-function isSvgImage(image?: SanityImageValue) {
-  const extension = image?.asset?.extension?.toLowerCase();
-  const mimeType = image?.asset?.mimeType?.toLowerCase();
-  const url = image?.asset?.url || image?.url || "";
-
-  return extension === "svg" || mimeType === "image/svg+xml" || url.toLowerCase().includes(".svg");
-}
-
-function getAvatarImageUrl(testimonial: TestimonialItem) {
-  const imageUrl =
-    testimonial.image?.asset?.url ||
-    testimonial.photo?.asset?.url ||
-    testimonial.avatar?.asset?.url ||
-    testimonial.logo?.asset?.url ||
-    testimonial.clientLogo?.asset?.url ||
-    testimonial.image?.url ||
-    testimonial.photo?.url ||
-    testimonial.avatar?.url ||
-    testimonial.logo?.url ||
-    testimonial.clientLogo?.url ||
-    null;
-
-  return typeof imageUrl === "string" && imageUrl.startsWith("http") ? imageUrl : null;
-}
-
-function getAvatarImage(testimonial: TestimonialItem) {
-  return (
-    testimonial.avatar ||
-    testimonial.image ||
-    testimonial.logo ||
-    testimonial.photo ||
-    testimonial.clientLogo
-  );
-}
-
 export function Testimonials({ eyebrow, title, description, testimonials = [] }: TestimonialsProps) {
-  const visibleTestimonials = testimonials
-    .filter((item) => item.quote && item.name && item.featured !== false)
-    .slice(0, 3);
-  const displayEyebrow = eyebrow?.trim() || "";
+  const visibleTestimonials = useMemo(
+    () => testimonials.filter((item) => item.quote && item.name && item.featured !== false),
+    [testimonials],
+  );
+  const [activeIndex, setActiveIndex] = useState(0);
+  const hasMultipleTestimonials = visibleTestimonials.length > 1;
+  const activeTestimonial = visibleTestimonials[activeIndex];
+  const displayEyebrow = eyebrow?.trim() || (visibleTestimonials.length > 0 ? "TESTIMONIALS" : "");
   const displayTitle = title?.trim() || "";
   const displayDescription = description?.trim() || "";
   const hasHeading = Boolean(displayEyebrow || displayTitle || displayDescription);
+
+  useEffect(() => {
+    if (!hasMultipleTestimonials) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % visibleTestimonials.length);
+    }, 6000);
+
+    return () => window.clearInterval(interval);
+  }, [hasMultipleTestimonials, visibleTestimonials.length]);
+
+  useEffect(() => {
+    if (activeIndex > visibleTestimonials.length - 1) {
+      setActiveIndex(0);
+    }
+  }, [activeIndex, visibleTestimonials.length]);
 
   if (!hasHeading && visibleTestimonials.length === 0) {
     return null;
   }
 
   return (
-    <section id="testimonials" aria-label="Testimonials" className="bg-white py-10 lg:py-16">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section id="testimonials" aria-label="Testimonials" className="bg-white py-28 lg:py-36">
+      <div className="mx-auto flex max-w-6xl flex-col items-center px-6 text-center lg:px-8">
         {hasHeading ? (
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-3xl">
             {displayEyebrow ? (
               <TextReveal
                 as="p"
-                className="text-sm font-semibold uppercase tracking-[0.24em] text-primary"
+                className="text-xs font-semibold uppercase tracking-[0.14em] text-primary"
                 direction="down"
                 mode="chars"
                 stagger={0.018}
@@ -76,7 +64,7 @@ export function Testimonials({ eyebrow, title, description, testimonials = [] }:
             {displayTitle ? (
               <TextReveal
                 as="h2"
-                className="mt-4 text-3xl font-semibold tracking-tight text-navy md:text-5xl"
+                className="mx-auto mt-4 max-w-[820px] text-[36px] font-bold leading-[1.12] tracking-[-0.025em] text-navy sm:text-[clamp(38px,4vw,54px)]"
                 direction="up"
                 mode="words"
                 text={displayTitle}
@@ -85,7 +73,7 @@ export function Testimonials({ eyebrow, title, description, testimonials = [] }:
             {displayDescription ? (
               <TextReveal
                 as="p"
-                className="mt-5 text-lg leading-8 text-slate-600"
+                className="mx-auto mt-5 max-w-[760px] text-lg font-normal leading-[1.7] text-slate-600 md:text-[19px]"
                 direction="up"
                 mode="lines"
                 text={displayDescription}
@@ -94,62 +82,41 @@ export function Testimonials({ eyebrow, title, description, testimonials = [] }:
           </div>
         ) : null}
 
-        {visibleTestimonials.length > 0 ? (
-          <StaggerContainer className="mt-10 grid gap-5 lg:mt-12 lg:grid-cols-3">
-            {visibleTestimonials.map((item) => {
-              const rating = Math.max(1, Math.min(item.rating ?? 5, 5));
-              const testimonialImage = getAvatarImage(item);
-              const avatarUrl = getAvatarImageUrl(item);
-              const isLogoAvatar = isSvgImage(testimonialImage);
+        {activeTestimonial ? (
+          <figure
+            className="mx-auto mt-16 max-w-[900px] opacity-100 transition-opacity duration-500 ease-out"
+            key={`${activeTestimonial.name}-${activeIndex}`}
+          >
+            <blockquote className="mx-auto max-w-[900px] text-[28px] font-medium leading-[1.45] tracking-[-0.015em] text-[#0A1330] transition-opacity duration-500 md:text-[32px] lg:text-[clamp(28px,2.7vw,40px)]">
+              &ldquo;{activeTestimonial.quote}&rdquo;
+            </blockquote>
+            <figcaption className="mt-10">
+              <p className="text-xl font-semibold text-navy md:text-[21px]">{activeTestimonial.name}</p>
+              {[activeTestimonial.position, activeTestimonial.company].filter(Boolean).length > 0 ? (
+                <p className="mt-2 text-base font-normal leading-7 text-[#5A6584]">
+                  {[activeTestimonial.position, activeTestimonial.company].filter(Boolean).join(" · ")}
+                </p>
+              ) : null}
+            </figcaption>
+          </figure>
+        ) : null}
 
-              return (
-                <StaggerItem
-                  className="group flex min-h-[300px] flex-col justify-between rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.06)] transition duration-300 ease-out hover:-translate-y-1.5 hover:border-primary/35 hover:shadow-[0_34px_96px_rgba(37,99,235,0.14)] md:min-h-[360px] md:p-7"
-                  key={`${item.name}-${item.company ?? "testimonial"}`}
-                >
-                  <figure className="flex h-full flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-1 text-primary">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <Star
-                            aria-hidden="true"
-                            className={index < rating ? "h-4 w-4 fill-current" : "h-4 w-4 text-slate-200"}
-                            key={index}
-                          />
-                        ))}
-                      </div>
-                      <blockquote className="mt-6 text-lg leading-8 tracking-tight text-navy md:mt-8 md:text-xl md:leading-9">
-                        "{item.quote}"
-                      </blockquote>
-                    </div>
-
-                    <figcaption className="mt-8 flex items-center gap-4 border-t border-slate-100 pt-5 md:mt-10 md:pt-6">
-                      <div className="shrink-0 transition duration-300 ease-out group-hover:scale-[1.03]">
-                        <TestimonialAvatar
-                          imageUrl={avatarUrl}
-                          isLogo={isLogoAvatar}
-                          name={item.name}
-                        />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-navy">{item.name}</p>
-                        <p className="mt-1 text-sm leading-6 text-slate-500">
-                          {[item.position, item.company].filter(Boolean).join(", ")}
-                        </p>
-                      </div>
-                    </figcaption>
-                  </figure>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
-        ) : (
-          <div className="mx-auto mt-14 max-w-2xl rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 px-8 py-10 text-center">
-            <p className="text-sm font-medium text-slate-500">
-              Testimonials are not available yet.
-            </p>
+        {hasMultipleTestimonials ? (
+          <div className="mt-10 flex items-center justify-center gap-2.5" aria-label="Testimonial navigation">
+            {visibleTestimonials.map((item, index) => (
+              <button
+                aria-label={`Show testimonial from ${item.name}`}
+                aria-pressed={index === activeIndex}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  index === activeIndex ? "w-7 bg-navy" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                }`}
+                key={`${item.name}-${index}`}
+                onClick={() => setActiveIndex(index)}
+                type="button"
+              />
+            ))}
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   );

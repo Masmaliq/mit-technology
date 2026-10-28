@@ -1,0 +1,274 @@
+.scrollProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  height: 2px;
+  background: #4D7FFF;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 5%;
+  background: transparent;
+  transition: all 0.4s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 rgba(10,19,48,0.06);
+  padding: 16px 5%;
+}
+
+.logo {
+  color: #FFFFFF;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.4s ease;
+}
+
+.logoDot {
+  color: #4D7FFF;
+}
+
+.navbar.scrolled .logo {
+  color: #0A1330;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+  list-style: none;
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 4px;
+  color: rgba(255,255,255,0.92);
+  font-size: 13.5px;
+  font-weight: 500;
+  opacity: 0.85;
+  text-decoration: none;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.navLink svg {
+  width: 10.5px;
+  height: 10.5px;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: #4D7FFF;
+  transition: width 0.3s ease;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.navLink.active {
+  color: #4D7FFF;
+  opacity: 1;
+}
+
+.navbar.scrolled .navLink {
+  color: #0A1330;
+  opacity: 0.75;
+}
+
+.navbar.scrolled .navLink.active {
+  color: #4D7FFF;
+  opacity: 1;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+}
+
+.cta {
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 999px;
+  background: transparent;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 22px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta:hover {
+  border-color: #FF6A3D;
+  background: #FF6A3D;
+  color: #FFFFFF;
+}
+
+.navbar.scrolled .cta {
+  border-color: #0A1330;
+  color: #0A1330;
+}
+
+.navbar.scrolled .cta:hover {
+  border-color: #FF6A3D;
+  background: #FF6A3D;
+  color: #FFFFFF;
+}
+
+.burger {
+  display: none;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 999px;
+  background: transparent;
+  color: #FFFFFF;
+}
+
+.navbar.scrolled .burger {
+  border-color: #0A1330;
+  color: #0A1330;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 390;
+  background: rgba(10,19,48,0.35);
+}
+
+.mobilePanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 400;
+  width: min(80vw, 320px);
+  height: 100vh;
+  background: #FFFFFF;
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(.16,1,.3,1);
+}
+
+.mobilePanel.open {
+  transform: translateX(0);
+}
+
+.closeButton {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(10,19,48,0.15);
+  border-radius: 999px;
+  background: transparent;
+  color: #0A1330;
+}
+
+.mobileNavWrap {
+  padding-top: 100px;
+  padding-left: 54px;
+}
+
+.mobileNav {
+  position: relative;
+  list-style: none;
+  transform: skewY(-10deg);
+  transform-origin: top left;
+}
+
+.mobileNavItem {
+  position: relative;
+  height: 50px;
+}
+
+.mobileNavItem::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 230px;
+  height: 100%;
+  background: #F4F6FB;
+  transition: 0.3s ease;
+}
+
+.mobileNavItem::before {
+  content: attr(data-icon);
+  position: absolute;
+  top: 0;
+  left: -46px;
+  z-index: 2;
+  display: flex;
+  width: 46px;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: #EAEFFB;
+  color: #0A1330;
+  font-size: 10.5px;
+  font-weight: 700;
+  transition: 0.3s ease;
+}
+
+.mobileNavItem:hover::after {
+  background: #4D7FFF;
+  transform: translateX(14px);
+}
+
+.mobileNavItem:hover::before {
+  background: #3D6BEF;
+  color: #FFFFFF;
+}
+
+.mobileNavLink {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding-left: 24px;
+  color: #0A1330;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.mobileNavItem:hover .mobileNavLink {
+  color: #FFFFFF;
+}
+
+@media (max-width: 880px) {
+  .navLinks,
+  .cta {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+}

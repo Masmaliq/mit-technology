@@ -1,10 +1,12 @@
 import { defineField, defineType } from "sanity";
 import { seoFields } from "./objects/seoFields";
+import { CaseStudyEditor } from "../components/CaseStudyEditor";
 
 export const caseStudyType = defineType({
   name: "caseStudy",
   title: "Case Study",
   type: "document",
+  components: { input: CaseStudyEditor },
   fields: [
     defineField({
       name: "title",
@@ -20,20 +22,48 @@ export const caseStudyType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "projectType",
+      title: "Project Type",
+      type: "string",
+      initialValue: "newWebsite",
+      options: { layout: "radio", list: [{ title: "New Website", value: "newWebsite" }, { title: "Redesign", value: "redesign" }] },
+    }),
+    defineField({
       name: "client",
       title: "Client",
       type: "string",
     }),
     defineField({
       name: "industry",
-      title: "Industry",
+      title: "Category",
       type: "string",
     }),
+    defineField({ name: "year", title: "Year", type: "number", validation: (rule) => rule.min(1900).max(2200) }),
+    defineField({ name: "deliverables", title: "Deliverables", type: "array", of: [{ type: "string" }] }),
+    defineField({ name: "websiteUrl", title: "Website URL", type: "url" }),
+    defineField({ name: "statement", title: "Statement", type: "text", rows: 3 }),
+    defineField({ name: "overviewLabel", title: "Section Label", type: "string" }),
+    defineField({ name: "overviewHeading", title: "Heading", type: "string" }),
+    defineField({ name: "overviewDescription", title: "Description", type: "text", rows: 5 }),
+    defineField({ name: "redesignContext", title: "Redesign Context", type: "text", rows: 4 }),
+    defineField({ name: "previousWebsiteImage", title: "Redesign Previous Website", type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", title: "Alternative Text", type: "string" })] }),
+    defineField({ name: "redesignedWebsiteImage", title: "Redesign Redesigned Website", type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", title: "Alternative Text", type: "string" })] }),
+    defineField({ name: "keyImprovements", title: "Key Improvements", type: "array", of: [{ type: "object", fields: [defineField({ name: "title", title: "Title", type: "string" }), defineField({ name: "description", title: "Description", type: "text", rows: 3 })], preview: { select: { title: "title", subtitle: "description" } } }] }),
+    defineField({ name: "challengeLabel", title: "Section Label", type: "string" }),
+    defineField({ name: "challengeHeading", title: "Heading", type: "string" }),
     defineField({
       name: "challenge",
       title: "Challenge",
       type: "text",
     }),
+    defineField({ name: "challengeItems", title: "Challenge Items", type: "array", of: [{ type: "object", fields: [defineField({ name: "title", title: "Title", type: "string" }), defineField({ name: "description", title: "Description", type: "text", rows: 3 })], preview: { select: { title: "title", subtitle: "description" } } }] }),
+    defineField({ name: "supportingImage", title: "Challenge Full Width Media", type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", title: "Alternative Text", type: "string" })] }),
+    defineField({ name: "approachLabel", title: "Section Label", type: "string" }),
+    defineField({ name: "approachHeading", title: "Heading", type: "string" }),
+    defineField({ name: "approachSteps", title: "Steps", type: "array", of: [{ type: "object", fields: [defineField({ name: "title", title: "Title", type: "string" }), defineField({ name: "description", title: "Description", type: "text", rows: 3 })], preview: { select: { title: "title", subtitle: "description" } } }] }),
+    defineField({ name: "experienceLabel", title: "Section Label", type: "string" }),
+    defineField({ name: "experienceHeading", title: "Heading", type: "string" }),
+    defineField({ name: "experienceDescription", title: "Description", type: "text", rows: 4 }),
     defineField({
       name: "solution",
       title: "Solution",
@@ -44,6 +74,9 @@ export const caseStudyType = defineType({
       title: "Result",
       type: "text",
     }),
+    defineField({ name: "resultLabel", title: "Section Label", type: "string" }),
+    defineField({ name: "resultHeading", title: "Heading", type: "string" }),
+    defineField({ name: "finalImage", title: "Final Experience Image", type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", title: "Alternative Text", type: "string" })] }),
     defineField({
       name: "testimonial",
       title: "Testimonial",
@@ -51,20 +84,32 @@ export const caseStudyType = defineType({
     }),
     defineField({
       name: "gallery",
-      title: "Gallery",
+      title: "Supporting Images",
       type: "array",
+      options: {
+        layout: "grid",
+        sortable: true,
+        modal: { type: "popover", width: 1 },
+      },
       of: [
         {
           type: "image",
           options: { hotspot: true },
+          fields: [
+            defineField({ name: "alt", title: "Alternative Text", type: "string" }),
+            defineField({ name: "caption", title: "Caption", type: "string" }),
+          ],
         },
       ],
     }),
+    defineField({ name: "cursorSupportingImages", title: "Work Cursor Supporting Images", description: "Used only by the Featured Work cursor interaction. These assets do not appear in Case Study Experience.", type: "array", of: [{ type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", title: "Alternative Text", type: "string" })] }] }),
+    defineField({ name: "nextProject", title: "Next Project", type: "reference", to: [{ type: "caseStudy" }] }),
     defineField({
       name: "featuredImage",
-      title: "Featured Image",
+      title: "Case Study Hero Image",
       type: "image",
       options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alternative Text", type: "string" })],
     }),
     defineField({
       name: "featured",

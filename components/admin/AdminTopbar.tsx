@@ -21,7 +21,7 @@ export default function AdminTopbar({ onOpenMenu }: AdminTopbarProps) {
             Dashboard <span className="mx-2 text-slate-300">/</span>
             <span className="font-semibold text-slate-700">Control Center</span>
           </div>
-          <div className="truncate text-sm font-bold text-slate-950 sm:hidden">MIT Control Center</div>
+          <div className="truncate text-sm font-bold text-slate-950 sm:hidden">Emitech Control Center</div>
         </div>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

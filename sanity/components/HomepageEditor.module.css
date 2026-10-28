@@ -1,0 +1,651 @@
+.editor {
+  width: 100%;
+  max-width: none;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: #f4f5f2;
+  color: #17232b;
+  padding: clamp(24px, 3.5vw, 46px) clamp(18px, 4vw, 54px) 72px;
+}
+
+.header,
+.summary,
+.overviewLayout {
+  width: 100%;
+  max-width: none;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.eyebrow,
+.sectionEyebrow,
+.asideLabel {
+  margin: 0;
+  color: #748489;
+  font-size: 9px;
+  font-weight: 780;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 7px 0 0;
+  color: #002b32;
+  font-size: clamp(30px, 3.4vw, 39px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+}
+
+.lead {
+  max-width: 660px;
+  margin: 9px 0 0;
+  color: #6e7c83;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.sectionCount {
+  flex: none;
+  border: 1px solid #d6e2e3;
+  border-radius: 999px;
+  background: #fff;
+  color: #31555b;
+  padding: 8px 11px;
+  font-size: 9px;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 20px;
+  border: 1px solid #d6e2e3;
+  border-radius: 11px;
+  background: #eaf1f2;
+  padding: 13px 15px;
+  color: #395159;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.summary strong {
+  color: #173139;
+}
+
+.overviewLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: 32px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.sectionIndex {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #dde2df;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.indexRow {
+  display: grid;
+  grid-template-columns: 42px minmax(240px, 1fr) minmax(200px, auto) 24px;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  min-height: 72px;
+  border: 0;
+  border-bottom: 1px solid #e8ebe9;
+  background: transparent;
+  color: inherit;
+  padding: 12px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.indexRow:last-child {
+  border-bottom: 0;
+}
+
+.indexRow:hover,
+.indexRow:focus-visible {
+  background: #f3f7f7;
+  outline: none;
+}
+
+.indexNumber {
+  color: #89979b;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+}
+
+.indexCopy {
+  min-width: 0;
+}
+
+.indexCopy strong {
+  display: block;
+  color: #173139;
+  font-size: 13px;
+  font-weight: 690;
+}
+
+.indexCopy small {
+  display: block;
+  overflow: hidden;
+  margin-top: 3px;
+  color: #78878c;
+  font-size: 10.5px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.indexMeta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.indexMeta > span:first-child {
+  color: #78878c;
+  font-size: 9.5px;
+  white-space: nowrap;
+}
+
+.indexArrow {
+  color: #748489;
+  font-size: 15px;
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.indexRow:hover .indexArrow,
+.indexRow:focus-visible .indexArrow {
+  color: #0788c9;
+  transform: translateX(3px);
+}
+
+.badge {
+  flex: none;
+  border-radius: 999px;
+  padding: 6px 8px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.locked {
+  background: #edf2ff;
+  color: #4261a7;
+}
+
+.linked {
+  background: #f3edff;
+  color: #7355a1;
+}
+
+.editable {
+  background: #e8f3ee;
+  color: #39715b;
+}
+
+.note {
+  margin-top: 14px;
+  border-left: 3px solid #0788c9;
+  background: #f0f6f8;
+  color: #52656b;
+  padding: 10px 12px;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.nativeFields {
+  width: 100%;
+  min-width: 0;
+  margin-top: 14px;
+}
+
+.nativeFields > :global(*) {
+  width: 100%;
+  max-width: none !important;
+}
+
+.nativeFields :global(form),
+.nativeFields :global([data-testid="object-input"]),
+.nativeFields :global([data-testid="field-group-tabs-content"]) {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.nativeFields :global([data-ui="Card"]) {
+  box-shadow: none;
+}
+
+.nativeFields :global([data-ui="Label"]) {
+  color: #27383e;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.nativeFields :global([data-ui="Stack"]) {
+  gap: 12px;
+}
+
+.nativeFields :global([data-ui="Text"][data-muted="true"]),
+.nativeFields :global([data-ui="Muted"]),
+.nativeFields :global([data-testid*="description"]) {
+  color: #748489;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.nativeFields :global([data-ui="TextInput"]),
+.nativeFields :global([data-ui="TextArea"]),
+.nativeFields :global([data-ui="Select"]) {
+  border-color: #d8e1e1 !important;
+  background: #fbfcfb !important;
+}
+
+.nativeFields :global(input),
+.nativeFields :global(textarea),
+.nativeFields :global(select) {
+  min-height: 46px;
+  border-color: #d8e1e1 !important;
+  border-radius: 7px !important;
+  background: #fbfcfb !important;
+  color: #17232b !important;
+  font-size: 16px !important;
+  line-height: 1.5;
+}
+
+.nativeFields :global(textarea) {
+  min-height: 112px;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  resize: vertical;
+}
+
+.nativeFields :global([data-testid="image-input"]),
+.nativeFields :global([data-testid="hotspot-image-input"]),
+.nativeFields :global([data-testid="file-button-input"]) {
+  min-height: 132px;
+  border-color: #d8e1e1;
+  background: #fbfcfb;
+}
+
+.overviewAside {
+  position: sticky;
+  top: 18px;
+  min-width: 0;
+}
+
+.asideBlock {
+  border: 1px solid #dde2df;
+  border-radius: 12px;
+  background: #fff;
+  padding: 16px;
+}
+
+.asideBlock + .asideBlock {
+  margin-top: 12px;
+}
+
+.ruleBlock {
+  border-color: #eadfbe;
+  background: #fff9ec;
+}
+
+.ruleBlock h3 {
+  margin: 9px 0 7px;
+  color: #443d30;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.ruleBlock p:last-child {
+  margin: 0;
+  color: #776a50;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.sharedData {
+  margin: 10px 0 0;
+}
+
+.sharedData div {
+  border-top: 1px solid #eaedeb;
+  padding: 8px 0;
+}
+
+.sharedData div:first-child {
+  border-top: 0;
+}
+
+.sharedData dt {
+  color: #34484e;
+  font-size: 10px;
+  font-weight: 680;
+}
+
+.sharedData dd {
+  margin: 2px 0 0;
+  color: #78878c;
+  font-size: 9.5px;
+  line-height: 1.4;
+}
+
+.sectionWorkspace {
+  width: 100%;
+  max-width: none;
+  margin: 21px 0 0;
+}
+
+.backButton {
+  border: 0;
+  background: transparent;
+  color: #52656b;
+  padding: 5px 0;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.backButton:hover,
+.backButton:focus-visible {
+  color: #0788c9;
+  outline: none;
+}
+
+.editorPanel {
+  width: 100%;
+  max-width: none;
+  margin-top: 12px;
+  border: 1px solid #dde2df;
+  border-radius: 13px;
+  background: #fff;
+  padding: clamp(20px, 2.8vw, 32px);
+}
+
+.sectionPanel {
+  overflow: hidden;
+  border-color: #c99a32;
+  background: #f8f6f0;
+}
+
+.sectionPanel .sectionIntro {
+  margin: calc(clamp(20px, 2.8vw, 32px) * -1);
+  margin-bottom: 0;
+  border-bottom: 1px solid #c99a32;
+  background: #0b2420;
+  padding: 24px clamp(20px, 2.8vw, 32px);
+}
+
+.sectionPanel .sectionIntro .sectionEyebrow {
+  color: #d4a83f;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+
+.sectionPanel .sectionIntro > p:last-child {
+  color: #d8dfda;
+}
+
+.sectionPanel .columnLabel {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  border-bottom: 1px solid #d8cfb8;
+  color: #0d211d;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.sectionPanel .columnLabel::before {
+  width: 6px;
+  height: 6px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: #c99a32;
+  content: "";
+}
+
+.sectionPanel .nativeFields {
+  margin-top: 18px;
+}
+
+.sectionPanel .nativeFields :global([data-ui="Label"]) {
+  color: #102923;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.sectionPanel .nativeFields :global([data-ui="Stack"]) {
+  gap: 14px;
+}
+
+.sectionPanel .nativeFields :global([data-ui="Text"][data-muted="true"]),
+.sectionPanel .nativeFields :global([data-ui="Muted"]),
+.sectionPanel .nativeFields :global([data-testid*="description"]) {
+  color: #687872;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sectionPanel .nativeFields :global([data-ui="TextInput"]),
+.sectionPanel .nativeFields :global([data-ui="TextArea"]),
+.sectionPanel .nativeFields :global([data-ui="Select"]),
+.sectionPanel .nativeFields :global(input),
+.sectionPanel .nativeFields :global(textarea),
+.sectionPanel .nativeFields :global(select) {
+  border-color: #cfd7d2 !important;
+  background: #fff !important;
+  color: #0d211d !important;
+}
+
+.sectionPanel .nativeFields :global(input),
+.sectionPanel .nativeFields :global(select) {
+  min-height: 48px;
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+  font-size: 16px !important;
+}
+
+.sectionPanel .nativeFields :global(textarea) {
+  min-height: 122px;
+  padding: 13px 15px !important;
+  font-size: 16px !important;
+  line-height: 1.55;
+}
+
+.sectionPanel .nativeFields :global([data-ui="TextInput"]:focus-within),
+.sectionPanel .nativeFields :global([data-ui="TextArea"]:focus-within),
+.sectionPanel .nativeFields :global([data-ui="Select"]:focus-within),
+.sectionPanel .nativeFields :global(input:focus),
+.sectionPanel .nativeFields :global(textarea:focus),
+.sectionPanel .nativeFields :global(select:focus) {
+  border-color: #c99a32 !important;
+  box-shadow: 0 0 0 2px rgba(201, 154, 50, 0.14) !important;
+  outline: none;
+}
+
+.sectionPanel .nativeFields :global([role="radiogroup"]) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sectionPanel .nativeFields :global([role="radio"]) {
+  min-height: 46px;
+  justify-content: center;
+  border: 1px solid #cfd7d2 !important;
+  border-radius: 8px;
+  background: #fff !important;
+  color: #29423b !important;
+}
+
+.sectionPanel .nativeFields :global([role="radio"][aria-checked="true"]) {
+  border-color: #c99a32 !important;
+  background: #faf5e8 !important;
+  color: #0b2420 !important;
+}
+
+.sectionPanel .nativeFields :global([data-testid="image-input"]),
+.sectionPanel .nativeFields :global([data-testid="file-button-input"]) {
+  min-height: 170px;
+  border: 1px solid #c99a32;
+  border-radius: 10px;
+  background: #0b2420;
+  color: #f8f6f0;
+}
+
+.sectionPanel .nativeFields :global([data-testid="image-input"] [data-ui="Button"]),
+.sectionPanel .nativeFields :global([data-testid="file-button-input"] [data-ui="Button"]),
+.sectionPanel .nativeFields :global([data-testid^="file-input-upload-button"]) {
+  min-height: 42px;
+  border: 1px solid #d4a83f !important;
+  background: transparent !important;
+  color: #f8f6f0 !important;
+}
+
+.sectionFields {
+  margin-top: 20px;
+}
+
+.sectionIntro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid #e5e9e7;
+  padding-bottom: 14px;
+}
+
+.sectionIntro > p:last-child {
+  max-width: 650px;
+  margin: 0;
+  color: #6e7c83;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.sectionIntro .sectionEyebrow {
+  color: #29474e;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.heroFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  margin-top: 20px;
+}
+
+.fieldColumn {
+  min-width: 0;
+}
+
+.fieldColumn + .fieldColumn {
+  border-left: 1px solid #e5e9e7;
+  padding-left: 48px;
+}
+
+.columnLabel {
+  color: #52676d;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1100px) {
+  .overviewLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .overviewAside {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .asideBlock + .asideBlock {
+    margin-top: 0;
+  }
+
+  .heroFields {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldColumn + .fieldColumn {
+    border-top: 1px solid #e5e9e7;
+    border-left: 0;
+    padding-top: 22px;
+    padding-left: 0;
+  }
+}
+
+@media (min-width: 1500px) {
+  .editor {
+    padding-right: 48px;
+    padding-left: 48px;
+  }
+}
+
+@media (max-width: 680px) {
+  .editor {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .header,
+  .summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .overviewAside {
+    grid-template-columns: 1fr;
+  }
+
+  .indexRow {
+    grid-template-columns: 34px minmax(0, 1fr) 20px;
+  }
+
+  .indexMeta {
+    display: none;
+  }
+
+  .sectionIntro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sectionIntro > p:last-child {
+    text-align: left;
+  }
+}

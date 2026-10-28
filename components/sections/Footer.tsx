@@ -1,17 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import { getFooter, getSiteSettings } from "@/lib/sanity/fetch";
+import { getHomepageFooterGlobals, getSiteSettings } from "@/lib/sanity/fetch";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { StaggerContainer, StaggerItem, TextReveal } from "@/components/motion/Motion";
-
-function getWhatsappUrl(whatsapp?: string) {
-  if (!whatsapp) return "";
-
-  const cleaned = whatsapp.replace(/\D/g, "");
-  const normalized = cleaned.startsWith("0") ? `62${cleaned.slice(1)}` : cleaned;
-
-  return normalized ? `https://wa.me/${normalized}` : "";
-}
 
 function getObjectPosition(position?: string) {
   const positions = {
@@ -40,21 +32,27 @@ function clampOpacity(value?: number) {
 }
 
 export async function Footer() {
-  const [footer, settings] = await Promise.all([
-    getFooter(),
+  const [globals, settings] = await Promise.all([
+    getHomepageFooterGlobals(),
     getSiteSettings(),
   ]);
-  const companyName = settings.companyName || settings.siteTitle || "MIT Technology";
+  const footer = globals.footer || {};
+  const contact = globals.contact || {};
+  const identity = globals.identity || {};
+  const social = globals.social || {};
+  const companyName = identity.siteName || identity.shortName || contact.displayName || contact.companyName || settings.companyName || settings.siteTitle || "Emitech";
   const description =
     footer.description ||
+    identity.shortDescription ||
+    identity.tagline ||
     settings.description ||
     "";
   const address =
-    footer.address || settings.address || "";
-  const email = footer.email || settings.email || "";
-  const phone = footer.phone || settings.phone;
-  const whatsapp = footer.whatsapp || settings.whatsapp;
-  const whatsappUrl = getWhatsappUrl(whatsapp);
+    [contact.addressLine1, contact.addressLine2, contact.city, contact.province, contact.postalCode, contact.country].filter(Boolean).join(", ") || footer.address || settings.address || "";
+  const email = contact.primaryEmail || footer.email || settings.email || "";
+  const phone = contact.phone || footer.phone || settings.phone;
+  const whatsapp = contact.whatsappNumber || footer.whatsapp || settings.whatsapp;
+  const whatsappUrl = buildWhatsAppUrl(whatsapp, contact.whatsappDefaultMessage);
   const whatsappLabel = whatsapp || "";
   const hasBackground = Boolean(footer.enableFooterBackground && footer.footerBackgroundImage?.url);
   const overlayOpacity = clampOpacity(footer.footerOverlayOpacity);
@@ -97,6 +95,16 @@ export async function Footer() {
     href: string;
     external: boolean;
   }>;
+  const canonicalSocialLinks = [
+    { platform: social.instagramLabel || "Instagram", url: social.instagramUrl },
+    { platform: social.tiktokLabel || "TikTok", url: social.tiktokUrl },
+    { platform: social.linkedinLabel || "LinkedIn", url: social.linkedinUrl },
+    { platform: social.youtubeLabel || "YouTube", url: social.youtubeUrl },
+    { platform: social.facebookLabel || "Facebook", url: social.facebookUrl },
+    { platform: social.twitterLabel || "X", url: social.twitterUrl },
+    ...(social.additionalLinks || []).map((item) => ({ platform: item.label || item.platform, url: item.url })),
+  ].filter((item) => item.platform && item.url);
+  const socialLinks = canonicalSocialLinks.length ? canonicalSocialLinks : footer.socialLinks || [];
 
   return (
     <footer className="relative isolate overflow-hidden bg-[#020817] text-white">
@@ -150,9 +158,9 @@ export async function Footer() {
               text={description}
             />
           ) : null}
-          {footer.socialLinks?.some((socialLink) => socialLink.platform && socialLink.url) ? (
+          {socialLinks.some((socialLink) => socialLink.platform && socialLink.url) ? (
             <div className="mt-7 flex flex-wrap gap-3">
-              {footer.socialLinks?.map((socialLink) =>
+              {socialLinks.map((socialLink) =>
                 socialLink.platform && socialLink.url ? (
                   <Link
                     className="rounded-full border border-white/12 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/78 transition duration-300 hover:border-white/24 hover:bg-white/10 hover:text-white"

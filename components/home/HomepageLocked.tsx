@@ -134,7 +134,7 @@ export function HomepageLocked({
 
   return (
     <main className={styles.page} data-homepage-motion>
-      <header className={styles.hero}>
+      <header className={styles.hero} id="hero">
         {heroVideo ? (
           <video className={styles.heroMedia} autoPlay data-motion-parallax="36" muted loop playsInline poster={heroImage || undefined}>
             <source src={heroVideo} type="video/mp4" />

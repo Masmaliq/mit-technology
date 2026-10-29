@@ -604,8 +604,24 @@
   .heroInner {
     min-height: 740px;
   }
+  .heroInner {
+    width: min(100% - 48px, 1260px);
+  }
   .hero h1 {
-    font-size: clamp(58px, 19vw, 76px);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: clamp(40px, 13vw, 56px);
+    line-height: 0.84;
+    word-break: keep-all;
+  }
+  .heroBottom p {
+    max-width: 100%;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .heroBottom .lightButton {
+    max-width: 100%;
   }
   .heroBottom,
   .ctaBottom {
